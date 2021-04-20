@@ -12,9 +12,17 @@
   "npmScope": "angular-cdk",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "accessToken": "N2JhZjM1YTAtY2ZlMi00ZGRhLWI2MDktZmI2M2ZiYzM4NmMwfHJlYWQtd3JpdGU=",
+        "canTrackAnalytics": false,
+        "showUsageWarnings": true
       }
     }
   },
@@ -24,7 +32,9 @@
     },
     "official-site-e2e": {
       "tags": [],
-      "implicitDependencies": ["official-site"]
+      "implicitDependencies": [
+        "official-site"
+      ]
     }
   }
 }
