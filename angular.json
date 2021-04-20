@@ -150,7 +150,7 @@
     "navigables": {
       "projectType": "library",
       "root": "libs/navigables",
-      "sourceRoot": "libs/navigables/src",
+      "sourceRoot": "libs/navigables",
       "prefix": "bs",
       "architect": {
         "build": {
@@ -169,8 +169,8 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/navigables/src/**/*.ts",
-              "libs/navigables/src/**/*.html"
+              "libs/navigables/**/*.ts",
+              "libs/navigables/**/*.html"
             ]
           }
         },
@@ -187,7 +187,7 @@
     "timeline": {
       "projectType": "library",
       "root": "libs/timeline",
-      "sourceRoot": "libs/timeline/src",
+      "sourceRoot": "libs/timeline",
       "prefix": "bs",
       "architect": {
         "build": {
@@ -206,8 +206,8 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/timeline/src/**/*.ts",
-              "libs/timeline/src/**/*.html"
+              "libs/timeline/**/*.ts",
+              "libs/timeline/**/*.html"
             ]
           }
         },
