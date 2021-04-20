@@ -40,6 +40,7 @@
     "@bespunky/angular-zen": "^3.1.0",
     "@nrwl/angular": "12.0.7",
     "rxjs": "~6.6.3",
+    "ts-key-enum": "^2.0.7",
     "tslib": "^2.0.0",
     "zone.js": "^0.10.2"
   },

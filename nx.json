@@ -23,6 +23,8 @@
       "implicitDependencies": ["official-site"]
     },
     "navigables": { "tags": [] },
-    "timeline": { "tags": [] }
+    "timeline": { "tags": [] },
+    "shared": { "tags": [] },
+    "reactive-input": { "tags": [] }
   }
 }

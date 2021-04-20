@@ -1,30 +1,46 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Destroyable } from '@bespunky/angular-zen/core';
+import { Injectable                  } from '@angular/core';
+import { Destroyable                 } from '@bespunky/angular-zen/core';
 
 import { ViewBounds } from '../shared/view-bounds';
 
+@Injectable()
 export abstract class Camera<TItem> extends Destroyable
 {
-    public readonly moveFactor: BehaviorSubject<number> = new BehaviorSubject(3);
     public readonly zoomFactor: BehaviorSubject<number> = new BehaviorSubject(1.06);
     public readonly zoomLevel : BehaviorSubject<number> = new BehaviorSubject(0);
     
-    public readonly viewCenter: BehaviorSubject<number> = new BehaviorSubject(0);
+    public readonly position  : BehaviorSubject<number> = new BehaviorSubject(0);
     
-    abstract readonly viewBounds: Observable<ViewBounds>;
+    public abstract readonly viewBounds: Observable<ViewBounds>;
     
-    abstract moveTo(item: TItem)                                   : void;
-    abstract moveTo(position: number)                              : void;
-    abstract moveTo(positionOrItem: number | TItem)                : void;
-    abstract zoomOn(item: TItem, amount: number)                   : void;
-    abstract zoomOn(position: number, amount: number)              : void;
-    abstract zoomOn(positionOrItem: number | TItem, amount: number): void;
-        
-    public move(amount: number): void
+    protected abstract moveToItem(item: TItem): void;
+    protected abstract zoomOnItem(item: TItem, amount: number): void;
+    
+    public moveTo(item: TItem)                   : void;
+    public moveTo(position: number)              : void;
+    public moveTo(positionOrItem: number | TItem): void
     {
-        this.addAmount(this.viewCenter, amount);
+        typeof positionOrItem === 'number' ? this.moveToPosition(positionOrItem) : this.moveToItem(positionOrItem);
     }
     
+    public zoomOn(item: TItem, amount: number)                   : void;
+    public zoomOn(position: number, amount: number)              : void;
+    public zoomOn(positionOrItem: number | TItem, amount: number): void
+    {
+        typeof positionOrItem === 'number' ? this.zoomOnPosition(positionOrItem, amount) : this.zoomOnItem(positionOrItem, amount);
+    }
+
+    public move(amount: number): void
+    {
+        this.addAmount(this.position, amount);
+    }
+    
+    protected moveToPosition(position: number): void
+    {
+        this.position.next(position);
+    }
+
     public zoom(amount: number): void
     {
         this.addAmount(this.zoomLevel, amount);
@@ -33,11 +49,6 @@ export abstract class Camera<TItem> extends Destroyable
     public setZoom(zoomLevel: number): void
     {
         this.zoomLevel.next(zoomLevel);
-    }
-
-    protected moveToPosition(position: number): void
-    {
-        this.viewCenter.next(position);
     }
 
     protected zoomOnPosition(position: number, amount: number): void
@@ -78,7 +89,7 @@ export abstract class Camera<TItem> extends Destroyable
          */
 
         /** The current center position of the viewbox relative to the complete drawing. */
-        const viewCenter = this.viewCenter.value;
+        const viewCenter = this.position.value;
 
         /** The distance between the position and the center before zooming. This should be kept after zoom. */
         const dxPositionToCenter = position - viewCenter;
