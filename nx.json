@@ -9,7 +9,7 @@
   "affected": {
     "defaultBase": "master"
   },
-  "npmScope": "angular-cdk",
+  "npmScope": "@bespunky",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/nx-cloud",
