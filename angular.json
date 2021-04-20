@@ -25,7 +25,8 @@
     "@nrwl/angular:library": {
       "style": "scss",
       "linter": "eslint",
-      "unitTestRunner": "jest"
+      "unitTestRunner": "jest",
+      "strict": true
     },
     "@nrwl/angular:component": {
       "style": "scss"
@@ -142,6 +143,43 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/official-site-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "navigables": {
+      "projectType": "library",
+      "root": "libs/navigables",
+      "sourceRoot": "libs/navigables/src",
+      "prefix": "bs",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/navigables/tsconfig.lib.json",
+            "project": "libs/navigables/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/navigables/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/navigables/src/**/*.ts",
+              "libs/navigables/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/navigables"],
+          "options": {
+            "jestConfig": "libs/navigables/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

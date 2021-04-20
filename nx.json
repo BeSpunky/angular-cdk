@@ -1,25 +1,15 @@
 {
   "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
     ".eslintrc.json": "*"
   },
-  "affected": {
-    "defaultBase": "master"
-  },
+  "affected": { "defaultBase": "master" },
   "npmScope": "@bespunky",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "N2JhZjM1YTAtY2ZlMi00ZGRhLWI2MDktZmI2M2ZiYzM4NmMwfHJlYWQtd3JpdGU=",
         "canTrackAnalytics": false,
         "showUsageWarnings": true
@@ -27,14 +17,11 @@
     }
   },
   "projects": {
-    "official-site": {
-      "tags": []
-    },
+    "official-site": { "tags": [] },
     "official-site-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "official-site"
-      ]
-    }
+      "implicitDependencies": ["official-site"]
+    },
+    "navigables": { "tags": [] }
   }
 }
