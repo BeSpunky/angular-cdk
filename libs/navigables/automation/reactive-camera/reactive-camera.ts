@@ -31,9 +31,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly moveFactor             : BehaviorSubject<number>                  = new BehaviorSubject(3);
     public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
         
-    constructor(private element: ElementRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService)
+    constructor(private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, element: ElementRef)
     {
-        super();
+        super(element);
         
         this.hookZoomOnWheel();
         this.hookMoveOnWheel();

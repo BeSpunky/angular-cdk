@@ -1,7 +1,9 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Injectable                  } from '@angular/core';
-import { Destroyable                 } from '@bespunky/angular-zen/core';
+import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
+import { map, startWith                         } from 'rxjs/operators';
+import { ElementRef, Injectable                 } from '@angular/core';
+import { Destroyable                            } from '@bespunky/angular-zen/core';
 
+import { ViewPort   } from '../shared/view-port';
 import { ViewBounds } from '../shared/view-bounds';
 
 @Injectable()
@@ -9,11 +11,29 @@ export abstract class Camera<TItem> extends Destroyable
 {
     public readonly zoomFactor: BehaviorSubject<number> = new BehaviorSubject(1.06);
     public readonly zoomLevel : BehaviorSubject<number> = new BehaviorSubject(0);
-    
     public readonly position  : BehaviorSubject<number> = new BehaviorSubject(0);
+    
+    public readonly viewPort: Observable<ViewPort>;
     
     public abstract readonly viewBounds: Observable<ViewBounds>;
     
+    constructor(protected element: ElementRef)
+    {
+        super();
+        
+        this.viewPort = this.viewPortFeed();
+    }
+    
+    protected viewPortFeed(): Observable<ViewPort>
+    {
+        const element: HTMLElement = this.element.nativeElement;
+
+        return fromEvent<UIEvent>(element, 'resize').pipe(
+            startWith({}),
+            map(() => ({ width: element.clientWidth, height: element.clientHeight })),
+        );
+    }
+
     protected abstract moveToItem(item: TItem): void;
     protected abstract zoomOnItem(item: TItem, amount: number): void;
     
