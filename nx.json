@@ -22,6 +22,7 @@
       "tags": [],
       "implicitDependencies": ["official-site"]
     },
-    "navigables": { "tags": [] }
+    "navigables": { "tags": [] },
+    "timeline": { "tags": [] }
   }
 }
