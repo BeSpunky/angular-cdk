@@ -39,6 +39,7 @@ export abstract class Camera<TItem> extends Destroyable
     
     public moveTo(item: TItem)                   : void;
     public moveTo(position: number)              : void;
+    public moveTo(positionOrItem: number | TItem): void;
     public moveTo(positionOrItem: number | TItem): void
     {
         typeof positionOrItem === 'number' ? this.moveToPosition(positionOrItem) : this.moveToItem(positionOrItem);
@@ -46,6 +47,7 @@ export abstract class Camera<TItem> extends Destroyable
     
     public zoomOn(item: TItem, amount: number)                   : void;
     public zoomOn(position: number, amount: number)              : void;
+    public zoomOn(positionOrItem: number | TItem, amount: number): void;
     public zoomOn(positionOrItem: number | TItem, amount: number): void
     {
         typeof positionOrItem === 'number' ? this.zoomOnPosition(positionOrItem, amount) : this.zoomOnItem(positionOrItem, amount);

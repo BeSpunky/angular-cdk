@@ -2,9 +2,10 @@ import { animationFrameScheduler, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, observeOn               } from 'rxjs/operators';
 import { Injectable                                         } from '@angular/core';
 
-import { TimelineLocationService, useActivationSwitch, valueInRange                  } from '@bespunky/angular-timeline/shared';
-import { ViewBounds                                                                  } from '@bespunky/angular-timeline/abstraction';
-import { TimelineTick, DatesBetweenGenerator, TickItem, TickLabeler, WidthCalculator } from '@bespunky/angular-timeline/abstraction/ticks';
+import { useActivationSwitch, valueInRange                                           } from '@bespunky/angular-cdk/shared';
+import { ViewBounds                                                                  } from '@bespunky/angular-cdk/navigables/camera';
+import { TimelineLocationService                                                     } from '@bespunky/angular-cdk/timeline/shared';
+import { TimelineTick, DatesBetweenGenerator, TickItem, TickLabeler, WidthCalculator } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 
 /**
  * Provides methods for virtualizing tick rendering. This service is designed to determine what ticks should

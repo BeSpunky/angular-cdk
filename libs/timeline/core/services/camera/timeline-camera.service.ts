@@ -1,9 +1,12 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take    } from 'rxjs/operators';
-import { Injectable                } from '@angular/core';
+import { ElementRef, Injectable    } from '@angular/core';
 
-import { TimelineConfig, TimelineCamera, ViewBounds } from '@bespunky/angular-timeline/abstraction';
-import { TimelineLocationService                    } from '@bespunky/angular-timeline/shared';
+import { ViewBounds                     } from '@bespunky/angular-cdk/navigables/camera';
+import { ReactiveMouseService           } from '@bespunky/angular-cdk/reactive-input/mouse';
+import { ReactiveKeyboardService        } from '@bespunky/angular-cdk/reactive-input/keyboard';
+import { TimelineConfig, TimelineCamera } from '@bespunky/angular-cdk/timeline/abstraction';
+import { TimelineLocationService        } from '@bespunky/angular-cdk/timeline/shared';
 
 @Injectable()
 export class TimelineCameraService extends TimelineCamera
@@ -11,9 +14,15 @@ export class TimelineCameraService extends TimelineCamera
     public readonly viewBounds: Observable<ViewBounds>;
     public readonly dayWidth  : Observable<number>;
 
-    constructor(private config: TimelineConfig, private location: TimelineLocationService)
+    constructor(
+        private config  : TimelineConfig,
+        private location: TimelineLocationService,
+                mouse   : ReactiveMouseService,
+                keyboard: ReactiveKeyboardService,
+                element : ElementRef
+    )
     {
-        super();
+        super(mouse, keyboard, element);
 
         this.viewBounds = this.viewBoundsFeed();
         this.dayWidth   = this.dayWidthFeed();
@@ -21,15 +30,15 @@ export class TimelineCameraService extends TimelineCamera
     
     private viewBoundsFeed(): Observable<ViewBounds>
     {
-        return combineLatest([this.config.viewPortWidth, this.config.viewPortHeight, this.zoomLevel, this.viewCenter]).pipe(
-            map(([viewPortWidth, viewPortHeight, zoomLevel, viewCenter]) => new ViewBounds(viewPortWidth, viewPortHeight, zoomLevel, viewCenter)),
+        return combineLatest([this.viewPort, this.zoomLevel, this.position]).pipe(
+            map(([viewPort, zoomLevel, position]) => new ViewBounds(viewPort.width, viewPort.height, zoomLevel, position)),
             shareReplay(1)
         );
     }
     
     /**
      * Creates a stream that notifies of changes to the width of the one day in pixels.
-     * The width is determined by `baseTickSize`, `zoom` and `zoomDeltaFactor`.
+     * The width is determined by `baseTickSize`, `zoom` and `zoomFactor`.
      * 
      * @see /skeleton/services/control/readme.md for more information about zooming.
      *
@@ -39,8 +48,8 @@ export class TimelineCameraService extends TimelineCamera
      */
     private dayWidthFeed(): Observable<number>
     {
-        return combineLatest([this.config.baseTickSize, this.config.zoomDeltaFactor, this.zoomLevel]).pipe(
-            map(([baseTickSize, zoomDeltaFactor, zoomLevel]) => baseTickSize * Math.pow(zoomDeltaFactor, zoomLevel)),
+        return combineLatest([this.config.baseTickSize, this.zoomFactor, this.zoomLevel]).pipe(
+            map(([baseTickSize, zoomFactor, zoomLevel]) => baseTickSize * Math.pow(zoomFactor, zoomLevel)),
             // Make this observable remember and stream the latest value to each new subscriber.
             // This way the width can be resolved instantly when the value is needed for some immidiate calcualtion
             // like in TimelineCamera.moveTo().
@@ -48,84 +57,14 @@ export class TimelineCameraService extends TimelineCamera
         );
     }
     
-    public move(amount: number): void
+    protected moveToItem(date: Date): void
     {
-        this.addAmount(this.viewCenter, amount);
-    }
-    
-    public moveTo(date: Date): void;
-    public moveTo(position: number): void;
-    public moveTo(dateOrPosition: number | Date): void
-    {
-        dateOrPosition instanceof Date ? this.moveToDate(dateOrPosition) : this.moveToPosition(dateOrPosition);
-    }
-    
-    private moveToPosition(position: number): void
-    {
-        this.viewCenter.next(position);
+        this.dateToPosition(date).subscribe(position => this.moveToPosition(position));
     }
 
-    private moveToDate(date: Date): void
-    {
-        this.dateToPosition(date).subscribe(this.moveToPosition.bind(this));
-    }
-
-    public zoom(amount: number): void
-    {
-        this.addAmount(this.zoomLevel, amount);
-    }
-    
-    public zoomOn(date: Date, amount: number): void;
-    public zoomOn(position: number, amount: number): void;
-    public zoomOn(positionOrDate: number | Date, amount: number): void;
-    public zoomOn(positionOrDate: number | Date, amount: number): void
-    {
-        positionOrDate instanceof Date ? this.zoomOnDate(positionOrDate, amount) : this.zoomOnPosition(positionOrDate, amount);
-    }
-
-    private zoomOnPosition(position: number, amount: number): void
-    {
-        this.zoom(amount);
-
-        const zoomFactor = this.calculateZoomFactor(Math.sign(amount));
-        
-        this.moveToPosition(this.calculateViewCenterZoomedToPosition(position, zoomFactor * Math.abs(amount)));
-    }
-
-    private zoomOnDate(date: Date, amount: number): void
+    protected zoomOnItem(date: Date, amount: number): void
     {
         this.dateToPosition(date).subscribe(position => this.zoomOnPosition(position, amount));
-    }
-
-    private calculateZoomFactor(zoomDirection: number): number
-    {
-        let zoomFactor = this.config.zoomDeltaFactor.value;
-        
-        // When zooming out, flip the factor to shrink instead of grow
-        if (zoomDirection < 0) zoomFactor = 1 / zoomFactor;
-
-        return zoomFactor;
-    }
-
-    private calculateViewCenterZoomedToPosition(position: number, zoomedBy: number): number
-    {
-        /** The idea is to:
-         * 1. Calculate the current distance between the position and the viewCenter, so the same distance could be applied later-on.
-         * 2. Calculate where the pixel that was under the position will be AFTER zooming.
-         *    This will be the position multiplied by the factor.
-         *    If the image grew by 15%, the pixel under the position did the same.
-         * 3. Subtract the current distance from the new position to receive the new viewCenter.
-         */
-
-        /** The current center position of the viewbox relative to the complete drawing. */
-        const viewCenter = this.viewCenter.value;
-
-        /** The distance between the position and the center before zooming. This should be kept after zoom. */
-        const dxPositionToCenter = position - viewCenter;
-        /** The new position of the pixel under the specified point AFTER zooming. */
-        const newPosition        = position * zoomedBy;
-        // The new center be relative to the new position after zooming
-        return newPosition - dxPositionToCenter;
     }
 
     private dateToPosition(date: Date): Observable<number>

@@ -1,6 +1,6 @@
 import { ClassProvider } from '@angular/core';
 
-import { TimelineCamera        } from '@bespunky/angular-timeline/abstraction';
+import { TimelineCamera        } from '@bespunky/angular-cdk/timeline/abstraction';
 import { TimelineCameraService } from './timeline-camera.service';
 
 /**

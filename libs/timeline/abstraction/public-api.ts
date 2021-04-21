@@ -1,8 +1,6 @@
 export * from './config/timeline-config';
 
-export * from './control/timeline-control';
-export * from './control/timeline-camera';
-export * from './control/view-bounds';
+export * from './camera/timeline-camera';
 
 export * from './core/timeline';
 

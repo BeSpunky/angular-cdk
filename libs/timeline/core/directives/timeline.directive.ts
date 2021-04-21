@@ -2,21 +2,17 @@ import { combineLatest, Observable                                              
 import { filter, map, startWith, takeUntil                                              } from 'rxjs/operators';
 import { AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, Input, QueryList } from '@angular/core';
 
-import { Timeline, TimelineConfig, TimelineControl, TimelineCamera, TimelineRenderer } from '@bespunky/angular-timeline/abstraction';
-import { TimelineTick, TimelineTickRenderer                                          } from '@bespunky/angular-timeline/abstraction/ticks';
-import { TimelineLocationService                                                     } from '@bespunky/angular-timeline/shared';
-import { TimelineTickDirective                                                       } from '../modules/ticks/directives/timeline-tick.directive';
-import { TimelineTickRendererProvider                                                } from '../modules/ticks/services/renderer/timeline-tick-renderer.provider';
-import { TimelineConfigProvider                                                      } from '../services/config/timeline-config.provider';
-import { TimelineCameraProvider                                                      } from '../services/camera/timeline-camera.provider';
-import { TimelineControlProvider                                                     } from '../services/control/timeline-control.provider';
-import { TimelineRendererProvider                                                    } from '../services/renderer/timeline-renderer.provider';
+import { Timeline, TimelineConfig, TimelineCamera } from '@bespunky/angular-cdk/timeline/abstraction';
+import { TimelineTick, TimelineTickRenderer       } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { TimelineLocationService                  } from '@bespunky/angular-cdk/timeline/shared';
+import { TimelineTickDirective                    } from '../modules/ticks/directives/timeline-tick.directive';
+import { TimelineTickRendererProvider             } from '../modules/ticks/services/renderer/timeline-tick-renderer.provider';
+import { TimelineConfigProvider                   } from '../services/config/timeline-config.provider';
+import { TimelineCameraProvider                   } from '../services/camera/timeline-camera.provider';
 
 const providers = [
     TimelineConfigProvider,
     TimelineCameraProvider,
-    TimelineControlProvider,
-    TimelineRendererProvider,
     TimelineTickRendererProvider
 ];
 
@@ -51,17 +47,15 @@ export class TimelineDirective extends Timeline implements AfterViewInit
     constructor(
         public  readonly config      : TimelineConfig,
         public  readonly camera      : TimelineCamera,
-        private readonly control     : TimelineControl,
         private readonly location    : TimelineLocationService,
-        private readonly renderer    : TimelineRenderer,
         private readonly tickRenderer: TimelineTickRenderer,
         private readonly changes     : ChangeDetectorRef
     )
     {
         super();
 
-        this.currentDate = combineLatest([this.camera.dayWidth, this.camera.viewCenter]).pipe(
-            map(([dayWidth, viewCenter]) => this.location.positionToDate(dayWidth, viewCenter))
+        this.currentDate = combineLatest([this.camera.dayWidth, this.camera.position]).pipe(
+            map(([dayWidth, position]) => this.location.positionToDate(dayWidth, position))
         );
     }
 
@@ -117,38 +111,33 @@ export class TimelineDirective extends Timeline implements AfterViewInit
         this.config.baseTickSize.next(value);
     }
 
-    @Input() public set moveAmount(value: number)
-    {
-        this.config.moveAmount.next(value);
-    }
-
     @Input() public set moveOnKeyboard(value: boolean)
     {
-        this.config.moveOnKeyboard.next(value);
+        this.camera.moveOnKeyboard.next(value);
     }
 
     @Input() public set moveOnWheel(value: boolean)
     {
-        this.config.moveOnWheel.next(value);
+        this.camera.moveOnWheel.next(value);
+    }
+
+    @Input() public set zoomDeltaFactor(value: number)
+    {
+        this.camera.zoomFactor.next(value);
+    }
+
+    @Input() public set zoomOnKeyboard(value: boolean)
+    {
+        this.camera.zoomOnKeyboard.next(value);
+    }
+
+    @Input() public set zoomOnWheel(value: boolean)
+    {
+        this.camera.zoomOnWheel.next(value);
     }
 
     @Input() public set virtualizationBuffer(value: number)
     {
         this.config.virtualizationBuffer.next(value);
-    }
-
-    @Input() public set zoomDeltaFactor(value: number)
-    {
-        this.config.zoomDeltaFactor.next(value);
-    }
-
-    @Input() public set zoomOnKeyboard(value: boolean)
-    {
-        this.config.zoomOnKeyboard.next(value);
-    }
-
-    @Input() public set zoomOnWheel(value: boolean)
-    {
-        this.config.zoomOnWheel.next(value);
     }
 }

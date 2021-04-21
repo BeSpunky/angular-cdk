@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable   } from 'rxjs';
 import { ViewContainerRef, TemplateRef } from '@angular/core';
 
-import { TimelineCamera, TimelineConfig                                 } from '@bespunky/angular-timeline/abstraction';
+import { TimelineCamera, TimelineConfig                                 } from '@bespunky/angular-cdk/timeline/abstraction';
 import { TickItem                                                       } from '../render/tick-item';
 import { DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator } from './types';
 

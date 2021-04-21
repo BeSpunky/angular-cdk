@@ -1,6 +1,6 @@
 import { ClassProvider } from '@angular/core';
 
-import { TimelineTickRenderer        } from '@bespunky/angular-timeline/abstraction/ticks';
+import { TimelineTickRenderer        } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 import { TimelineTickRendererService } from './timeline-tick-renderer.service';
 
 /**

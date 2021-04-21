@@ -1,6 +1,6 @@
 import { ClassProvider } from '@angular/core';
 
-import { TimelineConfig        } from '@bespunky/angular-timeline/abstraction';
+import { TimelineConfig        } from '@bespunky/angular-cdk/timeline/abstraction';
 import { TimelineConfigService } from './timeline-config.service';
 
 /**

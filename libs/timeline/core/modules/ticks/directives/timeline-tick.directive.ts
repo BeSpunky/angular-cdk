@@ -1,8 +1,8 @@
 import { Observable                                      } from 'rxjs';
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { TimelineCamera, TimelineConfig                                                         } from '@bespunky/angular-timeline/abstraction';
-import { TimelineTick, TickItem, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator } from '@bespunky/angular-timeline/abstraction/ticks';
+import { TimelineCamera, TimelineConfig                                                         } from '@bespunky/angular-cdk/timeline/abstraction';
+import { TimelineTick, TickItem, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 import { TimelineTickVirtualizationService                                                      } from '../services/virtualization/timeline-tick-virtualization.service';
 
 /**

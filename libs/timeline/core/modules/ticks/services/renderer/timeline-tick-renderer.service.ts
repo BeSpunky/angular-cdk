@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TimelineTick, TimelineTickRenderer, RenderedTick, TickContext, TickViewContext, TickItem } from '@bespunky/angular-timeline/abstraction/ticks';
+import { TimelineTick, TimelineTickRenderer, RenderedTick, TickContext, TickViewContext, TickItem } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 
 /**
  * Provides tools for handling tick rendering.

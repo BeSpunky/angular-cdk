@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ViewBounds                                                             } from '@bespunky/angular-timeline/abstraction';
+import { ViewBounds                                                             } from '@bespunky/angular-cdk/navigables/camera';
 import { MillisecondsInADay, YearZeroJanuaryFirstInMs, MinDateInMs, MaxDateInMs } from '../../tools/date-consts';
 import { daysSinceYearZero                                                      } from '../../tools/date-functions';
 
