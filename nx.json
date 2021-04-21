@@ -25,6 +25,8 @@
     "navigables": { "tags": [] },
     "timeline": { "tags": [] },
     "shared": { "tags": [] },
-    "reactive-input": { "tags": [] }
+    "reactive-input": { "tags": [] },
+    "demo": { "tags": [] },
+    "demo-e2e": { "tags": [], "implicitDependencies": ["demo"] }
   }
 }
