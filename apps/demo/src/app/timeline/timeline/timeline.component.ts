@@ -1,10 +1,10 @@
 import { eachYearOfInterval, getDaysInMonth, getDaysInYear, eachMonthOfInterval, eachHourOfInterval, differenceInMinutes, addMinutes, addSeconds, differenceInSeconds, eachDayOfInterval, startOfMinute, startOfSecond } from 'date-fns';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 
-import { DatesBetweenGenerator, DayFactor, TickLabeler } from '@bespunky/angular-timeline/abstraction/ticks';
+import { DatesBetweenGenerator, DayFactor, TickLabeler } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 
 @Component({
-    selector     : 'app-timeline',
+    selector     : 'demo-timeline',
     templateUrl  : './timeline.component.html',
     styleUrls    : ['./timeline.component.css'],
     exportAs     : 'timeline',

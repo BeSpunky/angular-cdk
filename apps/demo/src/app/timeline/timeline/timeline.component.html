@@ -7,7 +7,6 @@
      [zoom]="zoom"
      [baseTickSize]="baseTickSize"
      [position]="date"
-     [moveAmount]="moveAmount"
      [moveOnKeyboard]="moveOnKeyboard"
      [moveOnWheel]="moveOnWheel"
      [virtualizationBuffer]="virtualizationBuffer"
@@ -67,6 +66,6 @@
 
 <div style="text-align: center;">
     Zoom      : {{ timeline.camera.zoomLevel.value }}<br/>
-    ViewCenter: {{ timeline.camera.viewCenter.value }}<br/>
+    ViewCenter: {{ timeline.camera.position.value }}<br/>
     Mouse     : {{x}}, {{y}}
 </div>
