@@ -90,7 +90,7 @@ export abstract class Camera<TItem> extends Destroyable
     
     protected calculateZoomChangeInPixels(amount: number): number
     {
-        const zoomingOut = Math.sign(amount) > 0;
+        const zoomingOut = Math.sign(amount) < 0;
         let   zoomFactor = this.zoomFactor.value;
         
         // When zooming out, flip the factor to shrink instead of grow

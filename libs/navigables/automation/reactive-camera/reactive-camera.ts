@@ -73,11 +73,11 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookMoveOnKeyboard(): void
     {
-        const moveLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
         const moveRight = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowRight });
+        const moveLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
 
-        this.hookPosition(moveLeft , () =>  this.moveFactor.value);
-        this.hookPosition(moveRight, () => -this.moveFactor.value);
+        this.hookPosition(moveRight, () =>  this.moveFactor.value);
+        this.hookPosition(moveLeft , () => -this.moveFactor.value);
     }
     
     private hookPosition<T extends EventWithModifiers>(eventFeed: Observable<T>, getAmount: (event: T) => number): void
