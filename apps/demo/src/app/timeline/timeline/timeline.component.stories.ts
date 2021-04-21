@@ -1,6 +1,6 @@
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 
-import { TimelineModule    } from '@bespunky/angular-timeline/core';
+import { TimelineModule    } from '@bespunky/angular-cdk/timeline/core';
 import { TimelineComponent } from './timeline.component';
 
 export default {
