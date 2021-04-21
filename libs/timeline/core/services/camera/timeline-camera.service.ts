@@ -2,7 +2,6 @@ import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take    } from 'rxjs/operators';
 import { ElementRef, Injectable    } from '@angular/core';
 
-import { ViewBounds                     } from '@bespunky/angular-cdk/navigables/camera';
 import { ReactiveMouseService           } from '@bespunky/angular-cdk/reactive-input/mouse';
 import { ReactiveKeyboardService        } from '@bespunky/angular-cdk/reactive-input/keyboard';
 import { TimelineConfig, TimelineCamera } from '@bespunky/angular-cdk/timeline/abstraction';
@@ -11,7 +10,6 @@ import { TimelineLocationService        } from '@bespunky/angular-cdk/timeline/s
 @Injectable()
 export class TimelineCameraService extends TimelineCamera
 {
-    public readonly viewBounds: Observable<ViewBounds>;
     public readonly dayWidth  : Observable<number>;
 
     constructor(
@@ -24,16 +22,7 @@ export class TimelineCameraService extends TimelineCamera
     {
         super(mouse, keyboard, element);
 
-        this.viewBounds = this.viewBoundsFeed();
         this.dayWidth   = this.dayWidthFeed();
-    }
-    
-    private viewBoundsFeed(): Observable<ViewBounds>
-    {
-        return combineLatest([this.viewPort, this.zoomLevel, this.position]).pipe(
-            map(([viewPort, zoomLevel, position]) => new ViewBounds(viewPort.width, viewPort.height, zoomLevel, position)),
-            shareReplay(1)
-        );
     }
     
     /**

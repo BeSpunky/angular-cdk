@@ -1,5 +1,5 @@
-import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
-import { map, startWith                         } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, fromEvent, Observable } from 'rxjs';
+import { map, shareReplay, startWith                         } from 'rxjs/operators';
 import { ElementRef, Injectable                 } from '@angular/core';
 import { Destroyable                            } from '@bespunky/angular-zen/core';
 
@@ -13,15 +13,15 @@ export abstract class Camera<TItem> extends Destroyable
     public readonly zoomLevel : BehaviorSubject<number> = new BehaviorSubject(0);
     public readonly position  : BehaviorSubject<number> = new BehaviorSubject(0);
     
-    public readonly viewPort: Observable<ViewPort>;
-    
-    public abstract readonly viewBounds: Observable<ViewBounds>;
+    public readonly viewPort  : Observable<ViewPort>;
+    public readonly viewBounds: Observable<ViewBounds>;
     
     constructor(protected element: ElementRef)
     {
         super();
         
-        this.viewPort = this.viewPortFeed();
+        this.viewPort   = this.viewPortFeed();
+        this.viewBounds = this.viewBoundsFeed();
     }
     
     protected viewPortFeed(): Observable<ViewPort>
@@ -33,7 +33,15 @@ export abstract class Camera<TItem> extends Destroyable
             map(() => ({ width: element.clientWidth, height: element.clientHeight })),
         );
     }
-
+    
+    protected viewBoundsFeed(): Observable<ViewBounds>
+    {
+        return combineLatest([this.viewPort, this.zoomLevel, this.position]).pipe(
+            map(([viewPort, zoomLevel, position]) => new ViewBounds(viewPort.width, viewPort.height, zoomLevel, position)),
+            shareReplay(1)
+        );
+    }
+    
     protected abstract moveToItem(item: TItem): void;
     protected abstract zoomOnItem(item: TItem, amount: number): void;
     
