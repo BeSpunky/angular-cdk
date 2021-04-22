@@ -54,7 +54,7 @@ export class TimelineDirective extends Timeline implements AfterViewInit
     {
         super();
 
-        this.currentDate = combineLatest([this.camera.dayWidth, this.camera.position]).pipe(
+        this.currentDate = combineLatest([this.camera.dayWidth, this.camera.viewCenterX]).pipe(
             map(([dayWidth, position]) => this.location.positionToDate(dayWidth, position))
         );
     }

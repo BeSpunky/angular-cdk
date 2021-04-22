@@ -1,6 +1,3 @@
-export type EventWithModifiers = {
-    ctrlKey        : boolean;
-    altKey         : boolean;
-    shiftKey       : boolean;
-    [value: string]: any;
-};
+import { KeyboardModifiers } from './keyboard-modifiers';
+
+export type EventWithModifiers = KeyboardModifiers & { [value: string]: any };

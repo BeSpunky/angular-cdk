@@ -6,4 +6,4 @@ import { TimelineTickDirective } from './directives/timeline-tick.directive';
     declarations: [TimelineTickDirective],
     exports     : [TimelineTickDirective]
 })
-export class TimelineTicksModule { }
+export class TimelineCdkTicksModule { }

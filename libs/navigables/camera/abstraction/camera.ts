@@ -1,7 +1,7 @@
 import { BehaviorSubject, combineLatest, fromEvent, Observable } from 'rxjs';
-import { map, shareReplay, startWith                         } from 'rxjs/operators';
-import { ElementRef, Injectable                 } from '@angular/core';
-import { Destroyable                            } from '@bespunky/angular-zen/core';
+import { map, shareReplay, startWith                           } from 'rxjs/operators';
+import { ElementRef, Injectable                                } from '@angular/core';
+import { Destroyable                                           } from '@bespunky/angular-zen/core';
 
 import { ViewPort   } from '../shared/view-port';
 import { ViewBounds } from '../shared/view-bounds';
@@ -9,9 +9,10 @@ import { ViewBounds } from '../shared/view-bounds';
 @Injectable()
 export abstract class Camera<TItem> extends Destroyable
 {
-    public readonly zoomFactor: BehaviorSubject<number> = new BehaviorSubject(1.06);
-    public readonly zoomLevel : BehaviorSubject<number> = new BehaviorSubject(0);
-    public readonly position  : BehaviorSubject<number> = new BehaviorSubject(0);
+    public readonly zoomFactor : BehaviorSubject<number> = new BehaviorSubject(1.06);
+    public readonly zoomLevel  : BehaviorSubject<number> = new BehaviorSubject(0);
+    public readonly viewCenterX: BehaviorSubject<number> = new BehaviorSubject(0);
+    public readonly viewCenterY: BehaviorSubject<number> = new BehaviorSubject(0);
     
     public readonly viewPort  : Observable<ViewPort>;
     public readonly viewBounds: Observable<ViewBounds>;
@@ -36,8 +37,8 @@ export abstract class Camera<TItem> extends Destroyable
     
     protected viewBoundsFeed(): Observable<ViewBounds>
     {
-        return combineLatest([this.viewPort, this.zoomLevel, this.position]).pipe(
-            map(([viewPort, zoomLevel, position]) => new ViewBounds(viewPort.width, viewPort.height, zoomLevel, position)),
+        return combineLatest([this.viewPort, this.viewCenterX, this.viewCenterY, this.zoomLevel]).pipe(
+            map(([viewPort, viewCenterX, viewCenterY, zoomLevel]) => new ViewBounds(viewPort, viewCenterX, viewCenterY, zoomLevel)),
             shareReplay(1)
         );
     }
@@ -45,30 +46,45 @@ export abstract class Camera<TItem> extends Destroyable
     protected abstract moveToItem(item: TItem): void;
     protected abstract zoomOnItem(item: TItem, amount: number): void;
     
-    public moveTo(item: TItem)                   : void;
-    public moveTo(position: number)              : void;
-    public moveTo(positionOrItem: number | TItem): void;
-    public moveTo(positionOrItem: number | TItem): void
+    public moveTo(item: TItem)                         : void;
+    public moveTo(positionX: number, positionY: number): void;
+    public moveTo(arg1: number | TItem, arg2?: number) : void;
+    public moveTo(arg1: number | TItem, arg2?: number) : void
     {
-        typeof positionOrItem === 'number' ? this.moveToPosition(positionOrItem) : this.moveToItem(positionOrItem);
+        if (typeof arg1 === 'number')
+        {
+            if (typeof arg2 !== 'number') throw new Error(`Expected numeric y view position (got ${typeof arg2}). Provide a numeric y value or use another overload.`);
+            
+            this.moveToPosition(arg1, arg2)
+        }
+        else this.moveToItem(arg1);
     }
     
-    public zoomOn(item: TItem, amount: number)                   : void;
-    public zoomOn(position: number, amount: number)              : void;
-    public zoomOn(positionOrItem: number | TItem, amount: number): void;
-    public zoomOn(positionOrItem: number | TItem, amount: number): void
+    public zoomOn(item: TItem, amount: number)                         : void;
+    public zoomOn(positionX: number, positionY: number, amount: number): void;
+    public zoomOn(arg1: number | TItem, arg2: number, arg3?: number)   : void;
+    public zoomOn(arg1: number | TItem, arg2: number, arg3?: number)   : void
     {
-        typeof positionOrItem === 'number' ? this.zoomOnPosition(positionOrItem, amount) : this.zoomOnItem(positionOrItem, amount);
+        if (typeof arg1 === 'number')
+        {
+            if (typeof arg2 !== 'number') throw new Error(`Expected numeric y view position (got ${typeof arg2}). Provide a numeric y value or use another overload.`);
+            if (typeof arg3 !== 'number') throw new Error(`Expected numeric zoom amount (got ${typeof arg3}).`);
+
+            this.zoomOnPosition(arg1, arg2, arg3);
+        }
+        else this.zoomOnItem(arg1, arg2);   
     }
 
-    public move(amount: number): void
+    public move(amountX: number, amountY: number): void
     {
-        this.addAmount(this.position, amount);
+        this.addAmount(this.viewCenterX, amountX);
+        this.addAmount(this.viewCenterY, amountY);
     }
     
-    protected moveToPosition(position: number): void
+    protected moveToPosition(positionX: number, positionY: number): void
     {
-        this.position.next(position);
+        this.viewCenterX.next(positionX);
+        this.viewCenterY.next(positionY);
     }
 
     public zoom(amount: number): void
@@ -81,14 +97,15 @@ export abstract class Camera<TItem> extends Destroyable
         this.zoomLevel.next(zoomLevel);
     }
 
-    protected zoomOnPosition(position: number, amount: number): void
+    protected zoomOnPosition(positionX: number, positionY: number, amount: number): void
     {
         this.zoom(amount);
 
-        const zoomedBy         = this.calculateZoomChangeInPixels(amount);
-        const zoomedViewCenter = this.calculateViewCenterZoomedToPosition(position, zoomedBy);
+        const zoomedBy          = this.calculateZoomChangeInPixels(amount);
+        const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.viewCenterX.value, positionX, zoomedBy);
+        const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.viewCenterY.value, positionY, zoomedBy);
 
-        this.moveToPosition(zoomedViewCenter);
+        this.moveToPosition(zoomedViewCenterX, zoomedViewCenterY);
     }
 
     protected addAmount(subject: BehaviorSubject<number>, amount: number): void
@@ -96,7 +113,7 @@ export abstract class Camera<TItem> extends Destroyable
         subject.next(subject.value + amount);
     }
     
-    protected calculateZoomChangeInPixels(amount: number): number
+    private calculateZoomChangeInPixels(amount: number): number
     {
         const zoomingOut = Math.sign(amount) < 0;
         let   zoomFactor = this.zoomFactor.value;
@@ -108,7 +125,16 @@ export abstract class Camera<TItem> extends Destroyable
         return zoomFactor * Math.abs(amount);
     }
 
-    protected calculateViewCenterZoomedToPosition(position: number, zoomedBy: number): number
+    /**
+     *
+     *
+     * @private
+     * @param {number} currentViewCenter The current center position of the viewbox relative to the complete drawing.
+     * @param {number} position
+     * @param {number} zoomedBy
+     * @returns {number}
+     */
+    private calculateViewCenterZoomedToPosition(currentViewCenter: number, position: number, zoomedBy: number): number
     {
         /** The idea is to:
          * 1. Calculate the current distance between the position and the viewCenter, so the same distance could be applied later-on.
@@ -118,14 +144,11 @@ export abstract class Camera<TItem> extends Destroyable
          * 3. Subtract the current distance from the new position to receive the new viewCenter.
          */
 
-        /** The current center position of the viewbox relative to the complete drawing. */
-        const viewCenter = this.position.value;
-
         /** The distance between the position and the center before zooming. This should be kept after zoom. */
-        const dxPositionToCenter = position - viewCenter;
+        const deltaPositionToCenter = position - currentViewCenter;
         /** The new position of the pixel under the specified point AFTER zooming. */
-        const newPosition        = position * zoomedBy;
+        const newPosition           = position * zoomedBy;
         // The new center be relative to the new position after zooming
-        return newPosition - dxPositionToCenter;
+        return newPosition - deltaPositionToCenter;
     }
 }

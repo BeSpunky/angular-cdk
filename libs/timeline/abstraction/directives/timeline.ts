@@ -1,8 +1,8 @@
 import { Observable  } from 'rxjs';
 import { Destroyable } from '@bespunky/angular-zen/core';
 
-import { TimelineConfig } from '../config/timeline-config';
-import { TimelineCamera } from '../camera/timeline-camera';
+import { TimelineConfig } from '../services/timeline-config';
+import { TimelineCamera } from '../services/timeline-camera';
 
 export abstract class Timeline extends Destroyable
 {

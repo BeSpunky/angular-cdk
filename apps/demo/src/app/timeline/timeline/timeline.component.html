@@ -15,44 +15,44 @@
      [zoomOnWheel]="zoomOnWheel"
      (mousemove)="ddd($event)"
 >
-    <g *bsTimelineTick="'year'; minZoom: -100; maxZoom: 160; label: label.years; dayFactor: dayFactors.daysInYear; datesBetween: datesBetween.years; let screenPosition = screenPosition; let label = label">
-        <line [attr.x1]="screenPosition | async" y1="0"
-              [attr.x2]="screenPosition | async" y2="800"
+    <g *bsTimelineTick="'year'; minZoom: -100; maxZoom: 160; label: label.years; dayFactor: dayFactors.daysInYear; datesBetween: datesBetween.years; let screenPositionX = screenPositionX; let label = label">
+        <line [attr.x1]="screenPositionX | async" y1="0"
+              [attr.x2]="screenPositionX | async" y2="800"
               stroke-width="5" stroke="black"></line>
 
-        <text [attr.x]="screenPosition | async" y="400" dx="20" font-size="20">{{label | async}}</text>
+        <text [attr.x]="screenPositionX | async" y="400" dx="20" font-size="20">{{label | async}}</text>
     </g>
 
-    <g *bsTimelineTick="'month'; minZoom: -20; maxZoom: 100; label: label.months; dayFactor: dayFactors.daysInMonth; datesBetween: datesBetween.months; let screenPosition = screenPosition; let label = label">
-        <line [attr.x1]="screenPosition | async" y1="50"
-              [attr.x2]="screenPosition | async" y2="750"
+    <g *bsTimelineTick="'month'; minZoom: -20; maxZoom: 100; label: label.months; dayFactor: dayFactors.daysInMonth; datesBetween: datesBetween.months; let screenPositionX = screenPositionX; let label = label">
+        <line [attr.x1]="screenPositionX | async" y1="50"
+              [attr.x2]="screenPositionX | async" y2="750"
               stroke-width="4" stroke="green"></line>
 
-        <text [attr.x]="screenPosition | async" y="300" dx="5" font-size="20">{{label | async}}</text>
+        <text [attr.x]="screenPositionX | async" y="300" dx="5" font-size="20">{{label | async}}</text>
     </g>
 
-    <g *bsTimelineTick="'day'; minZoom: 45; maxZoom: 150; label: label.days; dayFactor: 1; datesBetween: datesBetween.days; let screenPosition = screenPosition; let label = label">
-        <line [attr.x1]="screenPosition | async" y1="100"
-              [attr.x2]="screenPosition | async" y2="700"
+    <g *bsTimelineTick="'day'; minZoom: 45; maxZoom: 150; label: label.days; dayFactor: 1; datesBetween: datesBetween.days; let screenPositionX = screenPositionX; let label = label">
+        <line [attr.x1]="screenPositionX | async" y1="100"
+              [attr.x2]="screenPositionX | async" y2="700"
               stroke-width="3" stroke="blue"></line>
 
-        <text [attr.x]="screenPosition | async" y="280" dx="5" font-size="20">{{label | async}}</text>
+        <text [attr.x]="screenPositionX | async" y="280" dx="5" font-size="20">{{label | async}}</text>
     </g>
 
-    <g *bsTimelineTick="'hour'; minZoom: 100; maxZoom: 800; label: label.hours; dayFactor: dayFactors.hoursInDay; datesBetween: datesBetween.hours; let screenPosition = screenPosition; let label = label">
-        <line [attr.x1]="screenPosition | async" y1="130"
-              [attr.x2]="screenPosition | async" y2="700"
+    <g *bsTimelineTick="'hour'; minZoom: 100; maxZoom: 800; label: label.hours; dayFactor: dayFactors.hoursInDay; datesBetween: datesBetween.hours; let screenPositionX = screenPositionX; let label = label">
+        <line [attr.x1]="screenPositionX | async" y1="130"
+              [attr.x2]="screenPositionX | async" y2="700"
               stroke-width="3" stroke="red"></line>
 
-        <text [attr.x]="screenPosition | async" y="250" dx="5" font-size="20">{{label | async}}</text>
+        <text [attr.x]="screenPositionX | async" y="250" dx="5" font-size="20">{{label | async}}</text>
     </g>
 
-    <g *bsTimelineTick="'minute'; minZoom: 145; maxZoom: 800; label: label.minutes; dayFactor: dayFactors.minutesInDay; datesBetween: datesBetween.minutes; let screenPosition = screenPosition; let label = label">
-        <line [attr.x1]="screenPosition | async" y1="160"
-              [attr.x2]="screenPosition | async" y2="700"
+    <g *bsTimelineTick="'minute'; minZoom: 145; maxZoom: 800; label: label.minutes; dayFactor: dayFactors.minutesInDay; datesBetween: datesBetween.minutes; let screenPositionX = screenPositionX; let label = label">
+        <line [attr.x1]="screenPositionX | async" y1="160"
+              [attr.x2]="screenPositionX | async" y2="700"
               stroke-width="3" stroke="yellow"></line>
 
-        <text [attr.x]="screenPosition | async" y="220" dx="5" font-size="20">{{label | async}}</text>
+        <text [attr.x]="screenPositionX | async" y="220" dx="5" font-size="20">{{label | async}}</text>
     </g>
 
     <g>
@@ -66,6 +66,7 @@
 
 <div style="text-align: center;">
     Zoom      : {{ timeline.camera.zoomLevel.value }}<br/>
-    ViewCenter: {{ timeline.camera.position.value }}<br/>
+    ViewCenterX: {{ timeline.camera.viewCenterX.value }}<br/>
+    ViewCenterY: {{ timeline.camera.viewCenterY.value }}<br/>
     Mouse     : {{x}}, {{y}}
 </div>

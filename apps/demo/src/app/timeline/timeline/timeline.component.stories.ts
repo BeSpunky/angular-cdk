@@ -1,14 +1,15 @@
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 
-import { TimelineModule    } from '@bespunky/angular-cdk/timeline/core';
+import { TimelineCdkModule } from '@bespunky/angular-cdk/timeline/core';
 import { TimelineComponent } from './timeline.component';
+import { CommonModule } from '@angular/common';
 
 export default {
     title     : 'TimelineComponent',
     decorators: [
         moduleMetadata({
-            declarations: [TimelineComponent],
-            imports     : [TimelineModule]
+            imports     : [TimelineCdkModule, CommonModule],
+            declarations: [TimelineComponent]
         })
     ],
     component: TimelineComponent,
@@ -16,7 +17,6 @@ export default {
         date                : { name: 'Date'                   , defaultValue: new Date(), control: { type: 'date'   } },
         zoom                : { name: 'Zoom Level'             , defaultValue: 0         , control: { type: 'range', min: -250, max: 250 } },
         baseTickSize        : { name: 'Base Tick Size'         , defaultValue: 1         , control: { type: 'range', min: 0.01 } },
-        moveAmount          : { name: 'Move Amount'            , defaultValue: 1         , control: { type: 'range', min: 1, max: 10, step: 0.5 }},
         moveOnKeyboard      : { name: 'Move On Keyboard'       , defaultValue: true      , control: { type: 'boolean' }},
         moveOnWheel         : { name: 'Move On Wheel'          , defaultValue: true      , control: { type: 'boolean' }},
         virtualizationBuffer: { name: 'Virtualization Buffer'  , defaultValue: 0.5       , control: { type: 'range', min: 0.1, max: 3, step: 0.1 }},

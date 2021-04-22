@@ -1,4 +1,4 @@
-export * from './timeline.module';
+export * from './timeline-cdk.module';
 
 export * from './directives/timeline.directive';
 
@@ -10,7 +10,7 @@ export * from './services/camera/timeline-camera.provider';
 export * from './services/camera/timeline-camera.service';
 
 // Ticks
-export * from './modules/ticks/timeline-ticks.module';
+export * from './modules/ticks/timeline-cdk-ticks.module';
 
 export * from './modules/ticks/directives/timeline-tick.directive';
 

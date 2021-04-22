@@ -18,7 +18,6 @@ export class TimelineComponent
     @Input() public date                : Date = new Date();
     @Input() public zoom                       = 0;
     @Input() public baseTickSize               = 1;
-    @Input() public moveAmount                 = 1;
     @Input() public moveOnKeyboard             = true;
     @Input() public moveOnWheel                = true;
     @Input() public virtualizationBuffer       = 0.5;

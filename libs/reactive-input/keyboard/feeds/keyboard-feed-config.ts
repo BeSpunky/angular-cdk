@@ -1,8 +1,8 @@
 import { Key } from 'ts-key-enum';
 
-import { FeedConfig } from '@bespunky/angular-cdk/reactive-input/shared';
+import { FeedWithModifiersConfig } from '@bespunky/angular-cdk/reactive-input/shared';
 
-export interface KeyboardFeedConfig extends FeedConfig
+export interface KeyboardFeedConfig extends FeedWithModifiersConfig
 {
     key: Key;
 }

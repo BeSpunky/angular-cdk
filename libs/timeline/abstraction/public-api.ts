@@ -1,7 +1,4 @@
-export * from './config/timeline-config';
+export * from './services/timeline-config';
+export * from './services/timeline-camera';
 
-export * from './camera/timeline-camera';
-
-export * from './core/timeline';
-
-export * from './render/timeline-renderer';
+export * from './directives/timeline';

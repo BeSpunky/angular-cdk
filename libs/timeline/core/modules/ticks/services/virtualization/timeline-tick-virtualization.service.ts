@@ -102,7 +102,7 @@ export class TimelineTickVirtualizationService
             const position       = this.location.dateToPosition(dayWidth, date);
             const screenPosition = this.location.toScreenPosition(position, viewBounds);
 
-            return new TickItem(position, screenPosition, date, width(date), label(date));
+            return new TickItem(position, 0, screenPosition, 0, date, width(date), label(date));
         });
     };
 }

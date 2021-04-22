@@ -48,12 +48,12 @@ export class TimelineCameraService extends TimelineCamera
     
     protected moveToItem(date: Date): void
     {
-        this.dateToPosition(date).subscribe(position => this.moveToPosition(position));
+        this.dateToPosition(date).subscribe(position => this.moveToPosition(position, 0));
     }
 
     protected zoomOnItem(date: Date, amount: number): void
     {
-        this.dateToPosition(date).subscribe(position => this.zoomOnPosition(position, amount));
+        this.dateToPosition(date).subscribe(position => this.zoomOnPosition(position, 0, amount));
     }
 
     private dateToPosition(date: Date): Observable<number>
