@@ -77,8 +77,8 @@ export class TimelineLocationService
         return daysSinceYearZero(yOrDate, m, d, h, mm, s, ms) * dayWidth;
     }
 
-    public toScreenPosition(position: number, { left: viewLeft }: ViewBounds): number
+    public toScreenPosition(position: number, viewStart: number): number
     {
-        return position - viewLeft;
+        return position - viewStart;
     }
 }

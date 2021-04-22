@@ -99,10 +99,11 @@ export class TimelineTickVirtualizationService
         // Generate all scale-level dates inside the screen bounds and create a tick item for each
         return datesBetween(start, end).map(date =>
         {
-            const position       = this.location.dateToPosition(dayWidth, date);
-            const screenPosition = this.location.toScreenPosition(position, viewBounds);
+            const position        = this.location.dateToPosition(dayWidth, date);
+            const screenPositionX = this.location.toScreenPosition(position, viewBounds.left);
+            const screenPositionY = this.location.toScreenPosition(0       , viewBounds.top);
 
-            return new TickItem(position, 0, screenPosition, 0, date, width(date), label(date));
+            return new TickItem(position, 0, screenPositionX, screenPositionY, date, width(date), label(date));
         });
     };
 }

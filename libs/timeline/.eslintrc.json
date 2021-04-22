@@ -10,8 +10,7 @@
       ],
       "parserOptions": {
         "project": [
-          "libs/timeline/tsconfig.*?.json",
-          "libs\\timeline\\.storybook\\tsconfig.json"
+          "libs/timeline/tsconfig.*?.json"
         ]
       },
       "rules": {

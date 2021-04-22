@@ -4,13 +4,13 @@ import { TickItem } from './tick-item';
 
 export class TickContext
 {
-    public readonly width          : BehaviorSubject<number>;
-    public readonly positionX      : BehaviorSubject<number>;
-    public readonly positionY      : BehaviorSubject<number>;
-    public readonly screenPositionX: BehaviorSubject<number>;
-    public readonly screenPositionY: BehaviorSubject<number>;
-    public readonly label          : BehaviorSubject<string | number>;
-    public readonly value          : BehaviorSubject<Date>;
+    public readonly width!          : BehaviorSubject<number>;
+    public readonly positionX!      : BehaviorSubject<number>;
+    public readonly positionY!      : BehaviorSubject<number>;
+    public readonly screenPositionX!: BehaviorSubject<number>;
+    public readonly screenPositionY!: BehaviorSubject<number>;
+    public readonly label!          : BehaviorSubject<string | number>;
+    public readonly value!          : BehaviorSubject<Date>;
     
     constructor(item: TickItem)
     {
