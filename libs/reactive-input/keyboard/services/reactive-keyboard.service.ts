@@ -1,6 +1,7 @@
 import { Observable             } from 'rxjs';
 import { filter                 } from 'rxjs/operators';
 import { ElementRef, Injectable } from '@angular/core';
+import { DocumentRef            } from '@bespunky/angular-zen';
 
 import { createReactiveInputObservable } from '@bespunky/angular-cdk/reactive-input/shared';
 import { KeyboardFeedConfig            } from '../feeds/keyboard-feed-config';
@@ -8,7 +9,7 @@ import { KeyboardFeedConfig            } from '../feeds/keyboard-feed-config';
 @Injectable({ providedIn: 'root' })
 export class ReactiveKeyboardService
 {
-    public keydown(element: ElementRef, config?: KeyboardFeedConfig): Observable<KeyboardEvent>
+    public keydown(element: ElementRef | DocumentRef, config?: KeyboardFeedConfig): Observable<KeyboardEvent>
     {
         const { key } = config || {};
         

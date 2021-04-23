@@ -1,6 +1,7 @@
 import { Observable             } from 'rxjs';
 import { filter                 } from 'rxjs/operators';
 import { ElementRef, Injectable } from '@angular/core';
+import { DocumentRef            } from '@bespunky/angular-zen';
 
 import { createReactiveInputObservable } from '@bespunky/angular-cdk/reactive-input/shared';
 import { MouseWheelFeedConfig          } from '../feeds/mouse-wheel-feed-config';
@@ -11,7 +12,7 @@ import { MouseButtonNumbers            } from '../types/mouse-buttons';
 @Injectable({ providedIn: 'root' })
 export class ReactiveMouseService
 {
-    public wheel(element: ElementRef, config?: MouseWheelFeedConfig): Observable<WheelEvent>
+    public wheel(element: ElementRef | DocumentRef, config?: MouseWheelFeedConfig): Observable<WheelEvent>
     {
         const { direction } = config || {};
 
@@ -23,7 +24,7 @@ export class ReactiveMouseService
         return wheel;
     }
 
-    public mouseButton(element: ElementRef, eventName: MouseEventName, config?: MouseDownFeedConfig): Observable<MouseEvent>
+    public mouseButton(element: ElementRef | DocumentRef, eventName: MouseEventName, config?: MouseDownFeedConfig): Observable<MouseEvent>
     {
         const { button } = config || {};
 
