@@ -2,6 +2,7 @@ import { Key                                        } from 'ts-key-enum';
 import { BehaviorSubject, Observable                } from 'rxjs';
 import { exhaustMap, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                     } from '@angular/core';
+import { DocumentRef                                } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService    } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -32,7 +33,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly moveFactor             : BehaviorSubject<number>                  = new BehaviorSubject(3);
     public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
         
-    constructor(private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, element: ElementRef)
+    constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, element: ElementRef)
     {
         super(element);
         
@@ -89,10 +90,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     
     private hookMoveOnDrag(): void
     {
-        const dragStart = this.mouse.mouseButton(this.element, 'mousedown', { activationSwitch: this.moveOnDrag, button: 'main' });
-        const dragging  = this.mouse.mouseButton(this.element, 'mousemove', { activationSwitch: this.moveOnDrag, button: 'main' });
-        const dragEnd   = this.mouse.mouseButton(this.element, 'mouseup'  , { activationSwitch: this.moveOnDrag, button: 'main' });
+        // Mouse move and up are registered with the document to allow detection when the mouse leaves the element and goes into another
+        const dragStart = this.mouse.mouseButton(this.element , 'mousedown', { activationSwitch: this.moveOnDrag, button: 'main' });
+        const dragging  = this.mouse.mouseButton(this.document, 'mousemove', { activationSwitch: this.moveOnDrag, button: 'main' });
+        const dragEnd   = this.mouse.mouseButton(this.document, 'mouseup'  , { activationSwitch: this.moveOnDrag, button: 'main' });
         
+        // Listen for drag start, then switch it dragging until dragging ends
         const move = dragStart.pipe(
             exhaustMap(() => dragging.pipe(takeUntil(dragEnd)))
         );
