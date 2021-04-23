@@ -1,2 +1,3 @@
 export * from './services/reactive-mouse.service';
-export * from './feeds/wheel-feed-config';
+
+export * from './feeds/mouse-wheel-feed-config';

@@ -2,20 +2,20 @@ import { Observable, fromEvent  } from 'rxjs';
 import { filter                 } from 'rxjs/operators';
 import { ElementRef, Injectable } from '@angular/core';
 
-import { useActivationSwitch  } from '@bespunky/angular-cdk/shared';
-import { MouseWheelFeedConfig } from '../feeds/wheel-feed-config';
+import { createReactiveInputObservable } from '@bespunky/angular-cdk/reactive-input/shared';
+import { MouseWheelFeedConfig          } from '../feeds/mouse-wheel-feed-config';
 
 @Injectable({ providedIn: 'root' })
 export class ReactiveMouseService
 {
-    public wheel({ nativeElement }: ElementRef, config?: MouseWheelFeedConfig): Observable<WheelEvent>
+    public wheel(element: ElementRef, config?: MouseWheelFeedConfig): Observable<WheelEvent>
     {
-        const { activationSwitch, direction } = config || {};
+        const { direction } = config || {};
 
-        let wheel = fromEvent<WheelEvent>(nativeElement, 'wheel');
+        let wheel = createReactiveInputObservable<WheelEvent>(element, 'wheel', config);
 
-        if (activationSwitch) wheel = wheel.pipe(useActivationSwitch(activationSwitch));
-        if (direction       ) wheel = wheel.pipe(filter(e => e[direction] !== 0));
+        // A direction (i.e. deltaX, deltaY) different to zero means movement in that direction
+        if (direction) wheel = wheel.pipe(filter(e => e[direction] !== 0));
         
         return wheel;
     }
