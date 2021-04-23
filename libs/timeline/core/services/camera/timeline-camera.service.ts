@@ -1,6 +1,8 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map, shareReplay, take    } from 'rxjs/operators';
 import { ElementRef, Injectable    } from '@angular/core';
+import { DocumentRef               } from '@bespunky/angular-zen';
+
 
 import { ReactiveMouseService           } from '@bespunky/angular-cdk/reactive-input/mouse';
 import { ReactiveKeyboardService        } from '@bespunky/angular-cdk/reactive-input/keyboard';
@@ -15,12 +17,13 @@ export class TimelineCameraService extends TimelineCamera
     constructor(
         private config  : TimelineConfig,
         private location: TimelineLocationService,
+                document: DocumentRef,
                 mouse   : ReactiveMouseService,
                 keyboard: ReactiveKeyboardService,
                 element : ElementRef
     )
     {
-        super(mouse, keyboard, element);
+        super(document, mouse, keyboard, element);
 
         this.dayWidth   = this.dayWidthFeed();
     }
