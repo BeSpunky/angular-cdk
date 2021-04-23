@@ -97,8 +97,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             exhaustMap(() => dragging.pipe(takeUntil(dragEnd)))
         );
 
-        this.hookPosition(move, e => e.movementX, 'horizontal');
-        this.hookPosition(move, e => e.movementY, 'vertical');
+        // Reverse movement to match mouse move and hook
+        this.hookPosition(move, e => -e.movementX, 'horizontal');
+        this.hookPosition(move, e => -e.movementY, 'vertical');
     }
 
     private hookPosition<T extends EventWithModifiers>(eventFeed: Observable<T>, getAmount: (event: T) => number, direction: 'horizontal' | 'vertical'): void
