@@ -1,4 +1,5 @@
 import { CommonModule                                    } from '@angular/common';
+import { CoreModule                                      } from '@bespunky/angular-zen/core';
 import { componentWrapperDecorator, Meta, moduleMetadata } from '@storybook/angular';
 
 import { TimelineCdkModule, TimelineConfigProvider, TimelineCameraProvider, TimelineTickDirective } from '@bespunky/angular-cdk/timeline';
@@ -10,7 +11,7 @@ export default {
     component : TimelineTickDirective,
     decorators: [
         moduleMetadata({
-            imports  : [CommonModule, TimelineCdkModule],
+            imports  : [CommonModule, CoreModule, TimelineCdkModule],
             providers: [TimelineCameraProvider, TimelineConfigProvider]
         }),
         componentWrapperDecorator(story => `<svg bsTimeline [zoom]="100" height="100vh" width="100vw">${story}</svg>`)
