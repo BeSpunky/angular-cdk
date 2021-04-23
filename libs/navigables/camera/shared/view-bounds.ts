@@ -20,8 +20,8 @@ export class ViewBounds
         public readonly zoom       : number
     )
     {
-        this.top    = viewCenterY - viewPort.height / 2;
         this.left   = viewCenterX - viewPort.width  / 2;
+        this.top    = viewCenterY - viewPort.height / 2;
         this.width  = viewPort.width;
         this.height = viewPort.height;
         this.right  = this.left + this.width;
