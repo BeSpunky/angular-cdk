@@ -48,7 +48,6 @@ export abstract class Camera<TItem> extends Destroyable
     
     public moveTo(item: TItem)                         : void;
     public moveTo(positionX: number, positionY: number): void;
-    public moveTo(arg1: number | TItem, arg2?: number) : void;
     public moveTo(arg1: number | TItem, arg2?: number) : void
     {
         if (typeof arg1 === 'number')
@@ -62,7 +61,6 @@ export abstract class Camera<TItem> extends Destroyable
     
     public zoomOn(item: TItem, amount: number)                         : void;
     public zoomOn(positionX: number, positionY: number, amount: number): void;
-    public zoomOn(arg1: number | TItem, arg2: number, arg3?: number)   : void;
     public zoomOn(arg1: number | TItem, arg2: number, arg3?: number)   : void
     {
         if (typeof arg1 === 'number')

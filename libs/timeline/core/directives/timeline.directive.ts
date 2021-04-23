@@ -101,9 +101,14 @@ export class TimelineDirective extends Timeline implements AfterViewInit
         this.camera.setZoom(value);
     }
 
-    @Input() public set position(dateOrPosition: number | Date)
+    @Input() public set position(value: number)
     {
-        this.camera.moveTo(dateOrPosition);
+        this.camera.moveTo(value, 0);
+    }
+
+    @Input() public set date(value: Date)
+    {
+        this.camera.moveTo(value);
     }
 
     @Input() public set baseTickSize(value: number)
