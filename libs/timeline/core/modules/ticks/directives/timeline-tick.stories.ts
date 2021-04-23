@@ -3,7 +3,7 @@ import { componentWrapperDecorator, Meta, moduleMetadata } from '@storybook/angu
 
 import { TimelineCdkModule, TimelineConfigProvider, TimelineCameraProvider, TimelineTickDirective } from '@bespunky/angular-cdk/timeline';
 import { createTickStory                                                                          } from './storybook/tick-helpers.stories';
-import { yearsTick, monthsTick, daysTick                                                          } from './storybook/tick-definitions.stories';
+import { yearsTick, monthsTick, daysTick, dayPartsTick                                            } from './storybook/tick-definitions.stories';
 
 export default {
     title     : 'Timeline Tick',
@@ -13,7 +13,7 @@ export default {
             imports  : [CommonModule, TimelineCdkModule],
             providers: [TimelineCameraProvider, TimelineConfigProvider]
         }),
-        componentWrapperDecorator(story => `<svg bsTimeline height="100vh" width="100vw">${story}</svg>`)
+        componentWrapperDecorator(story => `<svg bsTimeline [zoom]="100" height="100vh" width="100vw">${story}</svg>`)
     ]
 } as Meta;
 
@@ -21,3 +21,6 @@ export const Years    = createTickStory(yearsTick);
 export const Months   = createTickStory(monthsTick);
 export const Days     = createTickStory(daysTick);
 export const Multiple = createTickStory(yearsTick, monthsTick, daysTick);
+
+const zoomedDaysTick = { ...daysTick, minZoom: 30, maxZoom: 120 };
+export const DayParts = createTickStory(zoomedDaysTick, dayPartsTick);
