@@ -27,7 +27,6 @@
     "shared": { "tags": [] },
     "reactive-input": { "tags": [] },
     "demo": { "tags": [] },
-    "demo-e2e": { "tags": [], "implicitDependencies": ["demo"] },
-    "timeline-e2e": { "tags": [], "implicitDependencies": ["timeline"] }
+    "demo-e2e": { "tags": [], "implicitDependencies": ["demo"] }
   }
 }
