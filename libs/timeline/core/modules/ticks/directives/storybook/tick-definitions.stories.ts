@@ -20,3 +20,8 @@ export class TickStoryDefinition
 export const yearsTick  = new TickStoryDefinition('years', 'years', 'daysInYear', 'years');
 export const monthsTick = new TickStoryDefinition('months', 'months', 'daysInMonth', 'months');
 export const daysTick   = new TickStoryDefinition('days', 'days', 1, 'days');
+
+export const dayPartsTick = new TickStoryDefinition('dayParts', 'dayParts', 'dayParts', 'dayParts');
+
+dayPartsTick.minZoom = 80;
+dayPartsTick.maxZoom = 150;
