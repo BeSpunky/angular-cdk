@@ -74,7 +74,7 @@ const yearsTick  = new TickStoryDefinition('years', 'years', 'daysInYear', 'year
 const monthsTick = new TickStoryDefinition('months', 'months', 'daysInMonth', 'months');
 const daysTick   = new TickStoryDefinition('days', 'days', 1, 'days');
 
-export const Years  = createTickStory(yearsTick);
-export const Months = createTickStory(monthsTick);
-export const Days   = createTickStory(daysTick);
-export const Multiple  = createTickStory(yearsTick, monthsTick, daysTick);
+export const Years    = createTickStory(yearsTick);
+export const Months   = createTickStory(monthsTick);
+export const Days     = createTickStory(daysTick);
+export const Multiple = createTickStory(yearsTick, monthsTick, daysTick);
