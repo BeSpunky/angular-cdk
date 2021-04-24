@@ -1,2 +1,2 @@
 export * from '@bespunky/angular-cdk/navigables/camera';
-export * from '@bespunky/angular-cdk/navigables/automation';
+export * from '@bespunky/angular-cdk/navigables/camera/reactive';
