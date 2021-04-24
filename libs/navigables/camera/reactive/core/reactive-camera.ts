@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable                } from 'rxjs';
 import { exhaustMap, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                     } from '@angular/core';
 import { DocumentRef                                } from '@bespunky/angular-zen/core';
+import { Property                                   } from '@bespunky/typescript-utils';
 
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService    } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -16,6 +17,8 @@ export const DefaultKeyboardModifierFactors: KeyboardModifierFactors = {
     ctrl : 1.2,
     shift: 1.5
 };
+
+type ActivationSwitch<TItem> = Property<ReactiveCamera<TItem>, BehaviorSubject<boolean>>;
 
 @Injectable()
 export abstract class ReactiveCamera<TItem> extends Camera<TItem>
@@ -42,6 +45,21 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookMoveOnDrag();
         this.hookZoomOnKeyboard();
         this.hookMoveOnKeyboard();
+    }
+    
+    public switchOn(switchName: ActivationSwitch<TItem>): void
+    {
+        this[switchName].next(true);
+    }
+
+    public switchOff(switchName: ActivationSwitch<TItem>): void
+    {
+        this[switchName].next(false);
+    }
+
+    public toggleSwitch(switchName: ActivationSwitch<TItem>): void
+    {
+        this[switchName].next(!this[switchName].value);
     }
 
     private hookZoomOnWheel(): void
