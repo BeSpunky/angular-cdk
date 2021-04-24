@@ -13,7 +13,7 @@ export function createTickTemplate({tickId, minZoom, maxZoom, labelKey, dayFacto
               stroke-width="${width}" stroke="${color}"
         ></line>
 
-        <text [attr.x]="tick.screenPositionX | async" [attr.y]="tick.screenPositionY | async" dx="4" dy="${offset}" font-size="20">{{tick.label | async}}</text>
+        <text style="user-select: none" [attr.x]="tick.screenPositionX | async" [attr.y]="tick.screenPositionY | async" dx="4" dy="${offset}" font-size="20">{{tick.label | async}}</text>
     </g>
     `;
 }
