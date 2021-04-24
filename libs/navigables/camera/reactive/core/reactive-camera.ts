@@ -30,16 +30,16 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly zoomOnKeyboard: BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly moveOnKeyboard: BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly zoomOnPinch   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly moveOnFlick   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly moveOnTouch   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly moveOnDrag    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly flickX        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly flickY        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
 
     // Factors
-    public readonly moveFactor             : BehaviorSubject<number>                  = new BehaviorSubject(3);
+    public readonly keyboardMoveFactor     : BehaviorSubject<number>                  = new BehaviorSubject(3);
+    public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
-    public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
         
     constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, element: ElementRef)
     {
@@ -85,7 +85,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     {
         const hWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaX' });
         
-        this.hookPosition(hWheel, e => Math.sign(e.deltaX) * this.moveFactor.value, 'horizontal');
+        this.hookPosition(hWheel, e => Math.sign(e.deltaX) * this.keyboardMoveFactor.value, 'horizontal');
     }
 
     private hookZoomOnKeyboard(): void
@@ -105,10 +105,10 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const moveDown  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowDown  });
         const moveUp    = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp  });
 
-        this.hookPosition(moveRight, () =>  this.moveFactor.value, 'horizontal');
-        this.hookPosition(moveLeft , () => -this.moveFactor.value, 'horizontal');
-        this.hookPosition(moveDown , () =>  this.moveFactor.value, 'vertical'  );
-        this.hookPosition(moveUp   , () => -this.moveFactor.value, 'vertical'  );
+        this.hookPosition(moveRight, () =>  this.keyboardMoveFactor.value, 'horizontal');
+        this.hookPosition(moveLeft , () => -this.keyboardMoveFactor.value, 'horizontal');
+        this.hookPosition(moveDown , () =>  this.keyboardMoveFactor.value, 'vertical'  );
+        this.hookPosition(moveUp   , () => -this.keyboardMoveFactor.value, 'vertical'  );
     }
     
     private hookMoveOnDrag(): void
