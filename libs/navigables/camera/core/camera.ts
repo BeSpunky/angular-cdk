@@ -73,10 +73,20 @@ export abstract class Camera<TItem> extends Destroyable
         else this.zoomOnItem(arg1, arg2);   
     }
 
+    public moveX(amount: number): void
+    {
+        this.addAmount(this.viewCenterX, amount);
+    }
+
+    public moveY(amount: number): void
+    {
+        this.addAmount(this.viewCenterY, amount);
+    }
+
     public move(amountX: number, amountY: number): void
     {
-        this.addAmount(this.viewCenterX, amountX);
-        this.addAmount(this.viewCenterY, amountY);
+        this.moveX(amountX);
+        this.moveY(amountY);
     }
     
     protected moveToPosition(positionX: number, positionY: number): void

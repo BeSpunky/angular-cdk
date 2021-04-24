@@ -138,8 +138,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             map(([amount]) => amount)
         );
 
-        direction === 'horizontal' ? this.subscribe(movement, amount => this.move(amount, 0)) :
-                                     this.subscribe(movement, amount => this.move(0, amount));
+        this.subscribe(movement, amount => this.moveCamera(amount, direction));
+    }
+
+    private moveCamera(amount: number, direction: 'horizontal' | 'vertical'): void
+    {
+        direction === 'horizontal' ? this.moveX(amount) : this.moveY(amount);
     }
 
     private hookFlick(dragging: Observable<MouseEvent>, dragEnd: Observable<MouseEvent>, getAmount: (event: MouseEvent) => number, direction: 'horizontal' | 'vertical'): void
@@ -153,10 +157,10 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             map(([, lastDragEvent]) => lastDragEvent)
         );
 
-        const easeOut = this.easeOutMouseMovement(lastMovement, getAmount);
-
-        direction === 'horizontal' ? this.subscribe(easeOut, amount => this.move(amount, 0)) :
-                                     this.subscribe(easeOut, amount => this.move(0, amount));
+        this.subscribe(
+            this.easeOutMouseMovement(lastMovement, getAmount),
+            amount => this.moveCamera(amount, direction)
+        );
     }
 
     private easeOutMouseMovement<T extends MouseEvent>(eventFeed: Observable<T>, getMovement: (event: T) => number): Observable<number>
