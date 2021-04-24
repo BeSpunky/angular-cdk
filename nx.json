@@ -22,14 +22,10 @@
       "tags": [],
       "implicitDependencies": ["official-site"]
     },
-    "shared": { "tags": [] },
-    "reactive-input": { "tags": [], "implicitDependencies": ["shared"] },
-    "navigables": { "tags": [], "implicitDependencies": ["reactive-input"] },
-    "timeline": {
-      "tags": [],
-      "implicitDependencies": ["navigables", "reactive-input", "shared"]
-    },
-    "timeline-e2e": { "tags": [], "implicitDependencies": ["timeline"] },
-    "typscript-utils": { "tags": [] }
+    "shared"        : { "tags": [] },
+    "reactive-input": { "tags": [], "implicitDependencies": ["shared"]  },
+    "navigables"    : { "tags": [], "implicitDependencies": ["reactive-input"]  },
+    "timeline"      : { "tags": [], "implicitDependencies": ["navigables", "reactive-input", "shared"]  },
+    "timeline-e2e"  : { "tags": [], "implicitDependencies": ["timeline"] }
   }
 }
