@@ -15,15 +15,16 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bespunky/angular-cdk/shared": ["libs/shared"],
-      "@bespunky/angular-cdk/shared/*": ["libs/shared/*"],
-      "@bespunky/angular-cdk/reactive-input": ["libs/reactive-input"],
+      "@bespunky/angular-cdk/shared"          : ["libs/shared"],
+      "@bespunky/angular-cdk/shared/*"        : ["libs/shared/*"],
+      "@bespunky/angular-cdk/reactive-input"  : ["libs/reactive-input"],
       "@bespunky/angular-cdk/reactive-input/*": ["libs/reactive-input/*"],
-      "@bespunky/angular-cdk/navigables": ["libs/navigables"],
-      "@bespunky/angular-cdk/navigables/*": ["libs/navigables/*"],
-      "@bespunky/angular-cdk/timeline": ["libs/timeline"],
-      "@bespunky/angular-cdk/timeline/*": ["libs/timeline/*"],
-      "@bespunky/typescript-utils": ["libs/typscript-utils/src/index.ts"]
+      "@bespunky/angular-cdk/navigables"      : ["libs/navigables"],
+      "@bespunky/angular-cdk/navigables/*"    : ["libs/navigables/*"],
+      "@bespunky/angular-cdk/timeline"        : ["libs/timeline"],
+      "@bespunky/angular-cdk/timeline/*"      : ["libs/timeline/*"],
+      "@bespunky/typescript-utils"            : ["libs/typescript-utils", "libs/typescript-utils/src/index.ts"],
+      "@bespunky/typescript-utils/*"          : ["libs/typescript-utils/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
