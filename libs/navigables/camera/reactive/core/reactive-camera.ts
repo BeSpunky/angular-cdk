@@ -17,6 +17,11 @@ export const DefaultKeyboardModifierFactors: KeyboardModifierFactors = {
     shift: 1.5
 };
 
+// TODO: Move to a TypeScript utils library (this is the same util I created in angular-google-maps)
+type ActivationSwitch<T extends { [k: string]: any }> = {
+    [key in keyof T]: T[key] extends BehaviorSubject<boolean> ? key : never
+}[keyof T];
+
 @Injectable()
 export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 {
@@ -42,6 +47,21 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookMoveOnDrag();
         this.hookZoomOnKeyboard();
         this.hookMoveOnKeyboard();
+    }
+    
+    public switchOn(switchName: ActivationSwitch<ReactiveCamera<TItem>>): void
+    {
+        this[switchName].next(true);
+    }
+
+    public switchOff(switchName: ActivationSwitch<ReactiveCamera<TItem>>): void
+    {
+        this[switchName].next(false);
+    }
+
+    public toggleSwitch(switchName: ActivationSwitch<ReactiveCamera<TItem>>): void
+    {
+        this[switchName].next(!this[switchName].value);
     }
 
     private hookZoomOnWheel(): void
