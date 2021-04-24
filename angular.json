@@ -349,6 +349,19 @@
           }
         }
       }
+    },
+    "typscript-utils": {
+      "root": "libs/typscript-utils",
+      "sourceRoot": "libs/typscript-utils/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/typscript-utils/**/*.ts"]
+          }
+        }
+      }
     }
   }
 }
