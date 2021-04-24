@@ -2,7 +2,7 @@ import { Observable, pipe    } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
-import { KeyboardModifierFactors } from '../../reactive-camera/keyboard-modifier-factors';
+import { KeyboardModifierFactors } from '../../core/keyboard-modifier-factors';
 
 export type EventWithModifierFactors<TEvent extends EventWithModifiers> = [TEvent, KeyboardModifierFactors];
 export type AcceleratedEvent        <TEvent extends EventWithModifiers> = [number, TEvent];
