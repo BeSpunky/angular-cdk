@@ -107,8 +107,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
         this.hookPosition(moveRight, () =>  this.moveFactor.value, 'horizontal');
         this.hookPosition(moveLeft , () => -this.moveFactor.value, 'horizontal');
-        this.hookPosition(moveDown , () =>  this.moveFactor.value, 'vertical');
-        this.hookPosition(moveUp   , () => -this.moveFactor.value, 'vertical');
+        this.hookPosition(moveDown , () =>  this.moveFactor.value, 'vertical'  );
+        this.hookPosition(moveUp   , () => -this.moveFactor.value, 'vertical'  );
     }
     
     private hookMoveOnDrag(): void
@@ -120,7 +120,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         
         // Listen for drag start, then switch it dragging until dragging ends
         const move = dragStart.pipe(
-            exhaustMap(() => dragging.pipe(takeUntil(dragEnd))),
+            exhaustMap(() => dragging.pipe(takeUntil(dragEnd)))
         );
 
         // Reverse movement to match mouse move and hook
