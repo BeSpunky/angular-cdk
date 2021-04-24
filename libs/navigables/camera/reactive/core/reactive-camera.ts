@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable                } from 'rxjs';
 import { exhaustMap, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                     } from '@angular/core';
 import { DocumentRef                                } from '@bespunky/angular-zen/core';
+import { Property                                   } from '@bespunky/typescript-utils';
 
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService    } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -17,10 +18,7 @@ export const DefaultKeyboardModifierFactors: KeyboardModifierFactors = {
     shift: 1.5
 };
 
-// TODO: Move to a TypeScript utils library (this is the same util I created in angular-google-maps)
-type ActivationSwitch<T extends { [k: string]: any }> = {
-    [key in keyof T]: T[key] extends BehaviorSubject<boolean> ? key : never
-}[keyof T];
+type ActivationSwitch<TItem> = Property<ReactiveCamera<TItem>, BehaviorSubject<boolean>>;
 
 @Injectable()
 export abstract class ReactiveCamera<TItem> extends Camera<TItem>
@@ -49,17 +47,17 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookMoveOnKeyboard();
     }
     
-    public switchOn(switchName: ActivationSwitch<ReactiveCamera<TItem>>): void
+    public switchOn(switchName: ActivationSwitch<TItem>): void
     {
         this[switchName].next(true);
     }
 
-    public switchOff(switchName: ActivationSwitch<ReactiveCamera<TItem>>): void
+    public switchOff(switchName: ActivationSwitch<TItem>): void
     {
         this[switchName].next(false);
     }
 
-    public toggleSwitch(switchName: ActivationSwitch<ReactiveCamera<TItem>>): void
+    public toggleSwitch(switchName: ActivationSwitch<TItem>): void
     {
         this[switchName].next(!this[switchName].value);
     }
