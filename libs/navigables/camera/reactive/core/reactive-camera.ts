@@ -26,12 +26,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 {
     // Control Switchs
     public readonly zoomOnWheel   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly panOnWheel    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly zoomOnKeyboard: BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly panOnKeyboard : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly zoomOnPinch   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly panOnTouch    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly panOnDrag     : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnWheel    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnKeyboard : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnTouch    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly flickX        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly flickY        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
 
@@ -47,9 +47,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         super(element);
         
         this.hookZoomOnWheel();
-        this.hookPanOnWheel();
-        this.hookPanOnDrag();
         this.hookZoomOnKeyboard();
+        this.hookPanOnDrag();
+        this.hookPanOnWheel();
         this.hookPanOnKeyboard();
     }
     
