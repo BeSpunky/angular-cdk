@@ -24,7 +24,7 @@ export class ReactiveMouseService
         return wheel;
     }
 
-    public mouseButton(element: ElementRef | DocumentRef, eventName: MouseEventName, config?: MouseDownFeedConfig): Observable<MouseEvent>
+    public button(element: ElementRef | DocumentRef, eventName: MouseEventName, config?: MouseDownFeedConfig): Observable<MouseEvent>
     {
         const { button } = config || {};
 
