@@ -82,13 +82,6 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         );
     }
 
-    private hookPanOnWheel(): void
-    {
-        const hWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaX' });
-        
-        this.hookPosition(hWheel, e => e.deltaX * this.wheelPanSpeedFactor.value, 'horizontal');
-    }
-
     private hookZoomOnKeyboard(): void
     {
         const zoomIn  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp  , modifiers: { shiftKey: true } });
@@ -98,19 +91,6 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         // As keyboard zoom is activated using the shift modifier, this is 
         this.hookZoom(zoomIn , (_, viewBounds) => viewBounds.viewCenterX, (_, viewBounds) => viewBounds.viewCenterY, () =>  1, 'noAcceleration');
         this.hookZoom(zoomOut, (_, viewBounds) => viewBounds.viewCenterX, (_, viewBounds) => viewBounds.viewCenterY, () => -1, 'noAcceleration');
-    }
-
-    private hookPanOnKeyboard(): void
-    {
-        const panRight = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowRight });
-        const panLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
-        const panDown  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowDown , modifiers: { shiftKey: false } });
-        const panUp    = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp   , modifiers: { shiftKey: false } });
-
-        this.hookPosition(panRight, () =>  this.keyboardPanSpeed.value, 'horizontal');
-        this.hookPosition(panLeft , () => -this.keyboardPanSpeed.value, 'horizontal');
-        this.hookPosition(panDown , () =>  this.keyboardPanSpeed.value, 'vertical'  );
-        this.hookPosition(panUp   , () => -this.keyboardPanSpeed.value, 'vertical'  );
     }
     
     private hookPanOnDrag(): void
@@ -133,6 +113,31 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookFlick(dragging, dragEnd, e => -e.movementY, 'vertical');
     }
 
+    private hookPanOnWheel(): void
+    {
+        const hWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaX' });
+        
+        this.hookPosition(hWheel, e => e.deltaX * this.wheelPanSpeedFactor.value, 'horizontal');
+    }
+
+    private hookPanOnKeyboard(): void
+    {
+        const panRight = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowRight });
+        const panLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
+        const panDown  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowDown , modifiers: { shiftKey: false } });
+        const panUp    = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp   , modifiers: { shiftKey: false } });
+
+        this.hookPosition(panRight, () =>  this.keyboardPanSpeed.value, 'horizontal');
+        this.hookPosition(panLeft , () => -this.keyboardPanSpeed.value, 'horizontal');
+        this.hookPosition(panDown , () =>  this.keyboardPanSpeed.value, 'vertical'  );
+        this.hookPosition(panUp   , () => -this.keyboardPanSpeed.value, 'vertical'  );
+    }
+
+    private panCamera(amount: number, direction: 'horizontal' | 'vertical'): void
+    {
+        direction === 'horizontal' ? this.panX(amount) : this.panY(amount);
+    }
+
     private hookPosition<T extends EventWithModifiers>(eventFeed: Observable<T>, getAmount: (event: T) => number, direction: 'horizontal' | 'vertical'): void
     {
         const movement = eventFeed.pipe(
@@ -141,11 +146,6 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         );
 
         this.subscribe(movement, amount => this.panCamera(amount, direction));
-    }
-
-    private panCamera(amount: number, direction: 'horizontal' | 'vertical'): void
-    {
-        direction === 'horizontal' ? this.panX(amount) : this.panY(amount);
     }
 
     private hookFlick(dragging: Observable<MouseEvent>, dragEnd: Observable<MouseEvent>, getAmount: (event: MouseEvent) => number, direction: 'horizontal' | 'vertical'): void
