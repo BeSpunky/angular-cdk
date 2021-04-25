@@ -43,20 +43,20 @@ export abstract class Camera<TItem> extends Destroyable
         );
     }
     
-    protected abstract moveToItem(item: TItem): void;
+    protected abstract panToItem(item: TItem): void;
     protected abstract zoomOnItem(item: TItem, amount: number): void;
     
-    public moveTo(item: TItem)                         : void;
-    public moveTo(positionX: number, positionY: number): void;
-    public moveTo(arg1: number | TItem, arg2?: number) : void
+    public panTo(item: TItem)                         : void;
+    public panTo(positionX: number, positionY: number): void;
+    public panTo(arg1: number | TItem, arg2?: number) : void
     {
         if (typeof arg1 === 'number')
         {
             if (typeof arg2 !== 'number') throw new Error(`Expected numeric y view position (got ${typeof arg2}). Provide a numeric y value or use another overload.`);
             
-            this.moveToPosition(arg1, arg2)
+            this.panToPosition(arg1, arg2)
         }
-        else this.moveToItem(arg1);
+        else this.panToItem(arg1);
     }
     
     public zoomOn(item: TItem, amount: number)                         : void;
@@ -73,23 +73,23 @@ export abstract class Camera<TItem> extends Destroyable
         else this.zoomOnItem(arg1, arg2);   
     }
 
-    public moveX(amount: number): void
+    public panX(amount: number): void
     {
         this.addAmount(this.viewCenterX, amount);
     }
 
-    public moveY(amount: number): void
+    public panY(amount: number): void
     {
         this.addAmount(this.viewCenterY, amount);
     }
 
-    public move(amountX: number, amountY: number): void
+    public pan(amountX: number, amountY: number): void
     {
-        this.moveX(amountX);
-        this.moveY(amountY);
+        this.panX(amountX);
+        this.panY(amountY);
     }
     
-    protected moveToPosition(positionX: number, positionY: number): void
+    protected panToPosition(positionX: number, positionY: number): void
     {
         this.viewCenterX.next(positionX);
         this.viewCenterY.next(positionY);
@@ -113,7 +113,7 @@ export abstract class Camera<TItem> extends Destroyable
         const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.viewCenterX.value, positionX, zoomedBy);
         const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.viewCenterY.value, positionY, zoomedBy);
 
-        this.moveToPosition(zoomedViewCenterX, zoomedViewCenterY);
+        this.panToPosition(zoomedViewCenterX, zoomedViewCenterY);
     }
 
     protected addAmount(subject: BehaviorSubject<number>, amount: number): void

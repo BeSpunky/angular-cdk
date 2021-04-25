@@ -26,17 +26,17 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 {
     // Control Switchs
     public readonly zoomOnWheel   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly moveOnWheel   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnWheel    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly zoomOnKeyboard: BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly moveOnKeyboard: BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnKeyboard : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly zoomOnPinch   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly moveOnTouch   : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
-    public readonly moveOnDrag    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnTouch    : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
+    public readonly panOnDrag     : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly flickX        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
     public readonly flickY        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
 
     // Factors
-    public readonly keyboardMoveFactor     : BehaviorSubject<number>                  = new BehaviorSubject(3);
+    public readonly keyboardPanFactor      : BehaviorSubject<number>                  = new BehaviorSubject(3);
     public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
@@ -46,10 +46,10 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         super(element);
         
         this.hookZoomOnWheel();
-        this.hookMoveOnWheel();
-        this.hookMoveOnDrag();
+        this.hookPanOnWheel();
+        this.hookPanOnDrag();
         this.hookZoomOnKeyboard();
-        this.hookMoveOnKeyboard();
+        this.hookPanOnKeyboard();
     }
     
     public switchOn(switchName: ActivationSwitch<TItem>): void
@@ -81,11 +81,11 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         );
     }
 
-    private hookMoveOnWheel(): void
+    private hookPanOnWheel(): void
     {
         const hWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaX' });
         
-        this.hookPosition(hWheel, e => Math.sign(e.deltaX) * this.keyboardMoveFactor.value, 'horizontal');
+        this.hookPosition(hWheel, e => e.deltaX * this.keyboardPanFactor.value, 'horizontal');
     }
 
     private hookZoomOnKeyboard(): void
@@ -98,34 +98,34 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookZoom(zoomOut, (_, viewBounds) => viewBounds.viewCenterX, (_, viewBounds) => viewBounds.viewCenterY, () => -1);
     }
 
-    private hookMoveOnKeyboard(): void
+    private hookPanOnKeyboard(): void
     {
-        const moveRight = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowRight });
-        const moveLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
-        const moveDown  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowDown  });
-        const moveUp    = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp  });
+        const panRight = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowRight });
+        const panLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
+        const panDown  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowDown  });
+        const panUp    = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp  });
 
-        this.hookPosition(moveRight, () =>  this.keyboardMoveFactor.value, 'horizontal');
-        this.hookPosition(moveLeft , () => -this.keyboardMoveFactor.value, 'horizontal');
-        this.hookPosition(moveDown , () =>  this.keyboardMoveFactor.value, 'vertical'  );
-        this.hookPosition(moveUp   , () => -this.keyboardMoveFactor.value, 'vertical'  );
+        this.hookPosition(panRight, () =>  this.keyboardPanFactor.value, 'horizontal');
+        this.hookPosition(panLeft , () => -this.keyboardPanFactor.value, 'horizontal');
+        this.hookPosition(panDown , () =>  this.keyboardPanFactor.value, 'vertical'  );
+        this.hookPosition(panUp   , () => -this.keyboardPanFactor.value, 'vertical'  );
     }
     
-    private hookMoveOnDrag(): void
+    private hookPanOnDrag(): void
     {
-        // Mouse move and up are registered with the document to allow detection when the mouse leaves the element and goes into another
-        const dragStart = this.mouse.mouseButton(this.element , 'mousedown', { activationSwitch: this.moveOnDrag, button: 'main' });
-        const dragging  = this.mouse.mouseButton(this.document, 'mousemove', { activationSwitch: this.moveOnDrag, button: 'main' });
-        const dragEnd   = this.mouse.mouseButton(this.document, 'mouseup'  , { activationSwitch: this.moveOnDrag, button: 'main' });
+        // Mouse pan and up are registered with the document to allow detection when the mouse leaves the element and goes into another
+        const dragStart = this.mouse.mouseButton(this.element , 'mousedown', { activationSwitch: this.panOnDrag, button: 'main' });
+        const dragging  = this.mouse.mouseButton(this.document, 'mousemove', { activationSwitch: this.panOnDrag, button: 'main' });
+        const dragEnd   = this.mouse.mouseButton(this.document, 'mouseup'  , { activationSwitch: this.panOnDrag, button: 'main' });
         
         // Listen for drag start, then switch it dragging until dragging ends
-        const move = dragStart.pipe(
+        const pan = dragStart.pipe(
             exhaustMap(() => dragging.pipe(takeUntil(dragEnd)))
         );
 
-        // Reverse movement to match mouse move and hook
-        this.hookPosition(move, e => -e.movementX, 'horizontal');
-        this.hookPosition(move, e => -e.movementY, 'vertical'  );
+        // Reverse movement to match mouse pan and hook
+        this.hookPosition(pan, e => -e.movementX, 'horizontal');
+        this.hookPosition(pan, e => -e.movementY, 'vertical'  );
 
         this.hookFlick(dragging, dragEnd, e => -e.movementX, 'horizontal');
         this.hookFlick(dragging, dragEnd, e => -e.movementY, 'vertical');
@@ -138,12 +138,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             map(([amount]) => amount)
         );
 
-        this.subscribe(movement, amount => this.moveCamera(amount, direction));
+        this.subscribe(movement, amount => this.panCamera(amount, direction));
     }
 
-    private moveCamera(amount: number, direction: 'horizontal' | 'vertical'): void
+    private panCamera(amount: number, direction: 'horizontal' | 'vertical'): void
     {
-        direction === 'horizontal' ? this.moveX(amount) : this.moveY(amount);
+        direction === 'horizontal' ? this.panX(amount) : this.panY(amount);
     }
 
     private hookFlick(dragging: Observable<MouseEvent>, dragEnd: Observable<MouseEvent>, getAmount: (event: MouseEvent) => number, direction: 'horizontal' | 'vertical'): void
@@ -159,7 +159,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
         this.subscribe(
             this.easeOutMouseMovement(lastMovement, getAmount),
-            amount => this.moveCamera(amount, direction)
+            amount => this.panCamera(amount, direction)
         );
     }
 
@@ -182,7 +182,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             // Calculate the next decreased movement amount
             map(breaksStrength => movement - breaksStrength),
             // Take the direction into account and stop the animation when exceeding zero
-            takeWhile(nextMove => movement > 0 ? nextMove > 0 : nextMove < 0)
+            takeWhile(nextPan => movement > 0 ? nextPan > 0 : nextPan < 0)
         );
 
         return eventFeed.pipe(

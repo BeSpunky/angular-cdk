@@ -25,7 +25,7 @@ export class TimelineCameraService extends TimelineCamera
     {
         super(document, mouse, keyboard, element);
 
-        this.dayWidth   = this.dayWidthFeed();
+        this.dayWidth = this.dayWidthFeed();
     }
     
     /**
@@ -49,9 +49,9 @@ export class TimelineCameraService extends TimelineCamera
         );
     }
     
-    protected moveToItem(date: Date): void
+    protected panToItem(date: Date): void
     {
-        this.dateToPosition(date).subscribe(position => this.moveToPosition(position, 0));
+        this.dateToPosition(date).subscribe(position => this.panToPosition(position, 0));
     }
 
     protected zoomOnItem(date: Date, amount: number): void

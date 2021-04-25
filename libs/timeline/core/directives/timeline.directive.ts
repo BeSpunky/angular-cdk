@@ -103,17 +103,17 @@ export class TimelineDirective extends Timeline implements AfterViewInit
 
     @Input() public set positionX(value: number)
     {
-        this.camera.moveTo(value, this.camera.viewCenterY.value);
+        this.camera.panTo(value, this.camera.viewCenterY.value);
     }
 
     @Input() public set positionY(value: number)
     {
-        this.camera.moveTo(this.camera.viewCenterX.value, value);
+        this.camera.panTo(this.camera.viewCenterX.value, value);
     }
 
     @Input() public set date(value: Date)
     {
-        this.camera.moveTo(value);
+        this.camera.panTo(value);
     }
 
     @Input() public set baseTickSize(value: number)
@@ -121,14 +121,14 @@ export class TimelineDirective extends Timeline implements AfterViewInit
         this.config.baseTickSize.next(value);
     }
 
-    @Input() public set moveOnKeyboard(value: boolean)
+    @Input() public set panOnKeyboard(value: boolean)
     {
-        this.camera.moveOnKeyboard.next(value);
+        this.camera.panOnKeyboard.next(value);
     }
 
-    @Input() public set moveOnWheel(value: boolean)
+    @Input() public set panOnWheel(value: boolean)
     {
-        this.camera.moveOnWheel.next(value);
+        this.camera.panOnWheel.next(value);
     }
 
     @Input() public set zoomDeltaFactor(value: number)
