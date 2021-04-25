@@ -9,7 +9,7 @@ export function createTickTemplate({tickId, minZoom, maxZoom, labelKey, dayFacto
     return `
     <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;">
         <line [attr.x1]="tick.screenPositionX | async" [attr.y1]="(tick.screenPositionY | async) + ${offset}"
-              [attr.x2]="tick.screenPositionX | async" [attr.y2]="(tick.screenPositionY | async) + 50"
+              [attr.x2]="tick.screenPositionX | async" [attr.y2]="(tick.screenPositionY | async) + (tick.width | async) / 4"
               stroke-width="${width}" stroke="${color}"
         ></line>
 
