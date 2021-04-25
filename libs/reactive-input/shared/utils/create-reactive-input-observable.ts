@@ -19,13 +19,10 @@ export function createReactiveInputObservable<TEvent extends EventWithModifiers>
     if (activationSwitch) event = event.pipe(useActivationSwitch(activationSwitch));
     if (modifiers)
     {
-        const allModifiers: KeyboardModifiers = { altKey: false, ctrlKey: false, shiftKey: false, ...modifiers };
-
-        event = event.pipe(filter(e =>
-            e.altKey   === allModifiers.altKey   &&
-            e.ctrlKey  === allModifiers.ctrlKey  &&
-            e.shiftKey === allModifiers.shiftKey
-        ));
+        event = event.pipe(
+            filter(e => Object.keys(modifiers)
+                              .every(modifier => e[modifier] === modifiers[modifier as keyof KeyboardModifiers]))
+        );
     }
 
     return event;
