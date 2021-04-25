@@ -3,11 +3,11 @@ import { filter                 } from 'rxjs/operators';
 import { ElementRef, Injectable } from '@angular/core';
 import { DocumentRef            } from '@bespunky/angular-zen';
 
-import { createReactiveInputObservable } from '@bespunky/angular-cdk/reactive-input/shared';
-import { MouseWheelFeedConfig          } from '../feeds/mouse-wheel-feed-config';
-import { MouseDownFeedConfig           } from '../feeds/mouse-down-feed-config';
-import { MouseEventName                } from '../types/mouse-event';
-import { MouseButtonNumbers            } from '../types/mouse-buttons';
+import { createReactiveInputWithModifiersObservable } from '@bespunky/angular-cdk/reactive-input/shared';
+import { MouseWheelFeedConfig                       } from '../feeds/mouse-wheel-feed-config';
+import { MouseDownFeedConfig                        } from '../feeds/mouse-down-feed-config';
+import { MouseEventName                             } from '../types/mouse-event';
+import { MouseButtonNumbers                         } from '../types/mouse-buttons';
 
 @Injectable({ providedIn: 'root' })
 export class ReactiveMouseService
@@ -16,7 +16,7 @@ export class ReactiveMouseService
     {
         const { direction } = config || {};
 
-        let wheel = createReactiveInputObservable<WheelEvent>(element, 'wheel', config);
+        let wheel = createReactiveInputWithModifiersObservable<WheelEvent>(element, 'wheel', config) as Observable<WheelEvent>;
         
         // A direction (i.e. deltaX, deltaY) different to zero means movement in that direction
         if (direction) wheel = wheel.pipe(filter(e => e[direction] !== 0));
@@ -28,7 +28,7 @@ export class ReactiveMouseService
     {
         const { button } = config || {};
 
-        let mouseButton = createReactiveInputObservable<MouseEvent>(element, eventName, config);
+        let mouseButton = createReactiveInputWithModifiersObservable<MouseEvent>(element, eventName, config) as Observable<MouseEvent>;
         
         if (button)
         {
