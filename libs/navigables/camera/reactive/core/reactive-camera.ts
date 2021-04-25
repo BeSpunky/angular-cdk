@@ -36,7 +36,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly flickY        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
 
     // Factors
-    public readonly keyboardPanFactor      : BehaviorSubject<number>                  = new BehaviorSubject(3);
+    public readonly wheelPanSpeedFactor    : BehaviorSubject<number>                  = new BehaviorSubject(1);
+    public readonly keyboardPanSpeed       : BehaviorSubject<number>                  = new BehaviorSubject(30);
     public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
@@ -85,7 +86,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     {
         const hWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaX' });
         
-        this.hookPosition(hWheel, e => e.deltaX * this.keyboardPanFactor.value, 'horizontal');
+        this.hookPosition(hWheel, e => e.deltaX * this.wheelPanSpeedFactor.value, 'horizontal');
     }
 
     private hookZoomOnKeyboard(): void
