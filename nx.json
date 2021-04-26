@@ -17,13 +17,37 @@
     }
   },
   "projects": {
-    "official-site"    : { "tags": [] },
-    "official-site-e2e": { "tags": [], "implicitDependencies": ["official-site"]    },
-    "shared"           : { "tags": [] },
-    "typescript-utils" : { "tags": [] },
-    "reactive-input"   : { "tags": [], "implicitDependencies": ["shared"] },
-    "navigables"       : { "tags": [], "implicitDependencies": ["typescript-utils", "reactive-input"] },
-    "timeline"         : { "tags": [], "implicitDependencies": ["navigables", "reactive-input", "shared"] },
-    "timeline-e2e"     : { "tags": [], "implicitDependencies": ["timeline"] }
+    "official-site": {
+      "tags": []
+    },
+    "official-site-e2e": {
+      "tags": [],
+      "implicitDependencies": ["official-site"]
+    },
+    "typescript-utils": {
+      "tags": []
+    },
+    "rxjs": {
+      "tags": []
+    },
+    "shared": {
+      "tags": []
+    },
+    "reactive-input": {
+      "tags": [],
+      "implicitDependencies": ["rxjs"]
+    },
+    "navigables": {
+      "tags": [],
+      "implicitDependencies": ["typescript-utils", "reactive-input"]
+    },
+    "timeline": {
+      "tags": [],
+      "implicitDependencies": ["navigables", "reactive-input", "shared"]
+    },
+    "timeline-e2e": {
+      "tags": [],
+      "implicitDependencies": ["timeline"]
+    }
   }
 }
