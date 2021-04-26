@@ -144,8 +144,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaX - e.deltaX, 'horizontal');
         this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaY - e.deltaY, 'vertical'  );
 
-        // this.hookFlick(dragging, dragEnd, e => -e.movementX, 'horizontal');
-        // this.hookFlick(dragging, dragEnd, e => -e.movementY, 'vertical');
+        this.hookFlick(panning, panEnd, e => -e.deltaX * Math.abs(e.velocityX), 'horizontal');
+        this.hookFlick(panning, panEnd, e => -e.deltaY * Math.abs(e.velocityY), 'vertical');
     }
 
     private panCamera(amount: number, direction: 'horizontal' | 'vertical'): void
@@ -174,7 +174,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.subscribe(movement, amount => this.panCamera(amount, direction));
     }
 
-    private hookFlick(dragging: Observable<MouseEvent>, dragEnd: Observable<MouseEvent>, getAmount: (event: MouseEvent) => number, direction: 'horizontal' | 'vertical'): void
+    private hookFlick<TEvent>(dragging: Observable<TEvent>, dragEnd: Observable<TEvent>, getAmount: (event: TEvent) => number, direction: 'horizontal' | 'vertical'): void
     {
         const flickSwitch = direction === 'horizontal' ? this.flickX : this.flickY;
             
@@ -191,7 +191,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         );
     }
 
-    private easeOutMouseMovement<T extends MouseEvent>(eventFeed: Observable<T>, getMovement: (event: T) => number): Observable<number>
+    private easeOutMouseMovement<TEvent>(eventFeed: Observable<TEvent>, getMovement: (event: TEvent) => number): Observable<number>
     {
         /**
          * The idea is to get the last mouse movement amount, then repeat the movement decreasing the amount each time
