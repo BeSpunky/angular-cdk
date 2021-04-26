@@ -1,3 +1,2 @@
-export * from './rxjs/activation-switch';
-export * from './rxjs/debug';
-export * from './rxjs/value-in-range';
+export * from '@bespunky/angular-cdk/shared/rxjs';
+export * from '@bespunky/angular-cdk/shared/rxjs/operators';
