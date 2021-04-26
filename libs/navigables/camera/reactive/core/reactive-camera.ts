@@ -245,18 +245,6 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookZoom(zoomAmount, getPositionX, getPositionY);
     }
 
-    private hookTouchZoom<TEvent extends HammerInput>(
-        eventFeed   : Observable<TEvent>,
-        getPositionX: (event: TEvent, viewBounds: ViewBounds) => number,
-        getPositionY: (event: TEvent, viewBounds: ViewBounds) => number,
-        getAmount   : (event: TEvent) => number
-    )
-    {
-        const zoomAmount = eventFeed.pipe(map(e => [getAmount(e), e] as [number, TEvent]));
-
-        this.hookZoom(zoomAmount, getPositionX, getPositionY);
-    }
-
     private hookZoom<TEvent>(
         eventFeed   : Observable<[amount: number, event: TEvent]>,
         getPositionX: (event: TEvent, viewBounds: ViewBounds) => number,
