@@ -1,27 +1,19 @@
 import { Key                                                                                             } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable            } from 'rxjs';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, Observable                   } from 'rxjs';
 import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                                                                          } from '@angular/core';
-import { Property                                                                                        } from '@bespunky/typescript-utils';
 import { mergeToggled, toggled                                                                           } from '@bespunky/rxjs';
 import { useActivationSwitch                                                                             } from '@bespunky/rxjs/operators';
 import { DocumentRef                                                                                     } from '@bespunky/angular-zen/core';
 
-import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
-import { ReactiveMouseService    } from '@bespunky/angular-cdk/reactive-input/mouse';
-import { ReactiveKeyboardService } from '@bespunky/angular-cdk/reactive-input/keyboard';
-import { ReactiveTouchService    } from '@bespunky/angular-cdk/reactive-input/touch';
-import { Camera, ViewBounds      } from '@bespunky/angular-cdk/navigables/camera';
-import { accelerateWithKeyboard  } from '../rxjs/operators/accelerate-with-keyboard';
-import { KeyboardModifierFactors } from './keyboard-modifier-factors';
-
-export const DefaultKeyboardModifierFactors: KeyboardModifierFactors = {
-    alt  : 0.7,
-    ctrl : 1.2,
-    shift: 1.5
-};
-
-type ActivationSwitch<TItem> = Property<ReactiveCamera<TItem>, BehaviorSubject<boolean>>;
+import { EventWithModifiers                                                                          } from '@bespunky/angular-cdk/reactive-input/shared';
+import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
+import { ReactiveKeyboardService                                                                     } from '@bespunky/angular-cdk/reactive-input/keyboard';
+import { ReactiveTouchService                                                                        } from '@bespunky/angular-cdk/reactive-input/touch';
+import { Camera                                                                                      } from '@bespunky/angular-cdk/navigables/camera';
+import { accelerateWithKeyboard                                                                      } from '../rxjs/operators/accelerate-with-keyboard';
+import { DefaultKeyboardModifierFactors, KeyboardModifierFactors                                     } from './keyboard-modifier-factors';
+import { ActivationSwitch, ZoomConfig, PositionExtractor, PanDirection, AmountExtractor, FlickConfig } from './util-types';
 
 @Injectable()
 export abstract class ReactiveCamera<TItem> extends Camera<TItem>
@@ -64,14 +56,14 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     {
         const vWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaY' });
         
-        this.hookKeyboardAcceleratedZoom(
-            vWheel,
+        this.hookKeyboardAcceleratedZoom({
+            eventFeed   : vWheel,
             // Calculate the mouse position relative to the drawing (not the viewport).
-            (e, viewBounds) => viewBounds.left + e.offsetX,
-            (e, viewBounds) => viewBounds.top  + e.offsetY,
+            getPositionX: (e, viewBounds) => viewBounds.left + e.offsetX,
+            getPositionY: (e, viewBounds) => viewBounds.top  + e.offsetY,
             // Reverse deltaY so zooming in is positive and out is negative.
-            e               => -Math.sign(e.deltaY)
-        );
+            getAmount   : e               => -Math.sign(e.deltaY)
+        });
     }
 
     private hookZoomOnKeyboard(): void
@@ -82,8 +74,42 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         // There is no mouse point or anything so zoom around the center of the view.
         // As keyboard zoom is activated using the shift modifier, which is also used for keyboard acceleration, the camera behaved
         // in an unexpected manner. Hence the hooking without keyboard acceleration here.
-        this.hookStandardZoom(zoomIn , (_, viewBounds) => viewBounds.viewCenterX, (_, viewBounds) => viewBounds.viewCenterY, () =>  1);
-        this.hookStandardZoom(zoomOut, (_, viewBounds) => viewBounds.viewCenterX, (_, viewBounds) => viewBounds.viewCenterY, () => -1);
+        this.hookStandardZoom({ eventFeed: zoomIn , getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () => 1  });
+        this.hookStandardZoom({ eventFeed: zoomOut, getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () => -1 });
+    }
+
+    private hookStandardZoom<TEvent>({ eventFeed, getPositionX, getPositionY, getAmount }: ZoomConfig<TEvent>): void
+    {
+        const zoomAmount = eventFeed.pipe(map(e => [getAmount(e), e] as [number, TEvent]));
+
+        this.hookZoom(zoomAmount, getPositionX, getPositionY);
+    }
+
+    private hookKeyboardAcceleratedZoom<TEvent extends EventWithModifiers>({ eventFeed, getPositionX, getPositionY, getAmount }: ZoomConfig<TEvent>): void
+    {
+        const zoomAmount = eventFeed.pipe(accelerateWithKeyboard(getAmount, this.keyboardModifierFactors));
+
+        this.hookZoom(zoomAmount, getPositionX, getPositionY);
+    }
+
+    private hookZoom<TEvent>(
+        eventFeed   : Observable<[amount: number, event: TEvent]>,
+        getPositionX: PositionExtractor<TEvent>,
+        getPositionY: PositionExtractor<TEvent>
+    ): void
+    {
+        const zoom = eventFeed.pipe(
+            withLatestFrom(this.viewBounds),
+            map(([[amount, e], viewBounds]) =>
+                [
+                    getPositionX(e, viewBounds),
+                    getPositionY(e, viewBounds),
+                    amount
+                ]
+            )
+        );
+
+        this.subscribe(zoom, ([positionX, positionY, amount]) => this.zoomOn(positionX, positionY, amount));
     }
     
     private hookPanOnDrag(): void
@@ -99,9 +125,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         // Reverse movement to match mouse pan and hook
         this.hookKeyboardAcceleratedPosition(pan, e => -e.movementX, 'horizontal');
         this.hookKeyboardAcceleratedPosition(pan, e => -e.movementY, 'vertical'  );
-
-        this.hookFlick(dragStart, dragging, dragEnd, e => -e.movementX, 'horizontal');
-        this.hookFlick(dragStart, dragging, dragEnd, e => -e.movementY, 'vertical');
+        // Finish panning with an ease out animation
+        this.hookFlickOnMouseDrag(dragStart, dragging, dragEnd);
     }
 
     private hookPanOnWheel(): void
@@ -141,62 +166,79 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
         // Reverse movement to match mouse pan and hook
         this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaX - e.deltaX, 'horizontal');
-        this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaY - e.deltaY, 'vertical'  );
-
-        const swipeX = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, direction: 'horizontal', threshold: 5 });
-        const swipeY = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, direction: 'vertical'  , threshold: 5 });
-
-        const abortEase = merge(panStart, panEnd);
-
-        // TODO: Replace fixed factors with subjets
-        this.subscribe(this.easeOutMouseMovement(swipeX, abortEase, e => -e.deltaX * 0.4), amount => this.panX(amount));
-        this.subscribe(this.easeOutMouseMovement(swipeY, abortEase, e => -e.deltaY * 0.4), amount => this.panY(amount));
+        this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaY - e.deltaY, 'vertical');
+        // Finish panning with an ease out animation
+        this.hookFlickOnTouchSwipe(panStart);
     }
 
-    private panCamera(amount: number, direction: 'horizontal' | 'vertical'): void
+    private choosePanMethod(direction: PanDirection): (amount: number) => void
     {
-        direction === 'horizontal' ? this.panX(amount) : this.panY(amount);
+        const method = direction === 'horizontal' ? this.panX : this.panY;
+
+        return method.bind(this);
     }
 
-    private hookStandardPosition<TEvent>(eventFeed: Observable<TEvent>, getAmount: (event: TEvent) => number, direction: 'horizontal' | 'vertical'): void
+    private choosePanFlickActivationSwitch(direction: PanDirection): Observable<boolean>
+    {
+        return direction === 'horizontal' ? this.flickX : this.flickY;
+    }
+
+    private hookStandardPosition<TEvent>(eventFeed: Observable<TEvent>, getAmount: AmountExtractor<TEvent>, direction: PanDirection): void
     {
         const movement = eventFeed.pipe(map(e => [getAmount(e), e] as [number, TEvent]));
 
         this.hookPosition(movement, direction);
     }
 
-    private hookKeyboardAcceleratedPosition<T extends EventWithModifiers>(eventFeed: Observable<T>, getAmount: (event: T) => number, direction: 'horizontal' | 'vertical'): void
+    private hookKeyboardAcceleratedPosition<TEvent extends EventWithModifiers>(eventFeed: Observable<TEvent>, getAmount: AmountExtractor<TEvent>, direction: PanDirection): void
     {
         const movement = eventFeed.pipe(accelerateWithKeyboard(getAmount, this.keyboardModifierFactors));
 
         this.hookPosition(movement, direction);
     }
 
-    private hookPosition<TEvent>(eventFeed: Observable<[amount: number, event: TEvent]>, direction: 'horizontal' | 'vertical'): void
+    private hookPosition<TEvent>(eventFeed: Observable<[amount: number, event: TEvent]>, direction: PanDirection): void
     {
-        const movement = eventFeed.pipe(map(([amount]) => amount));
+        const movement  = eventFeed.pipe(map(([amount]) => amount));
+        const panCamera = this.choosePanMethod(direction);
 
-        this.subscribe(movement, amount => this.panCamera(amount, direction));
+        this.subscribe(movement, panCamera);
     }
 
-    private hookFlick<TEvent>(dragStart: Observable<TEvent>, dragging: Observable<TEvent>, dragEnd: Observable<TEvent>, getAmount: (event: TEvent) => number, direction: 'horizontal' | 'vertical'): void
+    private hookFlickOnMouseDrag(dragStart: Observable<MouseEvent>, dragging: Observable<MouseEvent>, dragEnd: Observable<MouseEvent>)
     {
-        const flickSwitch = direction === 'horizontal' ? this.flickX : this.flickY;
-            
         // For every drag end, emit the lastest drag event to ensure movement amount is present
         const lastMovement = dragEnd.pipe(
-            useActivationSwitch(flickSwitch),
             withLatestFrom(dragging),
             map(([, lastDragEvent]) => lastDragEvent)
         );
 
-        this.subscribe(
-            this.easeOutMouseMovement(lastMovement, dragStart, getAmount),
-            amount => this.panCamera(amount, direction)
-        );
+        this.hookFlick({ trigger: lastMovement, abortOn: dragStart, getLastMoveAmount: e => -e.movementX, direction: 'horizontal' });
+        this.hookFlick({ trigger: lastMovement, abortOn: dragStart, getLastMoveAmount: e => -e.movementY, direction: 'vertical' });
     }
 
-    private easeOutMouseMovement<TEvent, TAbort>(eventFeed: Observable<TEvent>, abort: Observable<TAbort>, getMovement: (event: TEvent) => number): Observable<number>
+    private hookFlickOnTouchSwipe(panStart: Observable<HammerInput>): void
+    {
+        const swipeX = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'horizontal', threshold: 5 });
+        const swipeY = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'vertical'  , threshold: 5 });
+
+        // TODO: Replace fixed factors with subjets
+        this.hookFlick({ trigger: swipeX, abortOn: panStart, getLastMoveAmount: e => -e.deltaX * 0.4, direction: 'horizontal' });
+        this.hookFlick({ trigger: swipeY, abortOn: panStart, getLastMoveAmount: e => -e.deltaX * 0.4, direction: 'vertical'   });
+    }
+
+    private hookFlick<TTrigger, TAbort>({ trigger, abortOn, direction, getLastMoveAmount }: FlickConfig<TTrigger, TAbort>): void
+    {
+        const flickSwitch = this.choosePanFlickActivationSwitch(direction);
+        const panCamera   = this.choosePanMethod(direction);
+
+        const lastMovement     = trigger.pipe(useActivationSwitch(flickSwitch));
+        const easeOutAnimation = this.easeOutMouseMovement(lastMovement, abortOn, getLastMoveAmount);
+
+        this.subscribe(easeOutAnimation, panCamera);
+    }
+
+    private easeOutMouseMovement<TEvent, TAbort>(lastMovement: Observable<TEvent>, abort: Observable<TAbort>, getMovement: AmountExtractor<TEvent>): Observable<number>
     {
         /**
          * The idea is to get the last mouse movement amount, then repeat the movement decreasing the amount each time
@@ -221,55 +263,11 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             takeWhile(nextPan => movement > 0 ? nextPan > 0 : nextPan < 0)
         );
 
-        return eventFeed.pipe(
+        return lastMovement.pipe(
             // Extract the movement amount from the mouse event
             map(getMovement),
             // Cancel any animation previously launched and create a new one with the new amount
             switchMap(easeOut)
         );
-    }
-
-    private hookStandardZoom<TEvent>(
-        eventFeed   : Observable<TEvent>,
-        getPositionX: (event: TEvent, viewBounds: ViewBounds) => number,
-        getPositionY: (event: TEvent, viewBounds: ViewBounds) => number,
-        getAmount   : (event: TEvent) => number
-    )
-    {
-        const zoomAmount = eventFeed.pipe(map(e => [getAmount(e), e] as [number, TEvent]));
-
-        this.hookZoom(zoomAmount, getPositionX, getPositionY);
-    }
-
-    private hookKeyboardAcceleratedZoom<T extends EventWithModifiers>(
-        eventFeed   : Observable<T>,
-        getPositionX: (event: T, viewBounds: ViewBounds) => number,
-        getPositionY: (event: T, viewBounds: ViewBounds) => number,
-        getAmount   : (event: T) => number
-    )
-    {
-        const zoomAmount = eventFeed.pipe(accelerateWithKeyboard(getAmount, this.keyboardModifierFactors));
-
-        this.hookZoom(zoomAmount, getPositionX, getPositionY);
-    }
-
-    private hookZoom<TEvent>(
-        eventFeed   : Observable<[amount: number, event: TEvent]>,
-        getPositionX: (event: TEvent, viewBounds: ViewBounds) => number,
-        getPositionY: (event: TEvent, viewBounds: ViewBounds) => number
-    ): void
-    {
-        const zoom = eventFeed.pipe(
-            withLatestFrom(this.viewBounds),
-            map(([[amount, e], viewBounds]) =>
-                [
-                    getPositionX(e, viewBounds),
-                    getPositionY(e, viewBounds),
-                    amount
-                ]
-            )
-        );
-
-        this.subscribe(zoom, ([positionX, positionY, amount]) => this.zoomOn(positionX, positionY, amount));
     }
 }
