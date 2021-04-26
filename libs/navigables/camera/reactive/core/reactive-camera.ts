@@ -6,7 +6,7 @@ import { mergeToggled, toggled                                                  
 import { useActivationSwitch                                                                             } from '@bespunky/rxjs/operators';
 import { DocumentRef                                                                                     } from '@bespunky/angular-zen/core';
 
-import { EventWithModifiers                                                                          } from '@bespunky/angular-cdk/reactive-input/shared';
+import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
 import { ReactiveKeyboardService                                                                     } from '@bespunky/angular-cdk/reactive-input/keyboard';
 import { ReactiveTouchService                                                                        } from '@bespunky/angular-cdk/reactive-input/touch';
@@ -134,15 +134,20 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookPanOnKeyboard(): void
     {
-        const panRight = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowRight });
-        const panLeft  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowLeft  });
-        const panDown  = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowDown , modifiers: { shiftKey: false } });
-        const panUp    = this.keyboard.keydown(this.element, { activationSwitch: this.zoomOnKeyboard, key: Key.ArrowUp   , modifiers: { shiftKey: false } });
+        this.hookPanOnKey(Key.ArrowRight, () =>  this.keyboardPanSpeed.value, 'horizontal');
+        this.hookPanOnKey(Key.ArrowLeft , () => -this.keyboardPanSpeed.value, 'horizontal');
+        this.hookPanOnKey(Key.ArrowDown , () =>  this.keyboardPanSpeed.value, 'vertical'  , { shiftKey: false });
+        this.hookPanOnKey(Key.ArrowUp   , () => -this.keyboardPanSpeed.value, 'vertical'  , { shiftKey: false });
+    }
 
-        this.hookKeyboardAcceleratedPosition(panRight, () =>  this.keyboardPanSpeed.value, 'horizontal');
-        this.hookKeyboardAcceleratedPosition(panLeft , () => -this.keyboardPanSpeed.value, 'horizontal');
-        this.hookKeyboardAcceleratedPosition(panDown , () =>  this.keyboardPanSpeed.value, 'vertical'  );
-        this.hookKeyboardAcceleratedPosition(panUp   , () => -this.keyboardPanSpeed.value, 'vertical'  );
+    private hookPanOnKey(key: Key, getAmount: AmountExtractor<KeyboardEvent>, direction: PanDirection, modifiers?: Partial<KeyboardModifiers>): void
+    {
+        const panning = this.keyboard.keydown(this.element, { activationSwitch: this.panOnKeyboard, key, modifiers });
+        const panEnd  = this.keyboard.keyup  (this.element, { activationSwitch: this.panOnKeyboard, key, modifiers });
+        
+        this.hookKeyboardAcceleratedPosition(panning, getAmount, direction);
+
+        this.hookFlick({ trigger: panEnd, abortOn: panning, getLastMoveAmount: getAmount, direction });
     }
 
     private hookPanOnTouch(): void
