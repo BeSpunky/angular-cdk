@@ -1,11 +1,12 @@
-import { Key                                                                                   } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable         } from 'rxjs';
-import { exhaustMap, map, observeOn, pairwise, switchMap, takeUntil, takeWhile, withLatestFrom } from 'rxjs/operators';
-import { ElementRef, Injectable                                                                } from '@angular/core';
-import { Property                                                                              } from '@bespunky/typescript-utils';
-import { useActivationSwitch                                                                                           } from '@bespunky/rxjs/operators';
+import { Key                                                                                             } from 'ts-key-enum';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable            } from 'rxjs';
+import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                                                          } from '@angular/core';
+import { Property                                                                                        } from '@bespunky/typescript-utils';
+import { mergeToggled, toggled                                                                           } from '@bespunky/rxjs';
+import { useActivationSwitch                                                                             } from '@bespunky/rxjs/operators';
+import { DocumentRef                                                                                     } from '@bespunky/angular-zen/core';
 
-import { useActivationSwitch     } from '@bespunky/angular-cdk/shared';
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService    } from '@bespunky/angular-cdk/reactive-input/mouse';
 import { ReactiveKeyboardService } from '@bespunky/angular-cdk/reactive-input/keyboard';
@@ -93,9 +94,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const dragEnd   = this.mouse.button(this.document, 'mouseup'  , { activationSwitch: this.panOnDrag, button: 'main' });
         
         // Listen for drag start, then switch it dragging until dragging ends
-        const pan = dragStart.pipe(
-            exhaustMap(() => dragging.pipe(takeUntil(dragEnd)))
-        );
+        const pan = mergeToggled(dragging, { on: dragStart, off: dragEnd });
 
         // Reverse movement to match mouse pan and hook
         this.hookKeyboardAcceleratedPosition(pan, e => -e.movementX, 'horizontal');
@@ -133,9 +132,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
         
         // Listen for drag start, then switch it dragging until dragging ends
-        const pan = panStart.pipe(
-            exhaustMap(() => panning.pipe(
-                takeUntil(panEnd),
+        const pan = toggled(panning, { on: panStart, off: panEnd }).pipe(
+            mergeMap(p => p.pipe(
+                startWith({ deltaX: 0, deltaY: 0 }),
                 pairwise()
             ))
         );
