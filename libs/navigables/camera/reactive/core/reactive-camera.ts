@@ -128,9 +128,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     private hookPanOnTouch(): void
     {
         // Mouse pan and up are registered with the document to allow detection when the mouse leaves the element and goes into another
-        const panStart = this.touch.pan(this.element , 'panstart', { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1, velocity: 0 });
-        const panning  = this.touch.pan(this.document, 'panmove' , { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1, velocity: 0 });
-        const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1, velocity: 0 });
+        const panStart = this.touch.pan(this.element , 'panstart', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
+        const panning  = this.touch.pan(this.document, 'panmove' , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
+        const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
         
         // Listen for drag start, then switch it dragging until dragging ends
         const pan = panStart.pipe(
