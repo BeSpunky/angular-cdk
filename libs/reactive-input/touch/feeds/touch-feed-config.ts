@@ -5,3 +5,5 @@ export interface TouchFeedConfig extends FeedConfig
 {
     direction?: TouchDirection;
 }
+
+export type TouchFeedWithRecognizerConfig = Omit<RecognizerOptions, 'direction'> & TouchFeedConfig;
