@@ -9,6 +9,7 @@ import { useActivationSwitch     } from '@bespunky/angular-cdk/shared';
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService    } from '@bespunky/angular-cdk/reactive-input/mouse';
 import { ReactiveKeyboardService } from '@bespunky/angular-cdk/reactive-input/keyboard';
+import { ReactiveTouchService    } from '@bespunky/angular-cdk/reactive-input/touch';
 import { Camera, ViewBounds      } from '@bespunky/angular-cdk/navigables/camera';
 import { accelerateWithKeyboard  } from '../rxjs/operators/accelerate-with-keyboard';
 import { KeyboardModifierFactors } from './keyboard-modifier-factors';
@@ -42,7 +43,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
         
-    constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, element: ElementRef)
+    constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, private touch: ReactiveTouchService, element: ElementRef)
     {
         super(element);
         
