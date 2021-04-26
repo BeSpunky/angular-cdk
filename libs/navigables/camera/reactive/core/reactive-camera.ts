@@ -1,5 +1,5 @@
 import { Key                                                                                   } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, Observable         } from 'rxjs';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable         } from 'rxjs';
 import { exhaustMap, map, observeOn, pairwise, switchMap, takeUntil, takeWhile, withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                                                                } from '@angular/core';
 import { Property                                                                              } from '@bespunky/typescript-utils';
@@ -101,8 +101,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookKeyboardAcceleratedPosition(pan, e => -e.movementX, 'horizontal');
         this.hookKeyboardAcceleratedPosition(pan, e => -e.movementY, 'vertical'  );
 
-        this.hookFlick(dragging, dragEnd, e => -e.movementX, 'horizontal');
-        this.hookFlick(dragging, dragEnd, e => -e.movementY, 'vertical');
+        this.hookFlick(dragStart, dragging, dragEnd, e => -e.movementX, 'horizontal');
+        this.hookFlick(dragStart, dragging, dragEnd, e => -e.movementY, 'vertical');
     }
 
     private hookPanOnWheel(): void
@@ -128,9 +128,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     private hookPanOnTouch(): void
     {
         // Mouse pan and up are registered with the document to allow detection when the mouse leaves the element and goes into another
-        const panStart = this.touch.pan(this.element , 'panstart', { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1 });
-        const panning  = this.touch.pan(this.document, 'panmove' , { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1 });
-        const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1 });
+        const panStart = this.touch.pan(this.element , 'panstart', { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1, velocity: 0 });
+        const panning  = this.touch.pan(this.document, 'panmove' , { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1, velocity: 0 });
+        const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, direction: 'all', threshold: 1, velocity: 0 });
         
         // Listen for drag start, then switch it dragging until dragging ends
         const pan = panStart.pipe(
@@ -144,8 +144,13 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaX - e.deltaX, 'horizontal');
         this.hookStandardPosition(pan, ([lastE, e]) => lastE.deltaY - e.deltaY, 'vertical'  );
 
-        this.hookFlick(panning, panEnd, e => -e.deltaX * Math.abs(e.velocityX), 'horizontal');
-        this.hookFlick(panning, panEnd, e => -e.deltaY * Math.abs(e.velocityY), 'vertical');
+        const swipeX = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, direction: 'horizontal', threshold: 5 });
+        const swipeY = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, direction: 'vertical'  , threshold: 5 });
+
+        const abortEase = merge(panStart, panEnd);
+
+        this.subscribe(this.easeOutMouseMovement(swipeX, abortEase, e => -e.deltaX * 0.4), amount => this.panX(amount));
+        this.subscribe(this.easeOutMouseMovement(swipeY, abortEase, e => -e.deltaY * 0.4), amount => this.panY(amount));
     }
 
     private panCamera(amount: number, direction: 'horizontal' | 'vertical'): void
@@ -174,7 +179,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.subscribe(movement, amount => this.panCamera(amount, direction));
     }
 
-    private hookFlick<TEvent>(dragging: Observable<TEvent>, dragEnd: Observable<TEvent>, getAmount: (event: TEvent) => number, direction: 'horizontal' | 'vertical'): void
+    private hookFlick<TEvent>(dragStart: Observable<TEvent>, dragging: Observable<TEvent>, dragEnd: Observable<TEvent>, getAmount: (event: TEvent) => number, direction: 'horizontal' | 'vertical'): void
     {
         const flickSwitch = direction === 'horizontal' ? this.flickX : this.flickY;
             
@@ -186,12 +191,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         );
 
         this.subscribe(
-            this.easeOutMouseMovement(lastMovement, getAmount),
+            this.easeOutMouseMovement(lastMovement, dragStart, getAmount),
             amount => this.panCamera(amount, direction)
         );
     }
 
-    private easeOutMouseMovement<TEvent>(eventFeed: Observable<TEvent>, getMovement: (event: TEvent) => number): Observable<number>
+    private easeOutMouseMovement<TEvent, TAbort>(eventFeed: Observable<TEvent>, abort: Observable<TAbort>, getMovement: (event: TEvent) => number): Observable<number>
     {
         /**
          * The idea is to get the last mouse movement amount, then repeat the movement decreasing the amount each time
@@ -201,6 +206,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
         // Combine the timer and the breaks strength to have both values when calculating the next movement amount
         const easeOut = (movement: number) => combineLatest([animationInterval, this.flickBreaksStrength]).pipe(
+            // Allow aborting the animation with another observable
+            takeUntil(abort),
+            // Only process on browser animation rerender
             observeOn(animationFrameScheduler),
             // Calculate how much to decrease the original amount on the next animation step.
             // To calculate the next decreased movement: acceleration * animationStep
