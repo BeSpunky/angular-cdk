@@ -1,9 +1,9 @@
 import { fromEvent, Observable         } from 'rxjs';
 import { JQueryStyleEventEmitter       } from 'rxjs/internal/observable/fromEvent';
 import { ElementRef                    } from '@angular/core';
+import { useActivationSwitch           } from '@bespunky/rxjs/operators';
 import { DocumentRef                   } from '@bespunky/angular-zen';
 
-import { useActivationSwitch           } from '@bespunky/angular-cdk/shared';
 import { TouchEventName                } from '../types/touch-event';
 import { TouchDirectionCodes           } from '../types/touch-direction';
 import { TouchFeedWithRecognizerConfig } from '../feeds/touch-feed-config';
