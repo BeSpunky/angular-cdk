@@ -3,7 +3,7 @@ import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merg
 import { exhaustMap, map, observeOn, pairwise, switchMap, takeUntil, takeWhile, withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                                                                } from '@angular/core';
 import { Property                                                                              } from '@bespunky/typescript-utils';
-import { DocumentRef                                                                           } from '@bespunky/angular-zen/core';
+import { useActivationSwitch                                                                                           } from '@bespunky/rxjs/operators';
 
 import { useActivationSwitch     } from '@bespunky/angular-cdk/shared';
 import { EventWithModifiers      } from '@bespunky/angular-cdk/reactive-input/shared';
