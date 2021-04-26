@@ -149,6 +149,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
         const abortEase = merge(panStart, panEnd);
 
+        // TODO: Replace fixed factors with subjets
         this.subscribe(this.easeOutMouseMovement(swipeX, abortEase, e => -e.deltaX * 0.4), amount => this.panX(amount));
         this.subscribe(this.easeOutMouseMovement(swipeY, abortEase, e => -e.deltaY * 0.4), amount => this.panY(amount));
     }
