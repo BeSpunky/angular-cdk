@@ -156,9 +156,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const panning  = this.touch.pan(this.document, 'panmove' , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
         const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
         
-        // Listen for drag start, then switch it dragging until dragging ends
+        // Hammerjs provides the total pan amount from the pan start position as the delta value.
+        // As camera panning is done with differential amounts the delta must be calculated relative to the last event.
         const pan = toggled(panning, { on: panStart, off: panEnd }).pipe(
             mergeMap(p => p.pipe(
+                // Reset the first value on each pan start to make sure the delta is always calculated
+                // relativly to the current pan session.
                 startWith({ deltaX: 0, deltaY: 0 }),
                 pairwise()
             ))
