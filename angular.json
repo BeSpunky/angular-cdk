@@ -342,7 +342,7 @@
     },
     "rxjs": {
       "root": "libs/rxjs",
-      "sourceRoot": "libs/rxjs/src",
+      "sourceRoot": "libs/rxjs",
       "projectType": "library",
       "architect": {
         "lint": {
@@ -366,7 +366,7 @@
             "outputPath": "dist/libs/rxjs",
             "tsConfig": "libs/rxjs/tsconfig.lib.json",
             "packageJson": "libs/rxjs/package.json",
-            "main": "libs/rxjs/src/index.ts",
+            "main": "libs/rxjs/index.ts",
             "assets": ["libs/rxjs/*.md"]
           }
         }
