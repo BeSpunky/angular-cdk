@@ -53,20 +53,9 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookPanOnKeyboard();
     }
     
-    public switchOn(switchName: ActivationSwitch<TItem>): void
-    {
-        this[switchName].next(true);
-    }
-
-    public switchOff(switchName: ActivationSwitch<TItem>): void
-    {
-        this[switchName].next(false);
-    }
-
-    public toggleSwitch(switchName: ActivationSwitch<TItem>): void
-    {
-        this[switchName].next(!this[switchName].value);
-    }
+    public switchOn    (switchName: ActivationSwitch<TItem>): void { this[switchName].next(true);                    }
+    public switchOff   (switchName: ActivationSwitch<TItem>): void { this[switchName].next(false);                   }
+    public toggleSwitch(switchName: ActivationSwitch<TItem>): void { this[switchName].next(!this[switchName].value); }
 
     private hookZoomOnWheel(): void
     {
