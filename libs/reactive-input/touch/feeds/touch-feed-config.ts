@@ -3,7 +3,8 @@ import { TouchDirection } from '../types/touch-direction';
 
 export interface TouchFeedConfig extends FeedConfig
 {
-    direction?: TouchDirection;
+    ignoreMouse?: boolean;
+    direction?  : TouchDirection;
 }
 
 export type TouchFeedWithRecognizerConfig = Omit<RecognizerOptions, 'direction'> & TouchFeedConfig;
