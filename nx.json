@@ -30,9 +30,6 @@
     "rxjs": {
       "tags": []
     },
-    "shared": {
-      "tags": []
-    },
     "reactive-input": {
       "tags": [],
       "implicitDependencies": ["rxjs"]
@@ -43,7 +40,7 @@
     },
     "timeline": {
       "tags": [],
-      "implicitDependencies": ["navigables", "reactive-input", "shared"]
+      "implicitDependencies": ["navigables", "reactive-input"]
     },
     "timeline-e2e": {
       "tags": [],
