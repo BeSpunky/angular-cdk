@@ -23,7 +23,7 @@
       "@bespunky/angular-cdk/timeline/*"      : ["libs/timeline/*"],
       "@bespunky/typescript-utils"            : ["libs/typescript-utils", "libs/typescript-utils/src/index.ts"],
       "@bespunky/typescript-utils/*"          : ["libs/typescript-utils/src/*"],
-      "@bespunky/rxjs"                        : ["libs/rxjs", "libs/rxjs/index.ts"],
+      "@bespunky/rxjs"                        : ["libs/rxjs"],
       "@bespunky/rxjs/*"                      : ["libs/rxjs/*"]
     }
   },
