@@ -17,7 +17,6 @@ export class ViewBounds
         public readonly viewPort   : ViewPort,
         public readonly viewCenterX: number,
         public readonly viewCenterY: number,
-        public readonly zoom       : number
     )
     {
         this.left   = viewCenterX - viewPort.width  / 2;
