@@ -1,10 +1,10 @@
-import { Key                                                                                             } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, Observable                   } from 'rxjs';
-import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
-import { ElementRef, Injectable                                                                          } from '@angular/core';
-import { mergeToggled, toggled                                                                           } from '@bespunky/rxjs';
-import { useActivationSwitch                                                                             } from '@bespunky/rxjs/operators';
-import { DocumentRef                                                                                     } from '@bespunky/angular-zen/core';
+import { Key                                                                                                           } from 'ts-key-enum';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                          } from 'rxjs';
+import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , throttleTime, withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                                                                        } from '@angular/core';
+import { mergeToggled, toggled                                                                                         } from '@bespunky/rxjs';
+import { useActivationSwitch                                                                                           } from '@bespunky/rxjs/operators';
+import { DocumentRef                                                                                                   } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -42,6 +42,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         
         this.hookZoomOnWheel();
         this.hookZoomOnKeyboard();
+        this.hookZoomOnPinch();
         this.hookPanOnDrag();
         this.hookPanOnWheel();
         this.hookPanOnKeyboard();
@@ -76,6 +77,37 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         // in an unexpected manner. Hence the hooking without keyboard acceleration here.
         this.hookStandardZoom({ eventFeed: zoomIn , getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () =>  1 });
         this.hookStandardZoom({ eventFeed: zoomOut, getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () => -1 });
+    }
+
+    private hookZoomOnPinch(): void
+    {
+        const pinchmove   = this.touch.pinch(this.element, 'pinchmove'  , { activationSwitch: this.zoomOnPinch, enable: true });
+        const pinchStart  = this.touch.pinch(this.element, 'pinchstart' , { activationSwitch: this.zoomOnPinch, enable: true });
+        const pinchEnd    = this.touch.pinch(this.element, 'pinchend'   , { activationSwitch: this.zoomOnPinch, enable: true });
+        const pinchCancel = this.touch.pinch(this.element, 'pinchcancel', { activationSwitch: this.zoomOnPinch, enable: true });
+        // Pinching sometimes gets stuck. Seems like it happens when a finger leaves the element or the screen.
+        // These compensate and abort pinching
+        const pinchEndDoc    = this.touch.pinch(this.document, 'pinchend'   , { activationSwitch: this.zoomOnPinch, enable: true });
+        const pinchCancelDoc = this.touch.pinch(this.document, 'pinchcancel', { activationSwitch: this.zoomOnPinch, enable: true });
+        const panStartDoc    = this.touch.pan  (this.document, 'panstart'   , { activationSwitch: this.zoomOnPinch });
+        
+        const abortZoom = merge(pinchEnd, pinchCancel, pinchEndDoc, pinchCancelDoc, panStartDoc);
+        const zoom      = mergeToggled(pinchmove, { on: pinchStart, off: abortZoom }).pipe(
+            startWith({ scale: 0 }),
+            // Hammer fires pinch events too often, causing fast and unintuitive zoom.
+            // `Camera.sizeUnit` expectes zoomLevel to be an integer, meaning a rapid change in zoom level.
+            // To compensate, pinch values are throttled.
+            // TODO: Replace fixed value with subject
+            throttleTime(15),
+            pairwise(),
+            map(([lastE, e]) => [Math.sign(e.scale - lastE.scale), e])
+        ) as Observable<[number, HammerInput]>;
+
+        this.hookZoom(
+            zoom,
+            (e, viewBounds) => viewBounds.left + e.center.x,
+            (e, viewBounds) => viewBounds.top  + e.center.y
+        );
     }
 
     private hookStandardZoom<TEvent>({ eventFeed, getPositionX, getPositionY, getAmount }: ZoomConfig<TEvent>): void
