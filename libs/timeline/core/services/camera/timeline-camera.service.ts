@@ -42,8 +42,8 @@ export class TimelineCameraService extends TimelineCamera
      */
     private dayWidthFeed(): Observable<number>
     {
-        return combineLatest([this.config.baseTickSize, this.zoomFactor, this.zoomLevel]).pipe(
-            map(([baseTickSize, zoomFactor, zoomLevel]) => baseTickSize * Math.pow(zoomFactor, zoomLevel)),
+        return combineLatest([this.config.baseTickSize, this.sizeUnit]).pipe(
+            map(([baseTickSize, sizeUnit]) => baseTickSize * sizeUnit),
             // Make this observable remember and stream the latest value to each new subscriber.
             // This way the width can be resolved instantly when the value is needed for some immidiate calcualtion
             // like in TimelineCamera.moveTo().

@@ -14,6 +14,12 @@ export abstract class Camera<TItem> extends Destroyable
     public readonly viewCenterX: BehaviorSubject<number> = new BehaviorSubject(0);
     public readonly viewCenterY: BehaviorSubject<number> = new BehaviorSubject(0);
     
+    /**
+     * A zoom dependant value to use as a unit for sizing elements on the screen.
+     *
+     * @type {Observable<number>}
+     */
+    public readonly sizeUnit  : Observable<number>;
     public readonly viewPort  : Observable<ViewPort>;
     public readonly viewBounds: Observable<ViewBounds>;
     
@@ -21,10 +27,18 @@ export abstract class Camera<TItem> extends Destroyable
     {
         super();
         
+        this.sizeUnit   = this.sizeUnitFeed();
         this.viewPort   = this.viewPortFeed();
         this.viewBounds = this.viewBoundsFeed();
     }
     
+    protected sizeUnitFeed(): Observable<number>
+    {
+        return combineLatest([this.zoomFactor, this.zoomLevel]).pipe(
+            map(([zoomFactor, zoomLevel]) => zoomFactor ** zoomLevel)
+        );
+    }
+
     protected viewPortFeed(): Observable<ViewPort>
     {
         const element: HTMLElement = this.element.nativeElement;
@@ -37,8 +51,8 @@ export abstract class Camera<TItem> extends Destroyable
     
     protected viewBoundsFeed(): Observable<ViewBounds>
     {
-        return combineLatest([this.viewPort, this.viewCenterX, this.viewCenterY, this.zoomLevel]).pipe(
-            map(([viewPort, viewCenterX, viewCenterY, zoomLevel]) => new ViewBounds(viewPort, viewCenterX, viewCenterY, zoomLevel)),
+        return combineLatest([this.viewPort, this.viewCenterX, this.viewCenterY]).pipe(
+            map(([viewPort, viewCenterX, viewCenterY]) => new ViewBounds(viewPort, viewCenterX, viewCenterY)),
             shareReplay(1)
         );
     }
