@@ -13,7 +13,7 @@ import { ReactiveTouchService                                                   
 import { Camera                                                                                      } from '@bespunky/angular-cdk/navigables/camera';
 import { accelerateWithKeyboard                                                                      } from '../rxjs/operators/accelerate-with-keyboard';
 import { DefaultKeyboardModifierFactors, KeyboardModifierFactors                                     } from './keyboard-modifier-factors';
-import { ActivationSwitch, ZoomConfig, PositionExtractor, PanDirection, AmountExtractor, FlickConfig } from './util-types';
+import { ActivationSwitch, ZoomConfig, PositionExtractor, PanDirection, AmountExtractor, FlickConfig } from './_util-types';
 
 @Injectable()
 export abstract class ReactiveCamera<TItem> extends Camera<TItem>
