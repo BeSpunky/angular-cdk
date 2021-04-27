@@ -33,6 +33,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly wheelPanSpeedFactor    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly keyboardPanSpeed       : BehaviorSubject<number>                  = new BehaviorSubject(30);
     public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
+    public readonly swipeFlickFactor       : BehaviorSubject<number>                  = new BehaviorSubject(0.4);
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
         
@@ -246,9 +247,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const swipeX = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'horizontal', threshold: 3.5 });
         const swipeY = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'vertical'  , threshold: 3.5 });
 
-        // TODO: Replace fixed factors with subjets
-        this.hookFlick({ trigger: swipeX, abortOn: panStart, getLastMoveAmount: e => -e.deltaX * 0.4, direction: 'horizontal' });
-        this.hookFlick({ trigger: swipeY, abortOn: panStart, getLastMoveAmount: e => -e.deltaX * 0.4, direction: 'vertical'   });
+        this.hookFlick({ trigger: swipeX, abortOn: panStart, getLastMoveAmount: e => -e.deltaX * this.swipeFlickFactor.value, direction: 'horizontal' });
+        this.hookFlick({ trigger: swipeY, abortOn: panStart, getLastMoveAmount: e => -e.deltaY * this.swipeFlickFactor.value, direction: 'vertical'   });
     }
 
     private hookFlick<TTrigger, TAbort>({ trigger, abortOn, direction, getLastMoveAmount }: FlickConfig<TTrigger, TAbort>): void
