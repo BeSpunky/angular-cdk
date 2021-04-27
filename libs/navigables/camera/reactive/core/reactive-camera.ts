@@ -115,7 +115,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const dragging  = this.mouse.button(this.document, 'mousemove', { activationSwitch: this.panOnDrag, button: 'main' });
         const dragEnd   = this.mouse.button(this.document, 'mouseup'  , { activationSwitch: this.panOnDrag, button: 'main' });
         
-        // Listen for drag start, then switch it dragging until dragging ends
+        // Listen for drag events, but only between drag start and drag end
         const pan = mergeToggled(dragging, { on: dragStart, off: dragEnd });
 
         // Reverse movement to match mouse pan and hook
@@ -157,8 +157,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const panning  = this.touch.pan(this.document, 'panmove' , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
         const panEnd   = this.touch.pan(this.document, 'panend'  , { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'all', threshold: 1, velocity: 0 });
         
-        // Hammerjs provides the total pan amount from the pan start position as the delta value.
-        // As camera panning is done with differential amounts the delta must be calculated relative to the last event.
+        // Hammerjs provides the *total* pan amount from the position panning started as the delta value.
+        // As camera panning is done with differential amounts the delta must be calculated relatively to the last event.
         const pan = toggled(panning, { on: panStart, off: panEnd }).pipe(
             mergeMap(p => p.pipe(
                 // Reset the first value on each pan start to make sure the delta is always calculated
