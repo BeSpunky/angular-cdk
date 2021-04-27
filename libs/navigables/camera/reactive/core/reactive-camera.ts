@@ -1,10 +1,10 @@
-import { Key                                                                                                           } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                          } from 'rxjs';
-import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , throttleTime, withLatestFrom } from 'rxjs/operators';
-import { ElementRef, Injectable                                                                                        } from '@angular/core';
-import { mergeToggled, toggled                                                                                         } from '@bespunky/rxjs';
-import { useActivationSwitch                                                                                           } from '@bespunky/rxjs/operators';
-import { DocumentRef                                                                                                   } from '@bespunky/angular-zen/core';
+import { Key                                                                                             } from 'ts-key-enum';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable            } from 'rxjs';
+import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                                                          } from '@angular/core';
+import { mergeToggled, toggled                                                                           } from '@bespunky/rxjs';
+import { useActivationSwitch                                                                             } from '@bespunky/rxjs/operators';
+import { DocumentRef                                                                                     } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -81,7 +81,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookZoomOnPinch(): void
     {
-        const pinchmove   = this.touch.pinch(this.element, 'pinchmove'  , { activationSwitch: this.zoomOnPinch, enable: true });
+        const pinchmove   = this.touch.pinch(this.element, 'pinchmove'  , { activationSwitch: this.zoomOnPinch, enable: true, threshold: 0.05 });
         const pinchStart  = this.touch.pinch(this.element, 'pinchstart' , { activationSwitch: this.zoomOnPinch, enable: true });
         const pinchEnd    = this.touch.pinch(this.element, 'pinchend'   , { activationSwitch: this.zoomOnPinch, enable: true });
         const pinchCancel = this.touch.pinch(this.element, 'pinchcancel', { activationSwitch: this.zoomOnPinch, enable: true });
@@ -94,11 +94,6 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         const abortZoom = merge(pinchEnd, pinchCancel, pinchEndDoc, pinchCancelDoc, panStartDoc);
         const zoom      = mergeToggled(pinchmove, { on: pinchStart, off: abortZoom }).pipe(
             startWith({ scale: 0 }),
-            // Hammer fires pinch events too often, causing fast and unintuitive zoom.
-            // `Camera.sizeUnit` expectes zoomLevel to be an integer, meaning a rapid change in zoom level.
-            // To compensate, pinch values are throttled.
-            // TODO: Replace fixed value with subject
-            throttleTime(15),
             pairwise(),
             map(([lastE, e]) => [Math.sign(e.scale - lastE.scale), e])
         ) as Observable<[number, HammerInput]>;
