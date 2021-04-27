@@ -56,7 +56,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     {
         const vWheel = this.mouse.wheel(this.element, { activationSwitch: this.zoomOnWheel, direction: 'deltaY' });
         
-        this.hookKeyboardAcceleratedZoom({
+        this.hookStandardZoom({
             eventFeed   : vWheel,
             // Calculate the mouse position relative to the drawing (not the viewport).
             getPositionX: (e, viewBounds) => viewBounds.left + e.offsetX,
