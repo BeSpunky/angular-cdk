@@ -112,13 +112,6 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookZoom(zoomAmount, getPositionX, getPositionY);
     }
 
-    private hookKeyboardAcceleratedZoom<TEvent extends EventWithModifiers>({ eventFeed, getPositionX, getPositionY, getAmount }: ZoomConfig<TEvent>): void
-    {
-        const zoomAmount = eventFeed.pipe(accelerateWithKeyboard(getAmount, this.keyboardModifierFactors));
-
-        this.hookZoom(zoomAmount, getPositionX, getPositionY);
-    }
-
     private hookZoom<TEvent>(eventFeed: Observable<[amount: number, event: TEvent]>, getPositionX: PositionExtractor<TEvent>, getPositionY: PositionExtractor<TEvent>): void
     {
         const zoom = eventFeed.pipe(
