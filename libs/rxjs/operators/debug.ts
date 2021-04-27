@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { tap        } from 'rxjs/operators';
 
-export function debug<T>(message?: string | ((value: T) => string)): (source: Observable<T>) => Observable<T>
+export function debug<T>(message?: string | number | ((value: T) => any)): (source: Observable<T>) => Observable<T>
 {
     const log =
         message
