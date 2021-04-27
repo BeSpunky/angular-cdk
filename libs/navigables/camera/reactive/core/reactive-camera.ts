@@ -243,8 +243,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookFlickOnTouchSwipe(panStart: Observable<HammerInput>): void
     {
-        const swipeX = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'horizontal', threshold: 5 });
-        const swipeY = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'vertical'  , threshold: 5 });
+        const swipeX = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'horizontal', threshold: 3.5 });
+        const swipeY = this.touch.swipe(this.element, 'swipe', { activationSwitch: this.panOnTouch, ignoreMouse: true, direction: 'vertical'  , threshold: 3.5 });
 
         // TODO: Replace fixed factors with subjets
         this.hookFlick({ trigger: swipeX, abortOn: panStart, getLastMoveAmount: e => -e.deltaX * 0.4, direction: 'horizontal' });
