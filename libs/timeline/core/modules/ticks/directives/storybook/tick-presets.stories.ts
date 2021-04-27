@@ -27,7 +27,7 @@ export type DatesBetweenPreset = StandardDatesPreset<DatesBetweenGenerator>;
 export type TickLabelerPreset  = StandardDatesPreset<TickLabeler>;
 
 // TODO: Day factors only affect tick width calculation. As the width is not being occupied in the example
-// component, these were never tested. Test and adapt as needed.
+//       component, these were never tested. Test and adapt as needed.
 export const dayFactors: DayFactorPreset = {
     daysInYear  : getDaysInYear,
     daysInMonth : getDaysInMonth,

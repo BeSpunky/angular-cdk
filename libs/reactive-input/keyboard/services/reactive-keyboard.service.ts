@@ -29,7 +29,7 @@ export class ReactiveKeyboardService
     {
         const { key } = config || {};
         
-        // TODO: Replace document with element and make it work even without focus
+        // TODO: Research making keyboard events work even without element focus, then replace document with element.
         let keydown = createReactiveInputWithModifiersObservable<KeyboardEvent>(new ElementRef(document), eventName, config);
         
         if (key) keydown = keydown.pipe(filter(e => e.key === key));
