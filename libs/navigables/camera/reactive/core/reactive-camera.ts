@@ -74,7 +74,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         // There is no mouse point or anything so zoom around the center of the view.
         // As keyboard zoom is activated using the shift modifier, which is also used for keyboard acceleration, the camera behaved
         // in an unexpected manner. Hence the hooking without keyboard acceleration here.
-        this.hookStandardZoom({ eventFeed: zoomIn , getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () => 1  });
+        this.hookStandardZoom({ eventFeed: zoomIn , getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () =>  1 });
         this.hookStandardZoom({ eventFeed: zoomOut, getPositionX: (_, viewBounds) => viewBounds.viewCenterX, getPositionY: (_, viewBounds) => viewBounds.viewCenterY, getAmount: () => -1 });
     }
 
