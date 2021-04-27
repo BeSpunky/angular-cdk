@@ -1,5 +1,5 @@
 import { Observable, pipe, UnaryFunction                      } from 'rxjs';
-import { distinctUntilChanged, filter, mergeMap, windowToggle } from 'rxjs/operators';
+import { distinctUntilChanged, filter, mergeAll, windowToggle } from 'rxjs/operators';
 
 export function useActivationSwitch<T>(observable: Observable<boolean>): UnaryFunction<Observable<T>, Observable<T>>
 {
@@ -9,6 +9,6 @@ export function useActivationSwitch<T>(observable: Observable<boolean>): UnaryFu
     
     return pipe(
         windowToggle<T, boolean>(on, () => off),
-        mergeMap(value => value)
+        mergeAll()
     );
 }

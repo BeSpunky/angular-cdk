@@ -4,8 +4,8 @@ export class TickStoryDefinition
 {
     /** A visual offset (in pixels) in case of multiple ticks in one story. See `createStory()` function. */
     public offset                 = 0;
-    public minZoom                = 0;
-    public maxZoom                = 120;
+    public minZoom                = -200;
+    public maxZoom                = 220;
     public color                  = 'black';
     public width: number | string = 5;
 

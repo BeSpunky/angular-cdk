@@ -1,0 +1,1 @@
+export type KeyboardEventName = 'keydown' | 'keyup' | 'keypress';

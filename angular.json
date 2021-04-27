@@ -253,40 +253,6 @@
         }
       }
     },
-    "shared": {
-      "projectType": "library",
-      "root": "libs/shared",
-      "sourceRoot": "libs/shared",
-      "prefix": "bs",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:ng-packagr-lite",
-          "options": {
-            "tsConfig": "libs/shared/tsconfig.lib.json",
-            "project": "libs/shared/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/shared/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/shared/**/*.ts", "libs/shared/**/*.html"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/shared"],
-          "options": {
-            "jestConfig": "libs/shared/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "reactive-input": {
       "projectType": "library",
       "root": "libs/reactive-input",
@@ -370,6 +336,38 @@
             "packageJson": "libs/typescript-utils/package.json",
             "main": "libs/typescript-utils/src/index.ts",
             "assets": ["libs/typescript-utils/*.md"]
+          }
+        }
+      }
+    },
+    "rxjs": {
+      "root": "libs/rxjs",
+      "sourceRoot": "libs/rxjs",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/rxjs/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/rxjs"],
+          "options": {
+            "jestConfig": "libs/rxjs/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/rxjs",
+            "tsConfig": "libs/rxjs/tsconfig.lib.json",
+            "packageJson": "libs/rxjs/package.json",
+            "main": "libs/rxjs/index.ts",
+            "assets": ["libs/rxjs/*.md"]
           }
         }
       }

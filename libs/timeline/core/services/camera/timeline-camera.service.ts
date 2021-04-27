@@ -6,6 +6,7 @@ import { DocumentRef               } from '@bespunky/angular-zen';
 
 import { ReactiveMouseService           } from '@bespunky/angular-cdk/reactive-input/mouse';
 import { ReactiveKeyboardService        } from '@bespunky/angular-cdk/reactive-input/keyboard';
+import { ReactiveTouchService           } from '@bespunky/angular-cdk/reactive-input/touch';
 import { TimelineConfig, TimelineCamera } from '@bespunky/angular-cdk/timeline/abstraction';
 import { TimelineLocationService        } from '@bespunky/angular-cdk/timeline/shared';
 
@@ -20,10 +21,11 @@ export class TimelineCameraService extends TimelineCamera
                 document: DocumentRef,
                 mouse   : ReactiveMouseService,
                 keyboard: ReactiveKeyboardService,
+                touch   : ReactiveTouchService,
                 element : ElementRef
     )
     {
-        super(document, mouse, keyboard, element);
+        super(document, mouse, keyboard, touch, element);
 
         this.dayWidth = this.dayWidthFeed();
     }
@@ -40,8 +42,8 @@ export class TimelineCameraService extends TimelineCamera
      */
     private dayWidthFeed(): Observable<number>
     {
-        return combineLatest([this.config.baseTickSize, this.zoomFactor, this.zoomLevel]).pipe(
-            map(([baseTickSize, zoomFactor, zoomLevel]) => baseTickSize * Math.pow(zoomFactor, zoomLevel)),
+        return combineLatest([this.config.baseTickSize, this.sizeUnit]).pipe(
+            map(([baseTickSize, sizeUnit]) => baseTickSize * sizeUnit),
             // Make this observable remember and stream the latest value to each new subscriber.
             // This way the width can be resolved instantly when the value is needed for some immidiate calcualtion
             // like in TimelineCamera.moveTo().
