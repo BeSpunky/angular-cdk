@@ -29,5 +29,9 @@ export const Months   = createDynamicTickStory(monthsTick);
 export const Days     = createDynamicTickStory(daysTick);
 export const Multiple = createTickStory(yearsTick, monthsTick, daysTick);
 
+const zoomedMinutesTick = { ...minutesTick, minZoom: 140, maxZoom: 600 };
+const zoomedSecondsTick = { ...secondsTick, minZoom: 200, maxZoom: 600 };
+export const Time = createTickStory(hoursTick, zoomedMinutesTick, zoomedSecondsTick);
+
 const zoomedDaysTick = { ...daysTick, minZoom: 30, maxZoom: 120 };
 export const DayParts = createTickStory(zoomedDaysTick, dayPartsTick);
