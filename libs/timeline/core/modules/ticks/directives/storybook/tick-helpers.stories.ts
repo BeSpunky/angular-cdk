@@ -1,7 +1,6 @@
 import { Story } from '@storybook/angular';
 
-import { TimelineTickDirective           } from '@bespunky/angular-cdk/timeline';
-import { dayFactors, datesBetween, label } from './tick-presets.stories';
+import { dayFactors, datesBetween, label } from './tick-context.stories';
 import { TickStoryDefinition             } from './tick-definitions.stories';
 
 export function createTickTemplate({tickId, minZoom, maxZoom, labelKey, dayFactorKey, datesBetweenKey, color, width, offset}: TickStoryDefinition): string

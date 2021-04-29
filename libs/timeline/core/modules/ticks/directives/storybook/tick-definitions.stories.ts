@@ -1,4 +1,4 @@
-import { TickLabelerPreset, DayFactorPreset, DatesBetweenPreset } from './tick-presets.stories';
+import { TickLabelerPreset, DayFactorPreset, DatesBetweenPreset } from './tick-context.stories';
 
 export class TickStoryDefinition
 {
