@@ -3,9 +3,22 @@ import { Story } from '@storybook/angular';
 import { dayFactors, datesBetween, label } from './tick-context.stories';
 import { TickStoryDefinition             } from './tick-definitions.stories';
 
-export function createTickTemplate({tickId, minZoom, maxZoom, labelKey, dayFactorKey, datesBetweenKey, color, width, offset}: TickStoryDefinition): string
+export function wrapStoryInTimelineContainer(story: string)
 {
-    return `
+    return /*html*/`
+    <svg bsTimeline [zoom]="zoom" [date]="now" [positionY]="50" height="85vh" width="100vw">
+        <line x1="50%" y1="0"
+              x2="50%" y2="100%"
+              stroke="purple" stroke-width="1"
+        ></line>
+        ${story}
+    </svg>
+    `;
+}
+
+export function createTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayFactorKey, datesBetweenKey, color, width, offset }: TickStoryDefinition): string
+{    
+    return /*html*/`
     <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;">
         <line [attr.x1]="tick.screenPositionX | async" [attr.y1]="(tick.screenPositionY | async) + ${offset}"
               [attr.x2]="tick.screenPositionX | async" [attr.y2]="(tick.screenPositionY | async) + (tick.width | async) / 4"
@@ -30,12 +43,28 @@ export function offsetTick(tick: TickStoryDefinition, index: number): TickStoryD
     };
 }
 
-export function createTickStory(...ticks: TickStoryDefinition[]): Story<TimelineTickDirective>
+export function createTickStory(...ticks: TickStoryDefinition[]): Story<TickStoryDefinition>
 {
     const template = ticks.map(offsetTick).map(createTickTemplate).join(' ');
     
-    return args => ({
-        props   : { ...args, dayFactors, datesBetween, label },
+    const story: Story<TickStoryDefinition> = (args) => ({
+        props: { ...args, dayFactors, datesBetween, label },
         template
+    });
+
+    story.argTypes = {
+        tickId : { control: false },
+        minZoom: { control: false },
+        maxZoom: { control: false }
+    };
+
+    return story;
+}
+
+export function createDynamicTickStory(tick: TickStoryDefinition): Story<TickStoryDefinition>
+{
+    return (args) => ({
+        props   : { ...tick, ...args, dayFactors, datesBetween, label },
+        template: createTickTemplate(tick)
     });
 }
