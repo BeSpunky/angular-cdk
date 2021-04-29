@@ -3,6 +3,12 @@
     "angular.ng-template",
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
-    "firsttris.vscode-jest-runner"
+    "firsttris.vscode-jest-runner",
+    "WallabyJs.wallaby-vscode",
+    "WallabyJs.quokka-vscode",
+    "Tobermory.es6-string-html",
+    "vsls-contrib.codetour",
+    "wwm.better-align",
+    "matthewthorning.align-vertically"
   ]
 }

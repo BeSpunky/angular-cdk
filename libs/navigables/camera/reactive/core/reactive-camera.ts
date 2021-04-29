@@ -61,8 +61,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         this.hookStandardZoom({
             eventFeed   : vWheel,
             // Calculate the mouse position relative to the drawing (not the viewport).
-            getPositionX: (e, viewBounds) => viewBounds.left + e.offsetX,
-            getPositionY: (e, viewBounds) => viewBounds.top  + e.offsetY,
+            getPositionX: (e, viewBounds) => viewBounds.left + e.clientX,
+            getPositionY: (e, viewBounds) => viewBounds.top  + e.clientY,
             // Reverse deltaY so zooming in is positive and out is negative.
             getAmount   : e               => -Math.sign(e.deltaY)
         });

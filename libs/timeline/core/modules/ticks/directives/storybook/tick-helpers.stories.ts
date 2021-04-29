@@ -1,21 +1,24 @@
-import { Story } from '@storybook/angular';
+import { CommonModule                                           } from '@angular/common';
+import { componentWrapperDecorator, Meta, moduleMetadata, Story } from '@storybook/angular';
 
-import { TimelineTickDirective           } from '@bespunky/angular-cdk/timeline';
-import { dayFactors, datesBetween, label } from './tick-presets.stories';
-import { TickStoryDefinition             } from './tick-definitions.stories';
+import { TimelineTickDirective, TimelineCdkModule } from '@bespunky/angular-cdk/timeline';
+import { dayFactors, datesBetween, label          } from './tick-context.stories';
+import { TickStoryDefinition                      } from './tick-definitions.stories';
 
-export function createTickTemplate({tickId, minZoom, maxZoom, labelKey, dayFactorKey, datesBetweenKey, color, width, offset}: TickStoryDefinition): string
+export function createTickStoryMeta(exampleGroupName: string, wrapStoryInTimelineContainer: (story: string) => string): Meta
 {
-    return `
-    <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;">
-        <line [attr.x1]="tick.screenPositionX | async" [attr.y1]="(tick.screenPositionY | async) + ${offset}"
-              [attr.x2]="tick.screenPositionX | async" [attr.y2]="(tick.screenPositionY | async) + (tick.width | async) / 4"
-              stroke-width="${width}" stroke="${color}"
-        ></line>
-
-        <text style="user-select: none" [attr.x]="tick.screenPositionX | async" [attr.y]="tick.screenPositionY | async" dx="4" dy="${offset}" font-size="20">{{tick.label | async}}</text>
-    </g>
-    `;
+    return {
+        title     : `Timeline/*bsTimelineTick/${exampleGroupName}`,
+        component : TimelineTickDirective,
+        decorators: [
+            moduleMetadata({ imports: [CommonModule, TimelineCdkModule] }),
+            componentWrapperDecorator(wrapStoryInTimelineContainer, { zoom: 100, now: new Date() })
+        ],
+        argTypes: {
+            minZoom: { description: 'The lowest zoom level this tick should render on' , defaultValue: -200, control: { type: 'range', min: -300, max: 300 } },
+            maxZoom: { description: 'The highest zoom level this tick should render on', defaultValue:  200, control: { type: 'range', min: -300, max: 300 } }
+        }
+    } as Meta;
 }
 
 export function offsetTick(tick: TickStoryDefinition, index: number): TickStoryDefinition
@@ -31,12 +34,28 @@ export function offsetTick(tick: TickStoryDefinition, index: number): TickStoryD
     };
 }
 
-export function createTickStory(...ticks: TickStoryDefinition[]): Story<TimelineTickDirective>
+export function createTickStory(createTickTemplate: (tick: TickStoryDefinition) => string, ...ticks: TickStoryDefinition[]): Story<TickStoryDefinition>
 {
     const template = ticks.map(offsetTick).map(createTickTemplate).join(' ');
     
-    return args => ({
-        props   : { ...args, dayFactors, datesBetween, label },
+    const story: Story<TickStoryDefinition> = (args) => ({
+        props: { ...args, dayFactors, datesBetween, label },
         template
+    });
+
+    story.argTypes = {
+        tickId : { control: false },
+        minZoom: { control: false },
+        maxZoom: { control: false }
+    };
+
+    return story;
+}
+
+export function createDynamicTickStory(createTickTemplate: (tick: TickStoryDefinition) => string, tick: TickStoryDefinition): Story<TickStoryDefinition>
+{
+    return (args) => ({
+        props   : { ...tick, ...args, dayFactors, datesBetween, label },
+        template: createTickTemplate(tick)
     });
 }

@@ -1,4 +1,4 @@
-import { TickLabelerPreset, DayFactorPreset, DatesBetweenPreset } from './tick-presets.stories';
+import { TickLabelerPreset, DayFactorPreset, DatesBetweenPreset } from './tick-context.stories';
 
 export class TickStoryDefinition
 {
@@ -17,9 +17,12 @@ export class TickStoryDefinition
     ) { }
 };
 
-export const yearsTick  = new TickStoryDefinition('years', 'years', 'daysInYear', 'years');
-export const monthsTick = new TickStoryDefinition('months', 'months', 'daysInMonth', 'months');
-export const daysTick   = new TickStoryDefinition('days', 'days', 1, 'days');
+export const yearsTick   = new TickStoryDefinition('years', 'years', 'daysInYear', 'years');
+export const monthsTick  = new TickStoryDefinition('months', 'months', 'daysInMonth', 'months');
+export const daysTick    = new TickStoryDefinition('days', 'days', 1, 'days');
+export const hoursTick   = new TickStoryDefinition('hours', 'hours', 'hoursInDay', 'hours');
+export const minutesTick = new TickStoryDefinition('minutes', 'minutes', 'minutesInDay', 'minutes');
+export const secondsTick = new TickStoryDefinition('seconds', 'seconds', 'secondsInDay', 'seconds');
 
 export const dayPartsTick = new TickStoryDefinition('dayParts', 'dayParts', 'dayParts', 'dayParts');
 
