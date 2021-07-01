@@ -34,6 +34,45 @@
     }
   },
   "projects": {
+    "navigables": {
+      "projectType": "library",
+      "root": "libs/navigables",
+      "sourceRoot": "libs/navigables",
+      "prefix": "bs",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/navigables/tsconfig.lib.json",
+            "project": "libs/navigables/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/navigables/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/navigables/**/*.ts",
+              "libs/navigables/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/navigables"
+          ],
+          "options": {
+            "jestConfig": "libs/navigables/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "official-site": {
       "projectType": "application",
       "root": "apps/official-site",
@@ -48,13 +87,20 @@
             "main": "apps/official-site/src/main.ts",
             "polyfills": "apps/official-site/src/polyfills.ts",
             "tsConfig": "apps/official-site/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/official-site/src/favicon.ico",
               "apps/official-site/src/assets"
             ],
-            "styles": ["apps/official-site/src/styles.scss"],
-            "scripts": []
+            "styles": [
+              "apps/official-site/src/styles.scss"
+            ],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -114,7 +160,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/official-site"],
+          "outputs": [
+            "coverage/apps/official-site"
+          ],
           "options": {
             "jestConfig": "apps/official-site/jest.config.js",
             "passWithNoTests": true
@@ -143,112 +191,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/official-site-e2e/**/*.{js,ts}"]
-          }
-        }
-      }
-    },
-    "navigables": {
-      "projectType": "library",
-      "root": "libs/navigables",
-      "sourceRoot": "libs/navigables",
-      "prefix": "bs",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/navigables/tsconfig.lib.json",
-            "project": "libs/navigables/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/navigables/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
             "lintFilePatterns": [
-              "libs/navigables/**/*.ts",
-              "libs/navigables/**/*.html"
+              "apps/official-site-e2e/**/*.{js,ts}"
             ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/navigables"],
-          "options": {
-            "jestConfig": "libs/navigables/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "timeline": {
-      "projectType": "library",
-      "root": "libs/timeline",
-      "sourceRoot": "libs/timeline",
-      "prefix": "bs",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/timeline/tsconfig.lib.json",
-            "project": "libs/timeline/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/timeline/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/timeline/**/*.ts",
-              "libs/timeline/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/timeline"],
-          "options": {
-            "jestConfig": "libs/timeline/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "storybook": {
-          "builder": "@nrwl/storybook:storybook",
-          "options": {
-            "uiFramework": "@storybook/angular",
-            "port": 4400,
-            "config": {
-              "configFolder": "libs/timeline/.storybook"
-            }
-          },
-          "configurations": {
-            "ci": {
-              "quiet": true
-            }
-          }
-        },
-        "build-storybook": {
-          "builder": "@nrwl/storybook:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "uiFramework": "@storybook/angular",
-            "outputPath": "dist/storybook/timeline",
-            "config": {
-              "configFolder": "libs/timeline/.storybook"
-            }
-          },
-          "configurations": {
-            "ci": {
-              "quiet": true
-            }
           }
         }
       }
@@ -282,10 +227,124 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reactive-input"],
+          "outputs": [
+            "coverage/libs/reactive-input"
+          ],
           "options": {
             "jestConfig": "libs/reactive-input/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "rxjs": {
+      "root": "libs/rxjs",
+      "sourceRoot": "libs/rxjs",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/rxjs/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/rxjs"
+          ],
+          "options": {
+            "jestConfig": "libs/rxjs/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/libs/rxjs",
+            "tsConfig": "libs/rxjs/tsconfig.lib.json",
+            "packageJson": "libs/rxjs/package.json",
+            "main": "libs/rxjs/index.ts",
+            "assets": [
+              "libs/rxjs/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "timeline": {
+      "projectType": "library",
+      "root": "libs/timeline",
+      "sourceRoot": "libs/timeline",
+      "prefix": "bs",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/timeline/tsconfig.lib.json",
+            "project": "libs/timeline/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/timeline/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/timeline/**/*.ts",
+              "libs/timeline/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/timeline"
+          ],
+          "options": {
+            "jestConfig": "libs/timeline/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/timeline/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/timeline",
+            "config": {
+              "configFolder": "libs/timeline/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
           }
         }
       }
@@ -311,7 +370,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/timeline-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/timeline-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
@@ -324,50 +385,24 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/typescript-utils/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/typescript-utils/**/*.ts"
+            ]
           }
         },
         "build": {
           "builder": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/typescript-utils",
             "tsConfig": "libs/typescript-utils/tsconfig.lib.json",
             "packageJson": "libs/typescript-utils/package.json",
             "main": "libs/typescript-utils/src/index.ts",
-            "assets": ["libs/typescript-utils/*.md"]
-          }
-        }
-      }
-    },
-    "rxjs": {
-      "root": "libs/rxjs",
-      "sourceRoot": "libs/rxjs",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/rxjs/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/rxjs"],
-          "options": {
-            "jestConfig": "libs/rxjs/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "builder": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/rxjs",
-            "tsConfig": "libs/rxjs/tsconfig.lib.json",
-            "packageJson": "libs/rxjs/package.json",
-            "main": "libs/rxjs/index.ts",
-            "assets": ["libs/rxjs/*.md"]
+            "assets": [
+              "libs/typescript-utils/*.md"
+            ]
           }
         }
       }

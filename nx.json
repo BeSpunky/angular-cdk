@@ -1,9 +1,14 @@
 {
   "implicitDependencies": {
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     ".eslintrc.json": "*"
   },
-  "affected": { "defaultBase": "master" },
+  "affected": {
+    "defaultBase": "master"
+  },
   "npmScope": "@bespunky",
   "tasksRunnerOptions": {
     "default": {
@@ -17,6 +22,10 @@
     }
   },
   "projects": {
+    "navigables": {
+      "tags": [],
+      "implicitDependencies": ["typescript-utils", "reactive-input"]
+    },
     "official-site": {
       "tags": []
     },
@@ -24,19 +33,12 @@
       "tags": [],
       "implicitDependencies": ["official-site"]
     },
-    "typescript-utils": {
-      "tags": []
-    },
-    "rxjs": {
-      "tags": []
-    },
     "reactive-input": {
       "tags": [],
       "implicitDependencies": ["rxjs"]
     },
-    "navigables": {
-      "tags": [],
-      "implicitDependencies": ["typescript-utils", "reactive-input"]
+    "rxjs": {
+      "tags": []
     },
     "timeline": {
       "tags": [],
@@ -45,6 +47,17 @@
     "timeline-e2e": {
       "tags": [],
       "implicitDependencies": ["timeline"]
+    },
+    "typescript-utils": {
+      "tags": []
     }
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
   }
 }
