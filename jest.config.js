@@ -6,5 +6,6 @@ module.exports = {
     '<rootDir>/libs/rxjs',
     '<rootDir>/libs/reactive-input',
     '<rootDir>/apps/demo',
+    '<rootDir>/libs/angular-cdk',
   ],
 };

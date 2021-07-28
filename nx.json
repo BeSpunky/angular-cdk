@@ -22,6 +22,9 @@
     }
   },
   "projects": {
+    "angular-cdk": {
+      "tags": []
+    },
     "navigables": {
       "tags": [],
       "implicitDependencies": ["typescript-utils", "reactive-input"]

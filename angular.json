@@ -34,6 +34,47 @@
     }
   },
   "projects": {
+    "angular-cdk": {
+      "projectType": "library",
+      "root": "libs/angular-cdk",
+      "sourceRoot": "libs/angular-cdk/src",
+      "prefix": "bs",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "outputs": ["dist/libs/angular-cdk"],
+          "options": {
+            "project": "libs/angular-cdk/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/angular-cdk/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/angular-cdk/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-cdk"],
+          "options": {
+            "jestConfig": "libs/angular-cdk/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-cdk/src/**/*.ts",
+              "libs/angular-cdk/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "navigables": {
       "projectType": "library",
       "root": "libs/navigables",
@@ -63,9 +104,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/navigables"
-          ],
+          "outputs": ["coverage/libs/navigables"],
           "options": {
             "jestConfig": "libs/navigables/jest.config.js",
             "passWithNoTests": true
@@ -91,9 +130,7 @@
               "apps/official-site/src/favicon.ico",
               "apps/official-site/src/assets"
             ],
-            "styles": [
-              "apps/official-site/src/styles.scss"
-            ],
+            "styles": ["apps/official-site/src/styles.scss"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -160,9 +197,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/official-site"
-          ],
+          "outputs": ["coverage/apps/official-site"],
           "options": {
             "jestConfig": "apps/official-site/jest.config.js",
             "passWithNoTests": true
@@ -191,9 +226,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/official-site-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/official-site-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -227,9 +260,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/reactive-input"
-          ],
+          "outputs": ["coverage/libs/reactive-input"],
           "options": {
             "jestConfig": "libs/reactive-input/jest.config.js",
             "passWithNoTests": true
@@ -245,16 +276,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/rxjs/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/rxjs/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/rxjs"
-          ],
+          "outputs": ["coverage/libs/rxjs"],
           "options": {
             "jestConfig": "libs/rxjs/jest.config.js",
             "passWithNoTests": true
@@ -262,17 +289,13 @@
         },
         "build": {
           "builder": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/libs/rxjs",
             "tsConfig": "libs/rxjs/tsconfig.lib.json",
             "packageJson": "libs/rxjs/package.json",
             "main": "libs/rxjs/index.ts",
-            "assets": [
-              "libs/rxjs/*.md"
-            ]
+            "assets": ["libs/rxjs/*.md"]
           }
         }
       }
@@ -306,9 +329,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/timeline"
-          ],
+          "outputs": ["coverage/libs/timeline"],
           "options": {
             "jestConfig": "libs/timeline/jest.config.js",
             "passWithNoTests": true
@@ -331,9 +352,7 @@
         },
         "build-storybook": {
           "builder": "@nrwl/storybook:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "uiFramework": "@storybook/angular",
             "outputPath": "dist/storybook/timeline",
@@ -370,9 +389,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/timeline-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/timeline-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -385,24 +402,18 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/typescript-utils/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/typescript-utils/**/*.ts"]
           }
         },
         "build": {
           "builder": "@nrwl/node:package",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/libs/typescript-utils",
             "tsConfig": "libs/typescript-utils/tsconfig.lib.json",
             "packageJson": "libs/typescript-utils/package.json",
             "main": "libs/typescript-utils/src/index.ts",
-            "assets": [
-              "libs/typescript-utils/*.md"
-            ]
+            "assets": ["libs/typescript-utils/*.md"]
           }
         }
       }
