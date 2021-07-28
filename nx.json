@@ -43,10 +43,6 @@
     "rxjs": {
       "tags": []
     },
-    "timeline": {
-      "tags": [],
-      "implicitDependencies": ["navigables", "reactive-input"]
-    },
     "typescript-utils": {
       "tags": []
     }
