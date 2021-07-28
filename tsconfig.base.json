@@ -17,12 +17,6 @@
     "paths": {
       "@bespunky/angular-cdk": ["libs/angular-cdk"],
       "@bespunky/angular-cdk/*": ["libs/angular-cdk/*"],
-      "@bespunky/angular-cdk/navigables": ["libs/navigables"],
-      "@bespunky/angular-cdk/navigables/*": ["libs/navigables/*"],
-      "@bespunky/angular-cdk/reactive-input": ["libs/reactive-input"],
-      "@bespunky/angular-cdk/reactive-input/*": ["libs/reactive-input/*"],
-      "@bespunky/angular-cdk/timeline": ["libs/timeline"],
-      "@bespunky/angular-cdk/timeline/*": ["libs/timeline/*"],
       "@bespunky/rxjs": ["libs/rxjs"],
       "@bespunky/rxjs/*": ["libs/rxjs/*"],
       "@bespunky/typescript-utils": [
