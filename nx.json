@@ -22,9 +22,8 @@
     }
   },
   "projects": {
-    "navigables": {
-      "tags": [],
-      "implicitDependencies": ["typescript-utils", "reactive-input"]
+    "angular-cdk": {
+      "tags": []
     },
     "official-site": {
       "tags": []
@@ -33,20 +32,8 @@
       "tags": [],
       "implicitDependencies": ["official-site"]
     },
-    "reactive-input": {
-      "tags": [],
-      "implicitDependencies": ["rxjs"]
-    },
     "rxjs": {
       "tags": []
-    },
-    "timeline": {
-      "tags": [],
-      "implicitDependencies": ["navigables", "reactive-input"]
-    },
-    "timeline-e2e": {
-      "tags": [],
-      "implicitDependencies": ["timeline"]
     },
     "typescript-utils": {
       "tags": []
