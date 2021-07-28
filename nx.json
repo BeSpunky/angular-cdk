@@ -25,10 +25,6 @@
     "angular-cdk": {
       "tags": []
     },
-    "navigables": {
-      "tags": [],
-      "implicitDependencies": ["typescript-utils"]
-    },
     "official-site": {
       "tags": []
     },

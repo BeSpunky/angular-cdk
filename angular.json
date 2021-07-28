@@ -75,43 +75,6 @@
         }
       }
     },
-    "navigables": {
-      "projectType": "library",
-      "root": "libs/navigables",
-      "sourceRoot": "libs/navigables",
-      "prefix": "bs",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/navigables/tsconfig.lib.json",
-            "project": "libs/navigables/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/navigables/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/navigables/**/*.ts",
-              "libs/navigables/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/navigables"],
-          "options": {
-            "jestConfig": "libs/navigables/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "official-site": {
       "projectType": "application",
       "root": "apps/official-site",
