@@ -47,10 +47,6 @@
       "tags": [],
       "implicitDependencies": ["navigables", "reactive-input"]
     },
-    "timeline-e2e": {
-      "tags": [],
-      "implicitDependencies": ["timeline"]
-    },
     "typescript-utils": {
       "tags": []
     }
