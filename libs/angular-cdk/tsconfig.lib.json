@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": [],
+    "types": ["hammerjs"],
     "lib": ["dom", "es2018"]
   },
   "exclude": ["test-setup.ts", "**/*.spec.ts"],
