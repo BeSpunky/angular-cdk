@@ -1,6 +1,14 @@
 {
   "name": "@bespunky/angular-cdk",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.0",
+  "author": {
+    "email": "us@bespunky.io",
+    "name": "Shy Agam",
+    "url": "https://github.com/bespunky"
+  },
+  "license": "MIT",
+  "preview": true,
+  "private": false,
   "peerDependencies": {
     "@angular/common": "^12.0.0",
     "@angular/core": "^12.0.0",
