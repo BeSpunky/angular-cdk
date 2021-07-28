@@ -37,7 +37,7 @@
     "angular-cdk": {
       "projectType": "library",
       "root": "libs/angular-cdk",
-      "sourceRoot": "libs/angular-cdk/src",
+      "sourceRoot": "libs/angular-cdk",
       "prefix": "bs",
       "architect": {
         "build": {
@@ -68,8 +68,8 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/angular-cdk/src/**/*.ts",
-              "libs/angular-cdk/src/**/*.html"
+              "libs/angular-cdk/**/*.ts",
+              "libs/angular-cdk/**/*.html"
             ]
           }
         }
