@@ -27,7 +27,7 @@
     },
     "navigables": {
       "tags": [],
-      "implicitDependencies": ["typescript-utils", "reactive-input"]
+      "implicitDependencies": ["typescript-utils"]
     },
     "official-site": {
       "tags": []
@@ -35,10 +35,6 @@
     "official-site-e2e": {
       "tags": [],
       "implicitDependencies": ["official-site"]
-    },
-    "reactive-input": {
-      "tags": [],
-      "implicitDependencies": ["rxjs"]
     },
     "rxjs": {
       "tags": []
