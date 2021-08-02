@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/libs/rxjs',
     '<rootDir>/apps/demo',
     '<rootDir>/libs/angular-cdk',
+    '<rootDir>/apps/tiket',
   ],
 };
