@@ -1,1 +1,64 @@
-<div>route-list</div>
+<div bsTimeline [zoom]="zoom" [date]="now" style="height: 100%; border: 1px solid black">
+    <div *bsTimelineTick="'days'; minZoom: -100; maxZoom: 3300; dayFactor: 1; label: label; datesBetween: datesBetween; let tick;"
+         [style.width.px]="tick.width | async"
+         [style.height.px]="15"
+         [style.transform]="'translateX(' + (tick.screenPositionX | async) + 'px)'"
+         style="position: absolute; border-left: 3px solid darkgray;">
+        <label style="position: absolute; top: 5px; user-select: none; font-size: larger; font-weight: bold; color: green">
+            {{tick.label | async}}
+        </label>
+    </div>
+
+    <div *bsTimelineTick="'hours'; minZoom: -100; maxZoom: 3300; dayFactor: 1 / 24; label: labelH; datesBetween: datesBetweenH; let tick;"
+         [style.width.px]="tick.width | async"
+         [style.height.px]="7"
+         [style.transform]="'translateX(' + (tick.screenPositionX | async) + 'px)'"
+         style="position: absolute; border-left: 3px solid lightgray;">
+        <label *ngIf="(tick.label | async) !== 0"
+               style="position: absolute; left:5px; user-select: none">
+            {{tick.label | async}}
+        </label>
+    </div>
+
+    <div *ngFor="let tiker of assignedTikets; let index = index">
+        <div [style.width.px]="50"
+            [style.height.px]="50"
+            [style.top.px]="50 + index * (50 + 15 * 2)"
+            style="position: absolute;
+                padding: 15px;
+                box-shadow: black 1px 1px 1px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            "
+        >
+            {{ tiker.uid }}
+        </div>
+
+        <div *ngFor="let tiket of tiker.assignedTikets"
+            [style.height.px]="50"
+             style="position: absolute;
+                    left: 50px;
+                    width: 100%;
+             "
+        >
+            <div *ngFor="let checkpoint of tiket.checkpoints"
+                 [style.width.px]="checkpoint.executionTime * ((timeline?.camera?.sizeUnit | async) ?? 1) / 1000"
+                 [style.top.px]="50 + index * (50 + 15 * 2)"
+                 [style.left.px]="positionTicket(
+                     checkpoint,
+                    (timeline?.camera?.dayWidth | async) ?? 0,
+                    timeline?.camera?.viewBounds | async
+                 )
+                 "
+                 style="position: absolute;
+                        background-color: lightyellow;
+                        height: 100%;
+                 "
+            >
+                {{checkpoint.type === 0 ? 'Job' : 'Warehouse'}}
+            </div>
+        </div>
+    </div>
+</div>

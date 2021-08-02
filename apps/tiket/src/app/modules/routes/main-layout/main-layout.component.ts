@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Destroyable } from '@bespunky/angular-zen/core';
 import { Observable } from 'rxjs';
-import { filter, share, take, takeUntil } from 'rxjs/operators';
+import { share } from 'rxjs/operators';
 import { UserService } from '../../../shared/services/user.service';
 import { FilteredTiketsService } from '../../../shared/services/filtered-tikets.service';
 import { Ticket } from '../../../shared/models/ticket';
 import { RoutesService } from '../../../shared/services/routes.service';
-import { RoutesCoordinatorService } from '../../../shared/services/routes-coordinator.service';
+import { AssignedTiketsByTiker, RoutesCoordinatorService } from '../../../shared/services/routes-coordinator.service';
 
 @Component({
-    selector: 'tt-main-layout',
+    selector   : 'tt-main-layout',
     templateUrl: './main-layout.component.html',
-    styleUrls: ['./main-layout.component.scss']
+    styleUrls  : ['./main-layout.component.scss']
 })
 export class MainLayoutComponent extends Destroyable
 {
   public unassignedTikets: Observable<Ticket[]>
+  public assignedTikets  : Observable<AssignedTiketsByTiker>
 
   constructor(
     private _filteredTiketsService: FilteredTiketsService,
@@ -27,6 +28,7 @@ export class MainLayoutComponent extends Destroyable
     super();
     
     this.unassignedTikets = this._filteredTiketsService.getFilteredUnassignedTickets().pipe(share());
+    this.assignedTikets   = this._coordinator.tiketsByTikerFeed().pipe(share());
   }
 
 }

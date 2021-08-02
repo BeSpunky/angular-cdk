@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export type TikerMap = Map<string, User>
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService
 {
-    getAllEnvironmentTikers(): Observable<User[]>
+    getActiveEnvironmentTikers(): Observable<User[]>
     {
         return of([
             new User('RANGERDANGER', 'Shy Agam', 'us@bespunky.io', '12345678-9'),

@@ -135,7 +135,7 @@ The timeline uses the view box to determine what to draw following these steps:
 Ticks render using the same practice.
 
 ## Implementation
-Every time the camera moves (`viewCenter`) changes, a new `ViewBounds` object is created and passed to the state service.
+Every time the camera moves (`viewCenter` changes), a new `ViewBounds` object is created and passed to the state service.
 
 Every time the view bounds change, the buffer size recalculates:
 $$\textit{\color{Tomato}bufferWidth} = viewBoundsWidth \cdot \textit{\color{AntiqueWhite}virtualizationBuffer}$$
