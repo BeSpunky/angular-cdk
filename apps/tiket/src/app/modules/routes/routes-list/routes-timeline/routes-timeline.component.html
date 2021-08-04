@@ -1,38 +1,40 @@
-<div bsTimeline [zoom]="10" style="height: 100%; border: 1px solid black" #timeline="timeline">
-    <tt-routes-timeline-ticks [id]="'days'"
-                              [minZoom]="-200"
-                              [maxZoom]="200"
-                              [dayFactor]="1"
-                              [datesBetween]="asd"
+<div bsTimeline [zoom]="150" [date]="now" style="height: 100%; border: 1px solid black" #timeline="timeline">
+    <tt-routes-timeline-ticks id="days"
+                              [minZoom]="80"
+                              [maxZoom]="150"
+                              [dayFactor]="dayFactors.day"
+                              [datesBetween]="datesBetween.days"
                               [label]="labels.days"></tt-routes-timeline-ticks>
 
-    <!-- <tt-routes-timeline-ticks id="dayParts"
+    <tt-routes-timeline-ticks id="dayParts"
                               [minZoom]="100"
                               [maxZoom]="250"
                               [dayFactor]="dayFactors.dayParts"
                               [datesBetween]="datesBetween.dayParts"
-                              [label]="labels.dayParts"></tt-routes-timeline-ticks>
+                              [label]="labels.dayParts"
+                              [top]="20"></tt-routes-timeline-ticks>
 
     <tt-routes-timeline-ticks id="hours"
-                              [minZoom]="50"
-                              [maxZoom]="150"
+                              [minZoom]="130"
+                              [maxZoom]="159"
                               [dayFactor]="dayFactors.hoursInDay"
                               [datesBetween]="datesBetween.hours"
                               [label]="labels.hours"></tt-routes-timeline-ticks>
 
     <tt-routes-timeline-ticks id="hourParts"
-                              [minZoom]="100"
-                              [maxZoom]="200"
+                              [minZoom]="160"
+                              [maxZoom]="350"
                               [dayFactor]="dayFactors.hourParts"
                               [datesBetween]="datesBetween.hourParts"
-                              [label]="labels.hours"></tt-routes-timeline-ticks>
+                              [label]="labels.hourParts"></tt-routes-timeline-ticks>
 
     <tt-routes-timeline-ticks id="minutes"
-                              [minZoom]="150"
+                              [minZoom]="180"
                               [maxZoom]="250"
                               [dayFactor]="dayFactors.minutesInDay"
                               [datesBetween]="datesBetween.minutes"
-                              [label]="labels.minutes"></tt-routes-timeline-ticks> -->
+                              [label]="labels.minutes"
+                              [top]="25"></tt-routes-timeline-ticks>
 
     <!-- <ng-container *ngFor="let tiker of assignedTikets; let index = index">
         <div [style.width.px]="50"
