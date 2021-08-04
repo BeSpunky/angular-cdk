@@ -2,20 +2,11 @@ import { Component, Input } from '@angular/core'
 import { eachDayOfInterval, eachHourOfInterval, differenceInMinutes, differenceInSeconds, startOfSecond, startOfMinute, addMinutes, addSeconds, setHours, setMinutes, format } from 'date-fns'
 
 import { AssignedTiketsByTiker } from '../../../../shared/services/routes-coordinator.service'
+import { divideIntoParts       } from './_utils/_date-parts'
 
 const DayParts       = ['Night', 'Morning', 'Noon', 'Evening']
 const HourPartsCount = 3
 
-function divideIntoParts(dates: Date[], intervalSize: number, partCount: number, setPart: (date: Date, partValue: number) => Date): Date[]
-{
-    const partPlaceholders = Array.from({ length: partCount })
-    const partSize         = intervalSize / partCount
-
-    return dates.reduce<Date[]>((parts, date) => [
-        ...parts,
-        ...partPlaceholders.map((_, index) => setPart(date, index * partSize))
-    ], [])
-}
 @Component({
     selector   : 'tt-routes-timeline',
     templateUrl: './routes-timeline.component.html',

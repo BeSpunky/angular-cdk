@@ -41,16 +41,7 @@
 
         <ng-container *ngFor="let tiket of tiker.assignedTikets">
             <ng-container *ngFor="let checkpoint of tiket.checkpoints">
-                <div *bsTimelineItem="checkpoint.date; duration: checkpoint.executionTime; let left = screenPosition; let width = size;"
-                     [style.width.px]="width"
-                     [style.left.px]="left"
-                     [style.top.px]="50 + index * (50 + 15 * 2)"
-                     style="position: absolute;
-                        background-color: lightyellow;
-                        height: 50px;
-                       ">
-                    {{checkpoint.type === 0 ? 'Job' : 'Warehouse'}}
-                </div>
+                <tt-routes-timeline-tiket-checkpoint [checkpoint]="checkpoint" [tikerIndex]="index"></tt-routes-timeline-tiket-checkpoint>
             </ng-container>
         </ng-container>
     </ng-container>

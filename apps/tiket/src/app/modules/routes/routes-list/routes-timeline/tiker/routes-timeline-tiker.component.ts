@@ -13,21 +13,19 @@ export class RoutesTimelineTikerComponent
     @Input() public tiker!: any     // TODO: Pass User object
     @Input() public index!: number
 
-    @Input() public width   = 50
-    @Input() public height  = 50
-    @Input() public padding = 15
+    @Input() public width  = 50
+    @Input() public height = 50
 
     constructor(public readonly timeline: TimelineDirective) { }
 
     public get staticTikerStyle()
     {
-        const top = (this.index + 1) * (this.height + this.padding * 2);
+        const top = (this.index + 1) * this.height;
         
         return {
-            'width'  : formatPxCssSize(this.width),
-            'height' : formatPxCssSize(this.height),
-            'padding': formatPxCssSize(this.padding),
-            'top'    : formatPxCssSize(top),
+            'width'    : formatPxCssSize(this.width),
+            'height'   : formatPxCssSize(this.height),
+            'transform': `translateY(${top}px)`,
         }
     }
 }
