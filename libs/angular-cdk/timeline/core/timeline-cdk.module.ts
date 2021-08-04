@@ -6,8 +6,8 @@ import { TimelineCdkItemsModule } from './modules/items/timeline-cdk-items.modul
 import { TimelineDirective      } from './directives/timeline.directive';
 
 @NgModule({
-    imports     : [TimelineCdkTicksModule, CoreModule, TimelineCdkItemsModule],
+    imports     : [CoreModule, TimelineCdkTicksModule, TimelineCdkItemsModule],
     declarations: [TimelineDirective],
-    exports     : [TimelineDirective, TimelineCdkTicksModule],
+    exports     : [TimelineDirective, TimelineCdkTicksModule, TimelineCdkItemsModule],
 })
 export class TimelineCdkModule {}
