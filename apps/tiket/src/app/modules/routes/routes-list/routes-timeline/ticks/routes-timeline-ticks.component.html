@@ -1,0 +1,12 @@
+TICKS
+
+<div *bsTimelineTick="'id'; minZoom: 0; maxZoom: 200; dayFactor: 1; label: label; datesBetween: asd; let tick;"
+     [style.width.px]="tick.width"
+     [style.transform]="transformedCssPosition(tick.screenPositionX)"
+     [ngStyle]="staticTickStyle"
+     class="routes-timeline-tick"
+>
+    <label [ngStyle]="staticLabelStyle" class="routes-timeline-tick-label">
+        {{tick.label}}
+    </label>
+</div>

@@ -1,0 +1,67 @@
+<div bsTimeline [zoom]="10" style="height: 100%; border: 1px solid black" #timeline="timeline">
+    <tt-routes-timeline-ticks [id]="'days'"
+                              [minZoom]="-200"
+                              [maxZoom]="200"
+                              [dayFactor]="1"
+                              [datesBetween]="asd"
+                              [label]="labels.days"></tt-routes-timeline-ticks>
+
+    <!-- <tt-routes-timeline-ticks id="dayParts"
+                              [minZoom]="100"
+                              [maxZoom]="250"
+                              [dayFactor]="dayFactors.dayParts"
+                              [datesBetween]="datesBetween.dayParts"
+                              [label]="labels.dayParts"></tt-routes-timeline-ticks>
+
+    <tt-routes-timeline-ticks id="hours"
+                              [minZoom]="50"
+                              [maxZoom]="150"
+                              [dayFactor]="dayFactors.hoursInDay"
+                              [datesBetween]="datesBetween.hours"
+                              [label]="labels.hours"></tt-routes-timeline-ticks>
+
+    <tt-routes-timeline-ticks id="hourParts"
+                              [minZoom]="100"
+                              [maxZoom]="200"
+                              [dayFactor]="dayFactors.hourParts"
+                              [datesBetween]="datesBetween.hourParts"
+                              [label]="labels.hours"></tt-routes-timeline-ticks>
+
+    <tt-routes-timeline-ticks id="minutes"
+                              [minZoom]="150"
+                              [maxZoom]="250"
+                              [dayFactor]="dayFactors.minutesInDay"
+                              [datesBetween]="datesBetween.minutes"
+                              [label]="labels.minutes"></tt-routes-timeline-ticks> -->
+
+    <!-- <ng-container *ngFor="let tiker of assignedTikets; let index = index">
+        <div [style.width.px]="50"
+             [style.height.px]="50"
+             [style.top.px]="(timeline.camera?.viewBounds | async)"
+             style="position: absolute;
+                padding: 15px;
+                box-shadow: black 1px 1px 1px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">
+            {{ tiker.uid }}
+        </div>
+
+        <ng-container *ngFor="let tiket of tiker.assignedTikets">
+            <ng-container *ngFor="let checkpoint of tiket.checkpoints">
+                <div *bsTimelineItem="checkpoint.date; duration: checkpoint.executionTime; let left = screenPosition; let width = size;"
+                     [style.width.px]="width"
+                     [style.left.px]="left"
+                     [style.top.px]="50 + index * (50 + 15 * 2)"
+                     style="position: absolute;
+                        background-color: lightyellow;
+                        height: 50px;
+                       ">
+                    {{checkpoint.type === 0 ? 'Job' : 'Warehouse'}}
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container> -->
+</div>
