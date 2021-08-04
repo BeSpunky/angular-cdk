@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { TimelineDirective } from '@bespunky/angular-cdk/timeline'
+import { ViewBounds } from '@bespunky/angular-cdk/navigables/camera'
 import { User } from '../../../../../shared/models/user'
 
 @Component({
@@ -15,11 +15,9 @@ export class RoutesTimelineTikerComponent
     @Input() public width  = 50
     @Input() public height = 50
 
-    constructor(public readonly timeline: TimelineDirective) { }
-
-    public tikerStyle()
+    public tikerStyle(viewBounds: ViewBounds)
     {
-        const top = (this.index + 1) * this.height;
+        const top = (this.index + 1) * this.height - viewBounds.viewCenterY;
         
         return {
             'width'    : `${this.width}px`,

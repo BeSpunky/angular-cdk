@@ -1,5 +1,6 @@
-<div class="routes-timeline-tiker"
-     [ngStyle]="tikerStyle()"
+<div *bsTimelineItem="let viewBounds = viewBounds"
+     class="routes-timeline-tiker"
+     [ngStyle]="tikerStyle(viewBounds)"
 >
     {{ tiker.uid }}
 </div>

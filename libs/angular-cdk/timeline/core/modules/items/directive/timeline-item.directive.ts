@@ -1,5 +1,5 @@
 import { combineLatest, Observable, Subject                               } from 'rxjs';
-import { map                                                              } from 'rxjs/operators';
+import { map, startWith                                                              } from 'rxjs/operators';
 import { Directive, EmbeddedViewRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 import { TimelineCamera, TimelineConfig                                   } from '@bespunky/angular-cdk/timeline/abstraction';
@@ -15,8 +15,10 @@ import { ViewBounds                                                       } from
 })
 export class TimelineItemDirective extends TimelineItem
 {
-    @Input() public set bsTimelineItem        (date: Date   ) { this.date.next(date);      }
-    @Input() public set bsTimelineItemDuration(value: number) { this.duration.next(value); }
+    // Empty string is what Angular passes-in when no value is assiged to the directive via microsyntax. This enables an optional
+    // date value and allows *bsTimelineItem to be used simply to export context values
+    @Input() public set bsTimelineItem        (date: Date | '') { this.date.next(date || new Date()); }
+    @Input() public set bsTimelineItemDuration(value: number  ) { this.duration.next(value); }
 
     private date    : Subject<Date>   = new Subject();
     private duration: Subject<number> = new Subject();
@@ -41,14 +43,17 @@ export class TimelineItemDirective extends TimelineItem
 
     private contextFeed(): Observable<ItemContext>
     {
+        // Allow combineLatest to emit with an optional date and/or duration
+        const date                               = this.date    .pipe(startWith(new Date()));
+        const duration                           = this.duration.pipe(startWith(0));
         const { dayWidth, viewBounds, sizeUnit } = this.camera;
-
-        return combineLatest([dayWidth, viewBounds, sizeUnit, this.date, this.duration]).pipe(
-            map(([dayWidth, viewBounds, sizeUnit, date, duration]) => this.createViewContext(dayWidth, viewBounds, sizeUnit, date, duration))
+        
+        return combineLatest([date, duration, dayWidth, viewBounds, sizeUnit]).pipe(
+            map(([date, duration, dayWidth, viewBounds, sizeUnit]) => this.createViewContext(date, duration, dayWidth, viewBounds, sizeUnit))
         );
     }
 
-    private createViewContext(dayWidth: number, viewBounds: ViewBounds, sizeUnit: number, date: Date, duration: number): ItemContext
+    private createViewContext(date: Date, duration: number, dayWidth: number, viewBounds: ViewBounds, sizeUnit: number): ItemContext
     {
         const isVertical     = this.config.vertical.value;
         const position       = this.location.dateToPosition(dayWidth, date);

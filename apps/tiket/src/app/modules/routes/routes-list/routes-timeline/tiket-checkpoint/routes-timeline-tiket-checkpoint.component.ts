@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core'
+import { ViewBounds } from '@bespunky/angular-cdk/navigables/camera'
 
 import { ITiketCheckpoint } from '../../../models/tiket-checkpoint.interface'
 
@@ -15,9 +16,9 @@ export class RoutesTimelineTiketCheckpointComponent
     @Input() public height = 50
 
     // Receiving `left` from template as it is created by the `*bsTimelineItem` directive
-    public checkpointStyle(left: number)
+    public checkpointStyle(left: number, viewBounds: ViewBounds)
     {
-        const top = (this.tikerIndex + 1) * this.height
+        const top = (this.tikerIndex + 1) * this.height - viewBounds.viewCenterY
 
         return {
             'transform': `translate(${left}px, ${top}px)`
