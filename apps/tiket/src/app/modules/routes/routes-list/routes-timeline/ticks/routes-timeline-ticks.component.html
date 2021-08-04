@@ -1,10 +1,9 @@
 <div *bsTimelineTick="id; minZoom: minZoom; maxZoom: maxZoom; dayFactor: dayFactor; label: label; datesBetween: datesBetween; let tick;"
      [style.width.px]="tick.width"
-     [style.transform]="transformedCssPosition(tick.screenPositionX)"
-     [ngStyle]="staticTickStyle"
+     [ngStyle]="tickStyle(tick.screenPositionX)"
      class="routes-timeline-tick"
 >
-    <label [ngStyle]="staticLabelStyle" class="routes-timeline-tick-label">
+    <label [ngStyle]="labelStyle()" class="routes-timeline-tick-label">
         {{tick.label}}
     </label>
 </div>

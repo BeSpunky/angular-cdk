@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { TimelineDirective } from '@bespunky/angular-cdk/timeline'
 import { User } from '../../../../../shared/models/user'
-import { formatPxCssSize } from '../_utils/_css-utils'
 
 @Component({
     selector   : 'tt-routes-timeline-tiker',
@@ -18,13 +17,13 @@ export class RoutesTimelineTikerComponent
 
     constructor(public readonly timeline: TimelineDirective) { }
 
-    public get staticTikerStyle()
+    public tikerStyle()
     {
         const top = (this.index + 1) * this.height;
         
         return {
-            'width'    : formatPxCssSize(this.width),
-            'height'   : formatPxCssSize(this.height),
+            'width'    : `${this.width}px`,
+            'height'   : `${this.height}px`,
             'transform': `translateY(${top}px)`,
         }
     }
