@@ -29,9 +29,7 @@ export class TimelineTickVirtualizationService
     public shouldRenderFeed(tick: TimelineTick): Observable<boolean>
     {
         return combineLatest([tick.camera.zoomLevel, tick.minZoom, tick.maxZoom]).pipe(
-            debug(),
             valueInRange(),
-            debug(),
             distinctUntilChanged()
         );
     }
