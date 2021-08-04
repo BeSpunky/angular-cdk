@@ -20,10 +20,10 @@
         </label>
     </div>
 
-    <div *ngFor="let tiker of assignedTikets; let index = index">
+    <ng-container *ngFor="let tiker of assignedTikets; let index = index">
         <div [style.width.px]="50"
             [style.height.px]="50"
-            [style.top.px]="50 + index * (50 + 15 * 2)"
+            [style.top.px]="(timeline.camera?.viewBounds | async)"
             style="position: absolute;
                 padding: 15px;
                 box-shadow: black 1px 1px 1px;
@@ -36,29 +36,20 @@
             {{ tiker.uid }}
         </div>
 
-        <div *ngFor="let tiket of tiker.assignedTikets"
-            [style.height.px]="50"
-             style="position: absolute;
-                    left: 50px;
-                    width: 100%;
-             "
-        >
-            <div *ngFor="let checkpoint of tiket.checkpoints"
-                 [style.width.px]="checkpoint.executionTime * ((timeline.camera.sizeUnit | async) ?? 1) / 1000"
+        <ng-container *ngFor="let tiket of tiker.assignedTikets">
+            <ng-container *ngFor="let checkpoint of tiket.checkpoints">
+                <div *bsTimelineItem="checkpoint.date; duration: checkpoint.executionTime; let left = screenPosition; let width = size;"
+                 [style.width.px]="width"
+                 [style.left.px]="left"
                  [style.top.px]="50 + index * (50 + 15 * 2)"
-                 [style.left.px]="positionTicket(
-                     checkpoint,
-                    (timeline.camera.dayWidth | async) ?? 0,
-                    timeline.camera.viewBounds | async
-                 )
-                 "
                  style="position: absolute;
                         background-color: lightyellow;
-                        height: 100%;
-                 "
-            >
-                {{checkpoint.type === 0 ? 'Job' : 'Warehouse'}}
-            </div>
-        </div>
-    </div>
+                        height: 50px;
+                       "
+                >
+                    {{checkpoint.type === 0 ? 'Job' : 'Warehouse'}}
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
 </div>
