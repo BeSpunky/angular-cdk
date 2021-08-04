@@ -1,7 +1,11 @@
 import { Component, Input } from '@angular/core'
 
 import { DatesBetweenGenerator, DayFactor, TickLabeler } from '@bespunky/angular-cdk/timeline/abstraction/ticks'
-import { eachDayOfInterval } from 'date-fns';
+
+function formatPxCssSize(size: number | string): string
+{
+    return typeof size === 'string' ? size : `${ size }px`;
+}
 
 @Component({
     selector   : 'tt-routes-timeline-ticks',
@@ -18,37 +22,34 @@ export class RoutesTimelineTicksComponent
     @Input() public datesBetween!: DatesBetweenGenerator;
     @Input() public label       !: TickLabeler;
 
-    @Input() public top: number | string = 5;
-    @Input() public height: number | string = 5;
+    @Input() public top      : number | string = 5;
+    @Input() public height   : number | string = 15;
     @Input() public thickness: number | string = 3;
-    @Input() public color = 'lightgray';
+    @Input() public color                      = 'lightgray';
     
     @Input() public labelSize: number | string = 'normal';
-    @Input() public labelColor = 'darkgray';
+    @Input() public labelColor                 = 'darkgray';
     
     public get staticTickStyle()
     {
         return {
-            height: this.height,
-            borderLeftWidth: this.thickness,
-            borderLeftColor: this.color,
+            'height'           : formatPxCssSize(this.height),
+            'border-left-width': formatPxCssSize(this.thickness),
+            'border-left-color': this.color,
         };
     }
 
     public get staticLabelStyle()
     {
         return {
-            fontSize: this.labelSize,
-            fontColor: this.labelColor,
+            'font-size': formatPxCssSize(this.labelSize),
+            'color'    : this.labelColor,
         };
     }
-    public asd(start: Date, end: Date)
-    {
-        return eachDayOfInterval({ start, end });
-    }
+    
     public transformedCssPosition(position: number): string
     {
-        const top = typeof this.top === 'string' ? this.top : `${ this.top }px`;
+        const top = formatPxCssSize(this.top);
 
         return `translate(${ position }px, ${ top })`;
     }
