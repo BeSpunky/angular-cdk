@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TimelineTick, TimelineTickRenderer, RenderedTick, TickContext, TickViewContext, TickItem } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { TimelineTick, TimelineTickRenderer, RenderedTick, TickContext, TickItem } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 
 /**
  * Provides tools for handling tick rendering.
@@ -62,17 +62,17 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      *
      * @private
      * @param {TickItem} item The item representing the tick.
-     * @returns {TickViewContext} The template context containing the tick information.
+     * @returns {TickContext} The template context containing the tick information.
      */
-    private createViewContext(item: TickItem): TickViewContext
+    private createViewContext(item: TickItem): TickContext
     {
-        const context = new TickContext(item);
-
         return {
             // Enable `let-context` 
-            $implicit: context,
+            $implicit     : item,
+            // Enable `as` keyword
+            bsTimelineTick: item,
             // Enable specific variables (e.g. `let-position`, `let-index`)
-            ...context
+            ...item
         };
     }
     
@@ -175,8 +175,8 @@ export class TimelineTickRendererService extends TimelineTickRenderer
             const renderedTick = renderedTicks[i];
             const newTickItem  = newTickItems [i];
 
-            renderedTick.item = newTickItem;
-            renderedTick.context.update(newTickItem);
+            renderedTick.item         = newTickItem;
+            renderedTick.view.context = this.createViewContext(newTickItem);
         }
     }
 }

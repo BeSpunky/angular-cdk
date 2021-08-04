@@ -1,11 +1,9 @@
-import { ViewRef } from '@angular/core';
+import { EmbeddedViewRef } from '@angular/core';
 
-import { TickItem    } from './tick-item';
 import { TickContext } from './tick-context';
-
+import { TickItem    } from './tick-item';
 export interface RenderedTick
 {
-    item   : TickItem;
-    context: TickContext;
-    view   : ViewRef;
+    item: TickItem;
+    view: EmbeddedViewRef<TickContext>;
 }
