@@ -6,6 +6,9 @@ import { TiketCheckpoint } from '../../modules/routes/models/tiket-checkpoint';
 import { TiketCheckpointType } from '../../modules/routes/types/tiket-checkpoint-type.enum';
 import addHours from 'date-fns/addHours';
 
+const _30Minutes = 1000 * 60 * 30;
+const _10Minutes = 1000 * 60 * 10;
+
 @Injectable({ providedIn: 'root' })
 export class RoutesService
 {
@@ -13,14 +16,53 @@ export class RoutesService
     {
         return of([
             new AssignedTiket('SHY', '111', [
-                new TiketCheckpoint(TiketCheckpointType.Warehouse, new Date, 100, 30),
-                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 1), 10, 30),
+                new TiketCheckpoint(TiketCheckpointType.Warehouse, new Date, _10Minutes,  _30Minutes),
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 1), _10Minutes, _30Minutes),
             ]),
             new AssignedTiket('SHY', '222', [
-                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 2), 10, 30),
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 2),  _10Minutes, _30Minutes),
             ]),
             new AssignedTiket('CHRIS', '333', [
-                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), 10, 30),
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS1', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS2', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS3', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS4', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS5', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS6', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS7', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS8', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS11', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS111', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS222', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS123', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
+            ]),
+            new AssignedTiket('CHRIS321', '333', [
+                new TiketCheckpoint(TiketCheckpointType.Job, addHours(new Date, 0.4), _10Minutes, _30Minutes),
             ])
         ]);
     }
