@@ -1,0 +1,7 @@
+<div *bsTimelineItem="checkpoint.date; duration: checkpoint.executionTime; let left = screenPosition; let width = size; let viewBounds = viewBounds"
+     [style.width.px]="width"
+     [ngStyle]="checkpointStyle(left, viewBounds)"
+     class="routes-timeline-tiket-checkpoint"
+>
+    {{checkpoint.type === 0 ? 'Job' : 'Warehouse'}}
+</div>

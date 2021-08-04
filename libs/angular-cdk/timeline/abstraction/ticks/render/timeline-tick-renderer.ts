@@ -17,10 +17,10 @@ export abstract class TimelineTickRenderer extends Destroyable
     /**
      * A map of all rendered tick views for each tick level. Used for view recycling.
      *
-     * @type {{ [tickLevel: number]: RenderedTick[] }}
+     * @type {{ [tickId: string]: RenderedTick[] }}
      */
-    public readonly ticksInView: { [tickLevel: number]: RenderedTick[] } = {};
+    public readonly ticksInView: { [tickId: string]: RenderedTick[] } = {};
     
-    abstract renderTicks(ticks: TimelineTick, tickLevel: number, items: TickData[]): void;
-    abstract unrenderTicks(tickLevel: number): void;
+    abstract renderTicks(tick: TimelineTick, items: TickData[]): void;
+    abstract unrenderTicks(tick: TimelineTick): void;
 }
