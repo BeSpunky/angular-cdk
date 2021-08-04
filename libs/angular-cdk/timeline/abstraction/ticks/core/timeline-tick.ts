@@ -1,5 +1,6 @@
 import { BehaviorSubject, Observable   } from 'rxjs';
 import { ViewContainerRef, TemplateRef } from '@angular/core';
+import { Destroyable                   } from '@bespunky/angular-zen/core';
 
 import { TimelineCamera, TimelineConfig                                 } from '@bespunky/angular-cdk/timeline/abstraction';
 import { TickData                                                       } from '../render/tick-data';
@@ -12,7 +13,7 @@ import { DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator } from '
  * @abstract
  * @class TimelineTick
  */
-export abstract class TimelineTick
+export abstract class TimelineTick extends Destroyable
 {
     /**
      * The id of the tick scale (e.g. 'years', 'months', etc.).

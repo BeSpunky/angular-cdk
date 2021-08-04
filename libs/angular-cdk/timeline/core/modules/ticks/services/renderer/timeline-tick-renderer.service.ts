@@ -17,31 +17,32 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      * Existing views are recycled and their context gets updated.
      *
      * @param {TimelineTick} tick The tick definition to use when rendering.
-     * @param {number} tickLevel A zero-based number representing the level of the ticks to render. Zero represents the
-     * top level tick. 
      * @param {TickData[]} newTickItems The new items representing the ticks to render.
      */
-    public renderTicks(tick: TimelineTick, tickLevel: number, newTickItems: TickData[]): void
+    public renderTicks(tick: TimelineTick, newTickItems: TickData[]): void
     {
-        const renderedViews = this.ticksInView[tickLevel] || [];
+        const tickId        = tick.id.value;
+        const renderedViews = this.ticksInView[tickId] || [];
 
         // Update state with created views
-        this.ticksInView[tickLevel] = this.AggregateChangesAndRecycleViews(tick, renderedViews , newTickItems);
+        this.ticksInView[tickId] = this.AggregateChangesAndRecycleViews(tick, renderedViews , newTickItems);
     }
 
     /**
      * Unrenders all previously rendered ticks for the specified tick level.
      *
-     * @param {number} tickLevel A zero-based number representing the level of ticks to unrender.
+     * @param {TimelineTick} tick The tick definition to use when unrendering.
      * @returns {void}
      */
-    public unrenderTicks(tickLevel: number): void
+    public unrenderTicks(tick: TimelineTick): void
     {
-        if (!this.ticksInView[tickLevel]) return;
+        const tickId = tick.id.value;
 
-        this.ticksInView[tickLevel].forEach(viewRef => viewRef.view.destroy());
+        if (!this.ticksInView[tickId]) return;
 
-        delete this.ticksInView[tickLevel];
+        this.ticksInView[tickId].forEach(viewRef => viewRef.view.destroy());
+
+        delete this.ticksInView[tickId];
     }
 
     private renderTick(tick: TimelineTick, item: TickData): RenderedTick
