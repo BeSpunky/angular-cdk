@@ -5,7 +5,7 @@ import { useActivationSwitch, valueInRange                  } from '@bespunky/rx
 
 import { ViewBounds                                                                  } from '@bespunky/angular-cdk/navigables/camera';
 import { TimelineLocationService                                                     } from '@bespunky/angular-cdk/timeline/shared';
-import { TimelineTick, DatesBetweenGenerator, TickItem, TickLabeler, WidthCalculator } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { TimelineTick, DatesBetweenGenerator, TickData, TickLabeler, WidthCalculator } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 
 /**
  * Provides methods for virtualizing tick rendering. This service is designed to determine what ticks should
@@ -55,10 +55,10 @@ export class TimelineTickVirtualizationService
      * - The timeline virtualization buffer size has changed
      *
      * @param {TimelineTick} tick The tick scale for which to create the stream.
-     * @returns {Observable<TickItem[]>} A stream that notifies subscribers when the ticks that should
+     * @returns {Observable<TickData[]>} A stream that notifies subscribers when the ticks that should
      * be displayed on the screen have changed.
      */
-    public itemsToRenderFeed(tick: TimelineTick): Observable<TickItem[]>
+    public itemsToRenderFeed(tick: TimelineTick): Observable<TickData[]>
     {
         return combineLatest([tick.label, tick.datesBetween, tick.width, tick.camera.dayWidth, tick.camera.viewBounds, tick.config.virtualizationBuffer]).pipe(
             // As item generation depends on multiple subjects, generation might be triggered multiple times for the same change.
@@ -88,9 +88,9 @@ export class TimelineTickVirtualizationService
      * @param {number} endPosition The end position (in pixels) from which ticks should end. This should include any buffer width.
      * @param {DatesBetweenGenerator} datesBetween The function that generates all tick scale-level dates between two given dates.
      * @param {TickLabeler} label The function to use for labeling the items.
-     * @returns {TickItem[]} An array of tick items representing the ticks that should be displayed on the screen.
+     * @returns {TickData[]} An array of tick items representing the ticks that should be displayed on the screen.
      */
-    public ticksOnScreen(viewBounds: ViewBounds, dayWidth: number, width: WidthCalculator, startPosition: number, endPosition: number, datesBetween: DatesBetweenGenerator, label: TickLabeler): TickItem[]
+    public ticksOnScreen(viewBounds: ViewBounds, dayWidth: number, width: WidthCalculator, startPosition: number, endPosition: number, datesBetween: DatesBetweenGenerator, label: TickLabeler): TickData[]
     {
         // Find the dates corresponding to the bounds of the screen
         const start = this.location.positionToDate(dayWidth, startPosition);
@@ -103,7 +103,7 @@ export class TimelineTickVirtualizationService
             const screenPositionX = this.location.toScreenPosition(position, viewBounds.left);
             const screenPositionY = this.location.toScreenPosition(0       , viewBounds.top);
 
-            return new TickItem(position, 0, screenPositionX, screenPositionY, date, width(date), label(date));
+            return new TickData(position, 0, screenPositionX, screenPositionY, date, width(date), label(date));
         });
     };
 }

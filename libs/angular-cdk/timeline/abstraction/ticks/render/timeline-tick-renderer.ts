@@ -1,7 +1,7 @@
 import { Destroyable } from '@bespunky/angular-zen/core';
 
 import { TimelineTick } from '../core/timeline-tick';
-import { TickItem     } from './tick-item';
+import { TickData     } from './tick-data';
 import { RenderedTick } from './rendered-tick';
 
 /**
@@ -21,6 +21,6 @@ export abstract class TimelineTickRenderer extends Destroyable
      */
     public readonly ticksInView: { [tickLevel: number]: RenderedTick[] } = {};
     
-    abstract renderTicks(ticks: TimelineTick, tickLevel: number, items: TickItem[]): void;
+    abstract renderTicks(ticks: TimelineTick, tickLevel: number, items: TickData[]): void;
     abstract unrenderTicks(tickLevel: number): void;
 }

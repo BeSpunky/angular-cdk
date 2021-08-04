@@ -121,6 +121,16 @@ export class TimelineDirective extends Timeline implements AfterViewInit
         this.config.baseTickSize.next(value);
     }
 
+    @Input() public set virtualizationBuffer(value: number)
+    {
+        this.config.virtualizationBuffer.next(value);
+    }
+
+    @Input() public set vertical(value: boolean)
+    {
+        this.config.vertical.next(value);
+    }
+
     @Input() public set panOnKeyboard(value: boolean)
     {
         this.camera.panOnKeyboard.next(value);
@@ -144,10 +154,5 @@ export class TimelineDirective extends Timeline implements AfterViewInit
     @Input() public set zoomOnWheel(value: boolean)
     {
         this.camera.zoomOnWheel.next(value);
-    }
-
-    @Input() public set virtualizationBuffer(value: number)
-    {
-        this.config.virtualizationBuffer.next(value);
     }
 }
