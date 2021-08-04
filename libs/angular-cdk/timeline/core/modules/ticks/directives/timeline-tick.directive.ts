@@ -1,9 +1,9 @@
 import { Observable                                      } from 'rxjs';
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { TimelineCamera, TimelineConfig                                                                          } from '@bespunky/angular-cdk/timeline/abstraction';
-import { TimelineTick, TickItem, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator, TickViewContext } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
-import { TimelineTickVirtualizationService                                                                       } from '../services/virtualization/timeline-tick-virtualization.service';
+import { TimelineCamera, TimelineConfig                                                                      } from '@bespunky/angular-cdk/timeline/abstraction';
+import { TimelineTick, TickItem, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator, TickContext } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { TimelineTickVirtualizationService                                                                   } from '../services/virtualization/timeline-tick-virtualization.service';
 
 /**
  * Converts an element to a tick template and provides tools for timelines to easily render ticks with
@@ -25,7 +25,7 @@ export class TimelineTickDirective extends TimelineTick
     
     constructor(
         public  readonly view      : ViewContainerRef,
-        public  readonly template  : TemplateRef<TickViewContext>,
+        public  readonly template  : TemplateRef<TickContext>,
         public  readonly config    : TimelineConfig,
         public  readonly camera    : TimelineCamera,
         private readonly virtualize: TimelineTickVirtualizationService
@@ -38,7 +38,7 @@ export class TimelineTickDirective extends TimelineTick
         this.itemsToRender = this.virtualize.itemsToRenderFeed(this);
     }
 
-    static ngTemplateContextGuard(directive: TimelineTickDirective, context: TickViewContext): context is TickViewContext { return true; }
+    static ngTemplateContextGuard(directive: TimelineTickDirective, context: TickContext): context is TickContext { return true; }
 
     @Input() public set bsTimelineTick            (value: string)                { this.id          .next(value); }
     @Input() public set bsTimelineTickDayFactor   (value: DayFactor)             { this.dayFactor   .next(value); }
