@@ -1,6 +1,4 @@
-TICKS
-
-<div *bsTimelineTick="'id'; minZoom: 0; maxZoom: 200; dayFactor: 1; label: label; datesBetween: asd; let tick;"
+<div *bsTimelineTick="id; minZoom: minZoom; maxZoom: maxZoom; dayFactor: dayFactor; label: label; datesBetween: datesBetween; let tick;"
      [style.width.px]="tick.width"
      [style.transform]="transformedCssPosition(tick.screenPositionX)"
      [ngStyle]="staticTickStyle"
