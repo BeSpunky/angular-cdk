@@ -1,6 +1,6 @@
-import { TickItem } from './tick-item';
+import { TickData } from './tick-data';
 
 export type TickContext = {
-    $implicit     : TickItem;
-    bsTimelineTick: TickItem;
-} & TickItem;
+    $implicit     : TickData;
+    bsTimelineTick: TickData;
+} & TickData;

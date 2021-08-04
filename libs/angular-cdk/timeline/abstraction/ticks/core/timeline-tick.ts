@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable   } from 'rxjs';
 import { ViewContainerRef, TemplateRef } from '@angular/core';
 
 import { TimelineCamera, TimelineConfig                                 } from '@bespunky/angular-cdk/timeline/abstraction';
-import { TickItem                                                       } from '../render/tick-item';
+import { TickData                                                       } from '../render/tick-data';
 import { DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator } from './types';
 
 /**
@@ -113,9 +113,9 @@ export abstract class TimelineTick
      * would trigger the regeneration of the items.
      * 
      * @abstract
-     * @type {Observable<TickItem[]>}
+     * @type {Observable<TickData[]>}
      */
-    abstract readonly itemsToRender: Observable<TickItem[]>;
+    abstract readonly itemsToRender: Observable<TickData[]>;
 
     abstract readonly config: TimelineConfig;
     abstract readonly camera: TimelineCamera;

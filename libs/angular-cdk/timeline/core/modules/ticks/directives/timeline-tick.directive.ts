@@ -2,7 +2,7 @@ import { Observable                                      } from 'rxjs';
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 import { TimelineCamera, TimelineConfig                                                                      } from '@bespunky/angular-cdk/timeline/abstraction';
-import { TimelineTick, TickItem, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator, TickContext } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { TimelineTick, TickData, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator, TickContext } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 import { TimelineTickVirtualizationService                                                                   } from '../services/virtualization/timeline-tick-virtualization.service';
 
 /**
@@ -21,7 +21,7 @@ export class TimelineTickDirective extends TimelineTick
 {
     public readonly shouldRender : Observable<boolean>;
     public readonly width        : Observable<WidthCalculator>;
-    public readonly itemsToRender: Observable<TickItem[]>;
+    public readonly itemsToRender: Observable<TickData[]>;
     
     constructor(
         public  readonly view      : ViewContainerRef,

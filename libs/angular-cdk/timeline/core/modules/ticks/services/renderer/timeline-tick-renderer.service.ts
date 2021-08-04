@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TimelineTick, TimelineTickRenderer, RenderedTick, TickContext, TickItem } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { TimelineTick, TimelineTickRenderer, RenderedTick, TickContext, TickData } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
 
 /**
  * Provides tools for handling tick rendering.
@@ -19,9 +19,9 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      * @param {TimelineTick} tick The tick definition to use when rendering.
      * @param {number} tickLevel A zero-based number representing the level of the ticks to render. Zero represents the
      * top level tick. 
-     * @param {TickItem[]} newTickItems The new items representing the ticks to render.
+     * @param {TickData[]} newTickItems The new items representing the ticks to render.
      */
-    public renderTicks(tick: TimelineTick, tickLevel: number, newTickItems: TickItem[]): void
+    public renderTicks(tick: TimelineTick, tickLevel: number, newTickItems: TickData[]): void
     {
         const renderedViews = this.ticksInView[tickLevel] || [];
 
@@ -44,7 +44,7 @@ export class TimelineTickRendererService extends TimelineTickRenderer
         delete this.ticksInView[tickLevel];
     }
 
-    private renderTick(tick: TimelineTick, item: TickItem): RenderedTick
+    private renderTick(tick: TimelineTick, item: TickData): RenderedTick
     {
         const viewContext = this.createViewContext(item);
         const view        = tick.view.createEmbeddedView(tick.template, viewContext);
@@ -61,10 +61,10 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      * Creates the context to provide when rendering a tick.
      *
      * @private
-     * @param {TickItem} item The item representing the tick.
+     * @param {TickData} item The item representing the tick.
      * @returns {TickContext} The template context containing the tick information.
      */
-    private createViewContext(item: TickItem): TickContext
+    private createViewContext(item: TickData): TickContext
     {
         return {
             // Enable `let-context` 
@@ -101,10 +101,10 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      * @private
      * @param {TimelineTick} tick The tick definition to render.
      * @param {RenderedTick[]} renderedTicks The existing tick with their previously rendered views.
-     * @param {TickItem[]} newTickItems The new tick items to render.
+     * @param {TickData[]} newTickItems The new tick items to render.
      * @returns {RenderedTick[]} The new rendered items with their views.
      */
-    private AggregateChangesAndRecycleViews(tick: TimelineTick, renderedTicks: RenderedTick[], newTickItems: TickItem[]): RenderedTick[]
+    private AggregateChangesAndRecycleViews(tick: TimelineTick, renderedTicks: RenderedTick[], newTickItems: TickData[]): RenderedTick[]
     {
         // Get the difference between existing and new items
         const changed = newTickItems.length - renderedTicks.length;
@@ -135,11 +135,11 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      * Grabs new tick items from the end, renders new views for them and adds them to the `renderedTicks` array.
      *
      * @private
-     * @param {TickItem[]} newTickItems The new tick items to be rendered.
+     * @param {TickData[]} newTickItems The new tick items to be rendered.
      * @param {number} addedCount The number of items to take from the end of the array.
      * @param {TimelineTick} tick The tick definition to render.
      */
-    private renderMissingTicks(renderedTicks: RenderedTick[], newTickItems: TickItem[], addedCount: number, tick: TimelineTick)
+    private renderMissingTicks(renderedTicks: RenderedTick[], newTickItems: TickData[], addedCount: number, tick: TimelineTick)
     {
         const addedItems = newTickItems.slice(-addedCount).map(item => this.renderTick(tick, item));
         
@@ -165,10 +165,10 @@ export class TimelineTickRendererService extends TimelineTickRenderer
      *
      * @private
      * @param {RenderedTick[]} renderedTicks The existing ticks to updated.
-     * @param {TickItem[]} newTickItems The new tick items to take new information from.
+     * @param {TickData[]} newTickItems The new tick items to take new information from.
      * @param {number} count The number of items to copy from the new ticks to the existing ones.
      */
-    private updateRenderedTicks(renderedTicks: RenderedTick[], newTickItems: TickItem[], count: number)
+    private updateRenderedTicks(renderedTicks: RenderedTick[], newTickItems: TickData[], count: number)
     {
         for (let i = 0; i < count; ++i)
         {

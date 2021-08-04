@@ -1,4 +1,4 @@
-export class TickItem
+export class TickData
 {
     constructor(
         public readonly positionX      : number,
