@@ -36,12 +36,12 @@
                               [label]="labels.minutes"
                               [top]="25"></tt-routes-timeline-ticks>
 
-    <ng-container *ngFor="let tiker of assignedTikets; let index = index">
-        <tt-routes-timeline-tiker [tiker]="tiker" [index]="index"></tt-routes-timeline-tiker>
+    <ng-container *ngFor="let tiker of assignedTikets; trackBy: tikerId; let tikerIndex = index">
+        <tt-routes-timeline-tiker [tiker]="tiker" [index]="tikerIndex"></tt-routes-timeline-tiker>
 
-        <ng-container *ngFor="let tiket of tiker.assignedTikets">
+        <ng-container *ngFor="let tiket of tiker.assignedTikets; trackBy: tiketId">
             <ng-container *ngFor="let checkpoint of tiket.checkpoints">
-                <tt-routes-timeline-tiket-checkpoint [checkpoint]="checkpoint" [tikerIndex]="index"></tt-routes-timeline-tiket-checkpoint>
+                <tt-routes-timeline-tiket-checkpoint [checkpoint]="checkpoint" [tikerIndex]="tikerIndex"></tt-routes-timeline-tiket-checkpoint>
             </ng-container>
         </ng-container>
     </ng-container>

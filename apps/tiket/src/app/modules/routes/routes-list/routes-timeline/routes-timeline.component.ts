@@ -45,4 +45,14 @@ export class RoutesTimelineComponent
         minutes  : (value: Date) => value.getMinutes(),
         seconds  : (value: Date) => value.getSeconds()
     } as const
+
+    public tikerId(index: number, { uid }: any) // TODO: Strong-type after fetching complete tiker info
+    {
+        return uid
+    }
+
+    public tiketId(index: number, { tiketId }: any) // TODO: Strong-type after fetching complete tiker info
+    {
+        return tiketId
+    }
 }
