@@ -14,21 +14,14 @@ import { ITiketCheckpoint } from '../models/tiket-checkpoint.interface'
     templateUrl: './route-list.component.html',
     styleUrls  : ['./route-list.component.scss']
 })
-export class RouteListComponent implements AfterViewInit
+export class RouteListComponent
 {
     now  = new Date()
     zoom = 150
 
-    @ViewChild(TimelineDirective) timeline!: Timeline;
-
     @Input() public assignedTikets: AssignedTiketsByTiker = []
 
     constructor(private location: TimelineLocationService) { }
-
-    ngAfterViewInit()
-    {
-        console.log(this.timeline);
-    }
 
     datesBetween = (start: Date, end: Date) => eachDayOfInterval({ start, end })
     label = (date: Date) => `${ date.getDate() }/${ date.getMonth() }`
@@ -37,14 +30,10 @@ export class RouteListComponent implements AfterViewInit
     labelH = (date: Date) => date.getHours()
 
     positionTicket({ date }: ITiketCheckpoint, dayWidth: number, viewBounds: ViewBounds | null): number
-    {
-        console.log(`Day Width: ${ dayWidth } view Bounds: ${ viewBounds }`);
-        
+    {    
         const pos = this.location.dateToPosition(dayWidth, date);
 
         const x = this.location.toScreenPosition(pos, viewBounds?.left ?? 0);
-
-        console.log(x);
 
         return x;
     }
