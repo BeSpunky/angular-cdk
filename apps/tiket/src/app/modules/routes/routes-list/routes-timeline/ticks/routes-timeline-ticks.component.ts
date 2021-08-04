@@ -1,11 +1,7 @@
-import { Component, Input } from '@angular/core'
-
+import { Component, Input                              } from '@angular/core'
 import { DatesBetweenGenerator, DayFactor, TickLabeler } from '@bespunky/angular-cdk/timeline/abstraction/ticks'
 
-function formatPxCssSize(size: number | string): string
-{
-    return typeof size === 'string' ? size : `${ size }px`;
-}
+import { formatPxCssSize                               } from '../_utils/_css-utils';
 
 @Component({
     selector   : 'tt-routes-timeline-ticks',

@@ -36,20 +36,8 @@
                               [label]="labels.minutes"
                               [top]="25"></tt-routes-timeline-ticks>
 
-    <!-- <ng-container *ngFor="let tiker of assignedTikets; let index = index">
-        <div [style.width.px]="50"
-             [style.height.px]="50"
-             [style.top.px]="(timeline.camera?.viewBounds | async)"
-             style="position: absolute;
-                padding: 15px;
-                box-shadow: black 1px 1px 1px;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-            {{ tiker.uid }}
-        </div>
+    <ng-container *ngFor="let tiker of assignedTikets; let index = index">
+        <tt-routes-timeline-tiker [tiker]="tiker" [index]="index"></tt-routes-timeline-tiker>
 
         <ng-container *ngFor="let tiket of tiker.assignedTikets">
             <ng-container *ngFor="let checkpoint of tiket.checkpoints">
@@ -65,5 +53,5 @@
                 </div>
             </ng-container>
         </ng-container>
-    </ng-container> -->
+    </ng-container>
 </div>
