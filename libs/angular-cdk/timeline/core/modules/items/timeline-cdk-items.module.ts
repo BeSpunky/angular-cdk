@@ -1,10 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule     } from '@angular/core';
 
-import { TimelineItemDirective } from './directive/timeline-item.directive';
+import { TimelineItemDirective } from './directives/timeline-item.directive';
 
 @NgModule({
-    imports     : [CommonModule],
     declarations: [TimelineItemDirective],
     exports     : [TimelineItemDirective]
 })

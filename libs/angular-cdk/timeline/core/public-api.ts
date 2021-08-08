@@ -22,6 +22,10 @@ export * from './modules/ticks/directives/well-known/timeline-minutes-tick.direc
 export * from './modules/ticks/directives/well-known/timeline-seconds-tick.directive';
 export * from './modules/ticks/directives/well-known/timeline-milliseconds-tick.directive';
 
+export * from './modules/items/timeline-cdk-items.module';
+
+export * from './modules/items/directives/timeline-item.directive';
+
 export * from './modules/ticks/services/renderer/timeline-tick-renderer.provider';
 export * from './modules/ticks/services/renderer/timeline-tick-renderer.service';
 

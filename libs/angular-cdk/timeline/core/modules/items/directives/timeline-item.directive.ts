@@ -1,13 +1,11 @@
 import { combineLatest, Observable, Subject                               } from 'rxjs';
-import { map, startWith                                                              } from 'rxjs/operators';
+import { map, startWith                                                   } from 'rxjs/operators';
 import { Directive, EmbeddedViewRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { TimelineCamera, TimelineConfig                                   } from '@bespunky/angular-cdk/timeline/abstraction';
-import { ItemContext                                                      } from '@bespunky/angular-cdk/timeline/abstraction/items';
-import { ItemData                                                         } from '@bespunky/angular-cdk/timeline/abstraction/items';
-import { TimelineItem                                                     } from '@bespunky/angular-cdk/timeline/abstraction/items';
-import { MillisecondsInADay, TimelineLocationService                      } from '@bespunky/angular-cdk/timeline/shared';
-import { ViewBounds                                                       } from '@bespunky/angular-cdk/navigables/camera';
+import { TimelineCamera, TimelineConfig              } from '@bespunky/angular-cdk/timeline/abstraction';
+import { ItemContext, ItemData, TimelineItem         } from '@bespunky/angular-cdk/timeline/abstraction/items';
+import { MillisecondsInADay, TimelineLocationService } from '@bespunky/angular-cdk/timeline/shared';
+import { ViewBounds                                  } from '@bespunky/angular-cdk/navigables/camera';
 
 @Directive({
     selector: '[bsTimelineItem]',
