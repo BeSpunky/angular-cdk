@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core'
+import { divideIntoParts } from '@bespunky/angular-cdk/timeline/shared'
 import { eachDayOfInterval, eachHourOfInterval, differenceInMinutes, differenceInSeconds, startOfSecond, startOfMinute, addMinutes, addSeconds, setHours, setMinutes, format } from 'date-fns'
 
 import { AssignedTiketsByTiker } from '../../../../shared/services/routes-coordinator.service'
-import { divideIntoParts       } from './_utils/_date-parts'
 
 const DayParts       = ['Night', 'Morning', 'Noon', 'Evening']
 const HourPartsCount = 3
