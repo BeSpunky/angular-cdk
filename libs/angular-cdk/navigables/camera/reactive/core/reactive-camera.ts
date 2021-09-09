@@ -1,10 +1,10 @@
-import { Key                                                                                             } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable            } from 'rxjs';
-import { map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
-import { ElementRef, Injectable                                                                          } from '@angular/core';
-import { mergeToggled, toggled                                                                           } from '@bespunky/rxjs';
-import { useActivationSwitch                                                                             } from '@bespunky/rxjs/operators';
-import { DocumentRef                                                                                     } from '@bespunky/angular-zen/core';
+import { Key                                                                                                    } from 'ts-key-enum';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                   } from 'rxjs';
+import { first, map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                                                                 } from '@angular/core';
+import { mergeToggled, toggled                                                                                  } from '@bespunky/rxjs';
+import { useActivationSwitch                                                                                    } from '@bespunky/rxjs/operators';
+import { DocumentRef                                                                                            } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -237,7 +237,8 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         // * the drag initiating element. In turn, this means that dragEnd will fire even if another element
         // * triggeres it. To make sure flicking is triggered for the corresponding element only, dragEnd is toggled
         // * here and only emits when the corresponding element has emitted a dragStart event.
-        const lastMovement = mergeToggled(dragEnd, { on: dragStart, off: dragEnd }).pipe(
+        const lastMovement = dragStart.pipe(
+            switchMap(() => dragEnd.pipe(first())),
             withLatestFrom(dragging),
             map(([, lastDragEvent]) => lastDragEvent)
         );
