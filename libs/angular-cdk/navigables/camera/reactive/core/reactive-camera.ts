@@ -232,8 +232,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookFlickOnMouseDrag(dragStart: Observable<MouseEvent>, dragging: Observable<MouseEvent>, dragEnd: Observable<MouseEvent>)
     {
-        // For every drag end, emit the lastest drag event to ensure movement amount is present
-        const lastMovement = dragEnd.pipe(
+        // For every drag end, emit the lastest drag event to ensure movement amount is present.
+        // * dragEnd is listened to on the entire document in order to allow releasing the mouse anywhere outside
+        // * the drag initiating element. In turn, this means that dragEnd will fire even if another element
+        // * triggeres it. To make sure flicking is triggered for the corresponding element only, dragEnd is toggled
+        // * here and only emits when the corresponding element has emitted a dragStart event.
+        const lastMovement = mergeToggled(dragEnd, { on: dragStart, off: dragEnd }).pipe(
             withLatestFrom(dragging),
             map(([, lastDragEvent]) => lastDragEvent)
         );

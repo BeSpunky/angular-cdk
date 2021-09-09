@@ -46,6 +46,8 @@ export abstract class Camera<TItem> extends Destroyable
             const element: HTMLElement = this.element.nativeElement;
             const resize = new ResizeObserver(([{ contentRect: { width, height } }]) => observer.next({ width, height }));
             
+            observer.next({ width: element.clientWidth, height: element.clientHeight });
+
             resize.observe(element)
         
             return () => resize.disconnect();
