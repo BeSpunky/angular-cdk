@@ -36,7 +36,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly swipeFlickFactor       : BehaviorSubject<number>                  = new BehaviorSubject(0.4);
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
     public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
-        
+    
     constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, private touch: ReactiveTouchService, element: ElementRef)
     {
         super(element);
