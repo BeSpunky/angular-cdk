@@ -15,24 +15,24 @@ import { ViewBounds } from '../shared/view-bounds';
  * values will have no lower bound.
  * @param {(Observable<number | null>)} higherBound The observable that emits the upper bound of the view bounds. If `null` is emitted,
  * values will have no upper bound.
- * @param {(viewBounds: ViewBounds) => number} viewPortLength A function which extracts the width or height of the view port
+ * @param {(viewBounds: ViewBounds) => number} extractViewPortLength A function which extracts the width or height of the view port
  * according to what the calling code is filtering (x position or y position).
  * @return {(source: Observable<number>) => Observable<number>} An observable which emits the source emitted value only
  * if it is withing the specified bounds.
  */
-function skipOutOfBoundsCameraPosition(
-    viewBounds    : Observable<ViewBounds>,
+function allowPositionInBoundsOnly(
+    viewPort      : Observable<ViewPort>,
     lowerBound    : Observable<number | null>,
     higherBound   : Observable<number | null>,
-    viewPortLength: (viewBounds: ViewBounds) => number,
+    extractViewPortLength: (viewPort: ViewPort) => number,
 ): (source: Observable<number>) => Observable<number>
 {
     return (source: Observable<number>) => source.pipe(
-        withLatestFrom(viewBounds, lowerBound, higherBound),
-        filter(([position, viewBounds, lower, higher]) =>
+        withLatestFrom(viewPort, lowerBound, higherBound),
+        filter(([position, viewPort, lower, higher]) =>
         {
             // Calculate half the viewport size so it can be added/subtracted from the position (which refers to the center of the view bounds)
-            const halfViewPort = viewPortLength(viewBounds) / 2;
+            const halfViewPort = extractViewPortLength(viewPort) / 2;
 
             // If bounds exist, use them to filter values; otherwise, don't filter.
             if (lower  && position - halfViewPort < lower ) return false;
@@ -65,51 +65,25 @@ export abstract class Camera<TItem> extends Destroyable
      *
      * @type {Observable<number>}
      */
-    public readonly sizeUnit   : Observable<number>;
+    public readonly viewPort   : Observable<ViewPort>;
     public readonly zoomLevel  : Observable<number>;
+    public readonly sizeUnit   : Observable<number>;
     public readonly viewCenterX: Observable<number>;
     public readonly viewCenterY: Observable<number>;
-    public readonly viewPort   : Observable<ViewPort>;
     public readonly viewBounds : Observable<ViewBounds>;
     
     constructor(protected element: ElementRef)
     {
         super();
         
-        this.sizeUnit    = this.sizeUnitFeed();
+        this.viewPort    = this.viewPortFeed();
         this.zoomLevel   = this.zoomLevelFeed();
+        this.sizeUnit    = this.sizeUnitFeed();
         this.viewCenterX = this.viewCenterXFeed();
         this.viewCenterY = this.viewCenterYFeed();
-        this.viewPort    = this.viewPortFeed();
         this.viewBounds  = this.viewBoundsFeed();
     }
     
-    protected sizeUnitFeed(): Observable<number>
-    {
-        return combineLatest([this.zoomFactor, this.zoomLevel]).pipe(
-            map(([zoomFactor, zoomLevel]) => zoomFactor ** zoomLevel)
-        );
-    }
-
-    protected zoomLevelFeed(): Observable<number>
-    {
-        return this.zoomLevelInput.asObservable();
-    }
-
-    protected viewCenterXFeed(): Observable<number>
-    {
-        return this.viewCenterXInput.pipe(
-            skipOutOfBoundsCameraPosition(this.viewBounds, this.leftBound, this.rightBound, viewBounds => viewBounds.width)
-        );
-    }
-
-    protected viewCenterYFeed(): Observable<number>
-    {
-        return this.viewCenterYInput.pipe(
-            skipOutOfBoundsCameraPosition(this.viewBounds, this.topBound, this.bottomBound, viewBounds => viewBounds.height)
-        );
-    }
-
     protected viewPortFeed(): Observable<ViewPort>
     {
         return new Observable<ViewPort>(observer =>
@@ -124,7 +98,33 @@ export abstract class Camera<TItem> extends Destroyable
             return () => resize.disconnect();
         });
     }
+
+    protected zoomLevelFeed(): Observable<number>
+    {
+        return this.zoomLevelInput.asObservable();
+    }
     
+    protected sizeUnitFeed(): Observable<number>
+    {
+        return combineLatest([this.zoomFactor, this.zoomLevel]).pipe(
+            map(([zoomFactor, zoomLevel]) => zoomFactor ** zoomLevel)
+        );
+    }
+
+    protected viewCenterXFeed(): Observable<number>
+    {
+        return this.viewCenterXInput.pipe(
+            allowPositionInBoundsOnly(this.viewPort, this.leftBound, this.rightBound, viewPort => viewPort.width)
+        );
+    }
+
+    protected viewCenterYFeed(): Observable<number>
+    {
+        return this.viewCenterYInput.pipe(
+            allowPositionInBoundsOnly(this.viewPort, this.topBound, this.bottomBound, viewPort => viewPort.height)
+        );
+    }
+
     protected viewBoundsFeed(): Observable<ViewBounds>
     {
         return combineLatest([this.viewPort, this.viewCenterX, this.viewCenterY]).pipe(
