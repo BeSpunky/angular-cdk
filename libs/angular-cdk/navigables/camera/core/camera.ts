@@ -41,12 +41,17 @@ export abstract class Camera<TItem> extends Destroyable
 
     protected viewPortFeed(): Observable<ViewPort>
     {
-        const element: HTMLElement = this.element.nativeElement;
+        return new Observable<ViewPort>(observer =>
+        {
+            const element: HTMLElement = this.element.nativeElement;
+            const resize = new ResizeObserver(([{ contentRect: { width, height } }]) => observer.next({ width, height }));
+            
+            observer.next({ width: element.clientWidth, height: element.clientHeight });
 
-        return fromEvent<UIEvent>(element, 'resize').pipe(
-            startWith({}),
-            map(() => ({ width: element.clientWidth, height: element.clientHeight })),
-        );
+            resize.observe(element)
+        
+            return () => resize.disconnect();
+        });
     }
     
     protected viewBoundsFeed(): Observable<ViewBounds>

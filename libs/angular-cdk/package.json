@@ -1,6 +1,6 @@
 {
   "name": "@bespunky/angular-cdk",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.4",
   "author": {
     "email": "us@bespunky.io",
     "name": "Shy Agam",
@@ -13,8 +13,14 @@
   "peerDependencies": {
     "@angular/common": "^12.0.0",
     "@angular/core": "^12.0.0",
+    "@bespunky/rxjs": "^12.0.0",
+    "date-fns": "^2.21.1",
     "hammerjs": "^2.0.8",
     "ts-key-enum": "^2.0.7"
+  },
+  "devDependencies": {
+    "@types/hammerjs": "^2.0.40",
+    "@bespunky/typescript-utils": "^0.0.1"
   },
   "dependencies": {
     "tslib": "^2.1.0"

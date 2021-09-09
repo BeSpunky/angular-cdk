@@ -1,7 +1,7 @@
 import { animationFrameScheduler, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, observeOn               } from 'rxjs/operators';
 import { Injectable                                         } from '@angular/core';
-import { useActivationSwitch, valueInRange                  } from '@bespunky/rxjs/operators';
+import { debug, useActivationSwitch, valueInRange                  } from '@bespunky/rxjs/operators';
 
 import { ViewBounds                                                                  } from '@bespunky/angular-cdk/navigables/camera';
 import { TimelineLocationService                                                     } from '@bespunky/angular-cdk/timeline/shared';
