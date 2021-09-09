@@ -72,6 +72,63 @@
               "libs/angular-cdk/**/*.html"
             ]
           }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/angular-cdk/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/angular-cdk",
+            "config": {
+              "configFolder": "libs/angular-cdk/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "angular-cdk-e2e": {
+      "root": "apps/angular-cdk-e2e",
+      "sourceRoot": "apps/angular-cdk-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/angular-cdk-e2e/cypress.json",
+            "tsConfig": "apps/angular-cdk-e2e/tsconfig.e2e.json",
+            "devServerTarget": "angular-cdk:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "angular-cdk:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/angular-cdk-e2e/**/*.{js,ts}"]
+          }
         }
       }
     },

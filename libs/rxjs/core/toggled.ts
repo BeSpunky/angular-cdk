@@ -15,4 +15,3 @@ export function toggled<TValue, TOn, TOff>(observable: Observable<TValue>, { on,
 
     return observable.pipe(windowToggle(on, closingSelector));
 }
-

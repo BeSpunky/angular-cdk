@@ -25,6 +25,10 @@
     "angular-cdk": {
       "tags": []
     },
+    "angular-cdk-e2e": {
+      "tags": [],
+      "implicitDependencies": ["angular-cdk"]
+    },
     "official-site": {
       "tags": []
     },

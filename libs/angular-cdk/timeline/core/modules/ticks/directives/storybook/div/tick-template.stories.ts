@@ -17,14 +17,14 @@ export function createDivTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayF
 {
     return /*html*/`
     <div *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;"
-         [style.width.px]="tick.width | async"
-         [style.height.px]="(tick.width | async) / 4"
-         [style.transform]="'translate(' + (tick.screenPositionX | async) + 'px, ' + (tick.screenPositionY | async) + 'px)'"
+         [style.width.px]="tick.width"
+         [style.height.px]="tick.width / 4"
+         [style.transform]="'translate(' + tick.screenPositionX + 'px, ' + tick.screenPositionY + 'px)'"
          style="position: absolute; border-left: ${width}px solid ${color};"
     >
-        <label [style.height.px]="(tick.screenPositionY | async) + ${offset}"
+        <label [style.height.px]="tick.screenPositionY + ${offset}"
                style="position: absolute; left:5px; user-select: none">
-            {{tick.label | async}}
+            {{tick.label}}
         </label>
     </div>
     `;

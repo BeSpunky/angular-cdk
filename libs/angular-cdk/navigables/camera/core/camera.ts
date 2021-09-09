@@ -1,44 +1,87 @@
-import { BehaviorSubject, combineLatest, fromEvent, Observable } from 'rxjs';
-import { map, shareReplay, startWith                           } from 'rxjs/operators';
-import { ElementRef, Injectable                                } from '@angular/core';
-import { Destroyable                                           } from '@bespunky/angular-zen/core';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { map, shareReplay, withLatestFrom           } from 'rxjs/operators';
+import { ElementRef, Injectable                     } from '@angular/core';
+import { Destroyable                                } from '@bespunky/angular-zen/core';
 
 import { ViewPort   } from '../shared/view-port';
 import { ViewBounds } from '../shared/view-bounds';
 
+/**
+ * Applies a pipeline filter on values emitted from the source observable which are out of the
+ * specified position bounds.
+ *
+ * @param {Observable<ViewBounds>} viewBounds The observable that emits the current view bounds.
+ * @param {(Observable<number | null>)} lowerBound The observable that emits the lower bound of the view bounds. If `null` is emitted,
+ * values will have no lower bound.
+ * @param {(Observable<number | null>)} higherBound The observable that emits the upper bound of the view bounds. If `null` is emitted,
+ * values will have no upper bound.
+ * @param {(viewBounds: ViewBounds) => number} extractViewPortLength A function which extracts the width or height of the view port
+ * according to what the calling code is filtering (x position or y position).
+ * @return {(source: Observable<number>) => Observable<number>} An observable which emits the source emitted value only
+ * if it is withing the specified bounds.
+ */
+function keepPositionInRange(
+    viewPort             : Observable<ViewPort>,
+    lowerBound           : Observable<number | null>,
+    higherBound          : Observable<number | null>,
+    extractViewPortLength: (viewPort: ViewPort) => number,
+): (source: Observable<number>) => Observable<number>
+{
+    return (source: Observable<number>) => source.pipe(
+        withLatestFrom(viewPort, lowerBound, higherBound),
+        map(([center, viewPort, lower, higher]) =>
+        {
+            // Calculate half the viewport size so it can be added/subtracted from the position (which refers to the center of the view bounds)
+            const halfViewPort = extractViewPortLength(viewPort) / 2;
+
+            // If bounds exist, use them to determine if the value is in range. If it is not, return a new value sitting on the bounds exactly.
+            if (lower  !== null && center - halfViewPort < lower ) return lower  + halfViewPort;
+            if (higher !== null && center + halfViewPort > higher) return higher - halfViewPort;
+
+            // No bounds or value is in range. Use the new center as-is.
+            return center;
+        })
+    );
+}
+
 @Injectable()
 export abstract class Camera<TItem> extends Destroyable
 {
-    public readonly zoomFactor : BehaviorSubject<number> = new BehaviorSubject(1.06);
-    public readonly zoomLevel  : BehaviorSubject<number> = new BehaviorSubject(0);
-    public readonly viewCenterX: BehaviorSubject<number> = new BehaviorSubject(0);
-    public readonly viewCenterY: BehaviorSubject<number> = new BehaviorSubject(0);
+    private readonly zoomLevelInput  : BehaviorSubject<number> = new BehaviorSubject(0);
+    private readonly viewCenterXInput: BehaviorSubject<number> = new BehaviorSubject(0);
+    private readonly viewCenterYInput: BehaviorSubject<number> = new BehaviorSubject(0);
+    
+    public readonly zoomFactor: BehaviorSubject<number> = new BehaviorSubject(1.06);
+    
+    public readonly leftBound  : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
+    public readonly rightBound : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
+    public readonly topBound   : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
+    public readonly bottomBound: BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
     
     /**
      * A zoom dependant value to use as a unit for sizing elements on the screen.
      *
      * @type {Observable<number>}
      */
-    public readonly sizeUnit  : Observable<number>;
-    public readonly viewPort  : Observable<ViewPort>;
-    public readonly viewBounds: Observable<ViewBounds>;
+    public readonly viewPort   : Observable<ViewPort>;
+    public readonly zoomLevel  : Observable<number>;
+    public readonly sizeUnit   : Observable<number>;
+    public readonly viewCenterX: Observable<number>;
+    public readonly viewCenterY: Observable<number>;
+    public readonly viewBounds : Observable<ViewBounds>;
     
     constructor(protected element: ElementRef)
     {
         super();
         
-        this.sizeUnit   = this.sizeUnitFeed();
-        this.viewPort   = this.viewPortFeed();
-        this.viewBounds = this.viewBoundsFeed();
+        this.viewPort    = this.viewPortFeed();
+        this.zoomLevel   = this.zoomLevelFeed();
+        this.sizeUnit    = this.sizeUnitFeed();
+        this.viewCenterX = this.viewCenterXFeed();
+        this.viewCenterY = this.viewCenterYFeed();
+        this.viewBounds  = this.viewBoundsFeed();
     }
     
-    protected sizeUnitFeed(): Observable<number>
-    {
-        return combineLatest([this.zoomFactor, this.zoomLevel]).pipe(
-            map(([zoomFactor, zoomLevel]) => zoomFactor ** zoomLevel)
-        );
-    }
-
     protected viewPortFeed(): Observable<ViewPort>
     {
         return new Observable<ViewPort>(observer =>
@@ -53,7 +96,33 @@ export abstract class Camera<TItem> extends Destroyable
             return () => resize.disconnect();
         });
     }
+
+    protected zoomLevelFeed(): Observable<number>
+    {
+        return this.zoomLevelInput.asObservable();
+    }
     
+    protected sizeUnitFeed(): Observable<number>
+    {
+        return combineLatest([this.zoomFactor, this.zoomLevel]).pipe(
+            map(([zoomFactor, zoomLevel]) => zoomFactor ** zoomLevel)
+        );
+    }
+
+    protected viewCenterXFeed(): Observable<number>
+    {
+        return this.viewCenterXInput.pipe(
+            keepPositionInRange(this.viewPort, this.leftBound, this.rightBound, viewPort => viewPort.width)
+        );
+    }
+
+    protected viewCenterYFeed(): Observable<number>
+    {
+        return this.viewCenterYInput.pipe(
+            keepPositionInRange(this.viewPort, this.topBound, this.bottomBound, viewPort => viewPort.height)
+        );
+    }
+
     protected viewBoundsFeed(): Observable<ViewBounds>
     {
         return combineLatest([this.viewPort, this.viewCenterX, this.viewCenterY]).pipe(
@@ -77,6 +146,16 @@ export abstract class Camera<TItem> extends Destroyable
         }
         else this.panToItem(arg1);
     }
+
+    public panToX(position: number): void
+    {
+        this.viewCenterXInput.next(position);
+    }
+    
+    public panToY(position: number): void
+    {
+        this.viewCenterYInput.next(position);
+    }
     
     public zoomOn(item: TItem, amount: number)                         : void;
     public zoomOn(positionX: number, positionY: number, amount: number): void;
@@ -94,12 +173,12 @@ export abstract class Camera<TItem> extends Destroyable
 
     public panX(amount: number): void
     {
-        this.addAmount(this.viewCenterX, amount);
+        this.addAmount(this.viewCenterXInput, amount);
     }
 
     public panY(amount: number): void
     {
-        this.addAmount(this.viewCenterY, amount);
+        this.addAmount(this.viewCenterYInput, amount);
     }
 
     public pan(amountX: number, amountY: number): void
@@ -110,18 +189,18 @@ export abstract class Camera<TItem> extends Destroyable
     
     protected panToPosition(positionX: number, positionY: number): void
     {
-        this.viewCenterX.next(positionX);
-        this.viewCenterY.next(positionY);
+        this.panToX(positionX);
+        this.panToY(positionY);
     }
 
     public zoom(amount: number): void
     {
-        this.addAmount(this.zoomLevel, amount);
+        this.addAmount(this.zoomLevelInput, amount);
     }
 
     public setZoom(zoomLevel: number): void
     {
-        this.zoomLevel.next(zoomLevel);
+        this.zoomLevelInput.next(zoomLevel);
     }
 
     protected zoomOnPosition(positionX: number, positionY: number, amount: number): void
@@ -129,8 +208,8 @@ export abstract class Camera<TItem> extends Destroyable
         this.zoom(amount);
 
         const zoomedBy          = this.calculateZoomChangeInPixels(amount);
-        const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.viewCenterX.value, positionX, zoomedBy);
-        const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.viewCenterY.value, positionY, zoomedBy);
+        const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.viewCenterXInput.value, positionX, zoomedBy);
+        const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.viewCenterYInput.value, positionY, zoomedBy);
 
         this.panToPosition(zoomedViewCenterX, zoomedViewCenterY);
     }

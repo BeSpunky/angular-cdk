@@ -17,12 +17,12 @@ export function createSVGTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayF
 {    
     return /*html*/`
     <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;">
-        <line [attr.x1]="tick.screenPositionX | async" [attr.y1]="(tick.screenPositionY | async) + ${offset}"
-              [attr.x2]="tick.screenPositionX | async" [attr.y2]="(tick.screenPositionY | async) + (tick.width | async) / 4"
+        <line [attr.x1]="tick.screenPositionX" [attr.y1]="tick.screenPositionY + ${offset}"
+              [attr.x2]="tick.screenPositionX" [attr.y2]="tick.screenPositionY + tick.width / 4"
               stroke-width="${width}" stroke="${color}"
         ></line>
 
-        <text style="user-select: none" [attr.x]="tick.screenPositionX | async" [attr.y]="tick.screenPositionY | async" dx="4" dy="${offset}" font-size="20">{{tick.label | async}}</text>
+        <text style="user-select: none" [attr.x]="tick.screenPositionX" [attr.y]="tick.screenPositionY" dx="4" dy="${offset}" font-size="20">{{tick.label}}</text>
     </g>
     `;
 }

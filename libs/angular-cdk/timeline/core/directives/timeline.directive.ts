@@ -1,5 +1,5 @@
 import { combineLatest, Observable                } from 'rxjs';
-import { map                                      } from 'rxjs/operators';
+import { first, map                                      } from 'rxjs/operators';
 import { Directive, Input                         } from '@angular/core';
 
 import { Timeline, TimelineConfig, TimelineCamera } from '@bespunky/angular-cdk/timeline/abstraction';
@@ -57,12 +57,44 @@ export class TimelineDirective extends Timeline
 
     @Input() public set positionX(value: number)
     {
-        this.camera.panTo(value, this.camera.viewCenterY.value);
+        this.camera.panToX(value);
     }
 
     @Input() public set positionY(value: number)
     {
-        this.camera.panTo(this.camera.viewCenterX.value, value);
+        this.camera.panToY(value);
+    }
+
+    @Input() public set minDate(value: Date)
+    {
+        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
+        //       horizontal LTR timelines.
+        this.subscribe(this.camera.dayWidth.pipe(first()), dayWidth => 
+            this.camera.leftBound.next(this.location.dateToPosition(dayWidth, value))
+        );
+    }
+
+    @Input() public set maxDate(value: Date)
+    {
+        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
+        //       horizontal LTR timelines.
+        this.subscribe(this.camera.dayWidth.pipe(first()), dayWidth => 
+            this.camera.rightBound.next(this.location.dateToPosition(dayWidth, value))
+        );
+    }
+
+    @Input() public set topBound(value: number)
+    {
+        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
+        //       horizontal LTR timelines.
+        this.camera.topBound.next(value)
+    }
+
+    @Input() public set bottomBound(value: number)
+    {
+        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
+        //       horizontal LTR timelines.
+        this.camera.bottomBound.next(value)
     }
 
     @Input() public set date(value: Date)
