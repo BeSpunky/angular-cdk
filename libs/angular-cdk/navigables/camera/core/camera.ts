@@ -1,5 +1,5 @@
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { filter, map, shareReplay, withLatestFrom   } from 'rxjs/operators';
+import { map, shareReplay, withLatestFrom           } from 'rxjs/operators';
 import { ElementRef, Injectable                     } from '@angular/core';
 import { Destroyable                                } from '@bespunky/angular-zen/core';
 
@@ -20,29 +20,27 @@ import { ViewBounds } from '../shared/view-bounds';
  * @return {(source: Observable<number>) => Observable<number>} An observable which emits the source emitted value only
  * if it is withing the specified bounds.
  */
-function allowPositionInBoundsOnly(
-    viewPort      : Observable<ViewPort>,
-    lowerBound    : Observable<number | null>,
-    higherBound   : Observable<number | null>,
+function keepPositionInRange(
+    viewPort             : Observable<ViewPort>,
+    lowerBound           : Observable<number | null>,
+    higherBound          : Observable<number | null>,
     extractViewPortLength: (viewPort: ViewPort) => number,
 ): (source: Observable<number>) => Observable<number>
 {
     return (source: Observable<number>) => source.pipe(
         withLatestFrom(viewPort, lowerBound, higherBound),
-        filter(([position, viewPort, lower, higher]) =>
+        map(([center, viewPort, lower, higher]) =>
         {
             // Calculate half the viewport size so it can be added/subtracted from the position (which refers to the center of the view bounds)
             const halfViewPort = extractViewPortLength(viewPort) / 2;
 
-            // If bounds exist, use them to filter values; otherwise, don't filter.
-            if (lower  && position - halfViewPort < lower ) return false;
-            if (higher && position + halfViewPort > higher) return false;
+            // If bounds exist, use them to determine if the value is in range. If it is not, return a new value sitting on the bounds exactly.
+            if (lower  !== null && center - halfViewPort < lower ) return lower  + halfViewPort;
+            if (higher !== null && center + halfViewPort > higher) return higher - halfViewPort;
 
-            // No bounds defined or value is withing the defined bounds; No filtering is done.
-            return true;
-        }),
-        // Restore original emitted value
-        map(([position]) => position)
+            // No bounds or value is in range. Use the new center as-is.
+            return center;
+        })
     );
 }
 
@@ -114,14 +112,14 @@ export abstract class Camera<TItem> extends Destroyable
     protected viewCenterXFeed(): Observable<number>
     {
         return this.viewCenterXInput.pipe(
-            allowPositionInBoundsOnly(this.viewPort, this.leftBound, this.rightBound, viewPort => viewPort.width)
+            keepPositionInRange(this.viewPort, this.leftBound, this.rightBound, viewPort => viewPort.width)
         );
     }
 
     protected viewCenterYFeed(): Observable<number>
     {
         return this.viewCenterYInput.pipe(
-            allowPositionInBoundsOnly(this.viewPort, this.topBound, this.bottomBound, viewPort => viewPort.height)
+            keepPositionInRange(this.viewPort, this.topBound, this.bottomBound, viewPort => viewPort.height)
         );
     }
 
