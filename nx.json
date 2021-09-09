@@ -35,13 +35,6 @@
     "rxjs": {
       "tags": []
     },
-    "tiket": {
-      "tags": []
-    },
-    "tiket-e2e": {
-      "tags": [],
-      "implicitDependencies": ["tiket"]
-    },
     "typescript-utils": {
       "tags": []
     }
