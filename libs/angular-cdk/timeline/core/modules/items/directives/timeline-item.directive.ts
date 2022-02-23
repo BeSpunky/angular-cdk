@@ -58,7 +58,7 @@ export class TimelineItemDirective extends TimelineItem
         const screenPosition = this.location.toScreenPosition(position, isVertical ? viewBounds.top : viewBounds.left);
         const size           = (duration / MillisecondsInADay) * sizeUnit;
         
-        const data = new ItemData(position, screenPosition, size, viewBounds);
+        const data = new ItemData(position, screenPosition, size, viewBounds, sizeUnit);
 
         return {
             $implicit     : data,
