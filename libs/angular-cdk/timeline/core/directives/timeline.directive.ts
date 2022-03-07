@@ -1,9 +1,8 @@
 import { combineLatest, Observable                } from 'rxjs';
-import { first, map                                      } from 'rxjs/operators';
+import { map                                      } from 'rxjs/operators';
 import { Directive, Input                         } from '@angular/core';
 
 import { Timeline, TimelineConfig, TimelineCamera } from '@bespunky/angular-cdk/timeline/abstraction';
-import { TimelineLocationService                  } from '@bespunky/angular-cdk/timeline/shared';
 import { TimelineTickRendererProvider             } from '../modules/ticks/services/renderer/timeline-tick-renderer.provider';
 import { TimelineConfigProvider                   } from '../services/config/timeline-config.provider';
 import { TimelineCameraProvider                   } from '../services/camera/timeline-camera.provider';
@@ -35,14 +34,13 @@ export class TimelineDirective extends Timeline
      */
     constructor(
         public  readonly config  : TimelineConfig,
-        public  readonly camera  : TimelineCamera,
-        private readonly location: TimelineLocationService
+        public  readonly camera  : TimelineCamera
     )
     {
         super();
 
-        this.currentDate = combineLatest([this.camera.dayWidth, this.camera.viewCenterX]).pipe(
-            map(([dayWidth, position]) => this.location.positionToDate(dayWidth, position))
+        this.currentDate = this.camera.viewCenterX.pipe(
+            map(position => this.camera.positionToDate(position))
         );
     }
 
@@ -69,18 +67,14 @@ export class TimelineDirective extends Timeline
     {
         // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
         //       horizontal LTR timelines.
-        this.subscribe(this.camera.dayWidth.pipe(first()), dayWidth => 
-            this.camera.leftBound.next(this.location.dateToPosition(dayWidth, value))
-        );
+        this.camera.leftBound.next(this.camera.dateToPosition(value));
     }
 
     @Input() public set maxDate(value: Date)
     {
         // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
         //       horizontal LTR timelines.
-        this.subscribe(this.camera.dayWidth.pipe(first()), dayWidth => 
-            this.camera.rightBound.next(this.location.dateToPosition(dayWidth, value))
-        );
+        this.camera.rightBound.next(this.camera.dateToPosition(value));
     }
 
     @Input() public set topBound(value: number)
