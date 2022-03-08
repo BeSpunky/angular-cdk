@@ -1,4 +1,4 @@
-import { combineLatest, Observable                } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable                } from 'rxjs';
 import { map                                      } from 'rxjs/operators';
 import { Directive, Input                         } from '@angular/core';
 
@@ -29,12 +29,17 @@ export class TimelineDirective extends Timeline
 {
     public readonly currentDate: Observable<Date>;
     
+    protected readonly minDate$    : BehaviorSubject<Date | null>   = new BehaviorSubject(null as Date | null);
+    protected readonly maxDate$    : BehaviorSubject<Date | null>   = new BehaviorSubject(null as Date | null);
+    protected readonly topBound$   : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
+    protected readonly bottomBound$: BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
+
     /**
      * Creates an instance of TimelineDirective.
      */
     constructor(
-        public  readonly config  : TimelineConfig,
-        public  readonly camera  : TimelineCamera
+        public readonly config: TimelineConfig,
+        public readonly camera: TimelineCamera
     )
     {
         super();
@@ -42,6 +47,15 @@ export class TimelineDirective extends Timeline
         this.currentDate = this.camera.viewCenterX.pipe(
             map(position => this.camera.positionToDate(position))
         );
+
+    
+        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
+        //       horizontal LTR timelines.
+        this.subscribe(merge(this.minDate$, this.camera.dayWidth), () => this.camera.leftBound .next(this.minDate ? this.camera.dateToPosition(this.minDate) : null));
+        this.subscribe(merge(this.maxDate$, this.camera.dayWidth), () => this.camera.rightBound.next(this.maxDate ? this.camera.dateToPosition(this.maxDate) : null));
+        // TODO: How will zooming affect the top and bottom bounds?
+        this.subscribe(merge(this.topBound$,    this.camera.dayWidth), () => this.camera.topBound.next(this.topBound));
+        this.subscribe(merge(this.bottomBound$, this.camera.dayWidth), () => this.camera.bottomBound.next(this.bottomBound));
     }
 
     /**
@@ -63,34 +77,18 @@ export class TimelineDirective extends Timeline
         this.camera.panToY(value);
     }
 
-    @Input() public set minDate(value: Date)
-    {
-        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
-        //       horizontal LTR timelines.
-        this.camera.leftBound.next(this.camera.dateToPosition(value));
-    }
+             public get minDate(    ): Date | null  { return this.minDate$.value; }
+    @Input() public set minDate(value: Date | null) { this.minDate$.next(value);  }
 
-    @Input() public set maxDate(value: Date)
-    {
-        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
-        //       horizontal LTR timelines.
-        this.camera.rightBound.next(this.camera.dateToPosition(value));
-    }
+             public get maxDate(    ): Date | null  { return this.maxDate$.value; }
+    @Input() public set maxDate(value: Date | null) { this.maxDate$.next(value);  }
 
-    @Input() public set topBound(value: number)
-    {
-        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
-        //       horizontal LTR timelines.
-        this.camera.topBound.next(value)
-    }
+             public get topBound(    ): number | null  { return this.topBound$.value; }
+    @Input() public set topBound(value: number | null) { this.topBound$.next(value);  }
 
-    @Input() public set bottomBound(value: number)
-    {
-        // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
-        //       horizontal LTR timelines.
-        this.camera.bottomBound.next(value)
-    }
-
+             public get bottomBound(    ): number | null  { return this.bottomBound$.value; }
+    @Input() public set bottomBound(value: number | null) { this.bottomBound$.next(value);  }
+    
     @Input() public set date(value: Date)
     {
         this.camera.panTo(value);

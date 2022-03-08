@@ -289,7 +289,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             // Calculate the next decreased movement amount
             map(breaksStrength => movement - breaksStrength),
             // Take the direction into account and stop the animation when exceeding zero
-            takeWhile(nextPan => movement > 0 ? nextPan > 0 : nextPan < 0)
+            takeWhile(nextPan => Math.abs(nextPan) > 0)
         );
 
         return lastMovement.pipe(
