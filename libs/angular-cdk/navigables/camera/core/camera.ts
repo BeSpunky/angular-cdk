@@ -1,24 +1,24 @@
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { map, pairwise, shareReplay, startWith, tap, withLatestFrom     } from 'rxjs/operators';
-import { ElementRef, Injectable                              } from '@angular/core';
-import { Property                                            } from '@bespunky/typescript-utils';
-import { Destroyable                                         } from '@bespunky/angular-zen/core';
+import { BehaviorSubject, combineLatest, Observable, Subject        } from 'rxjs';
+import { map, pairwise, shareReplay, startWith, tap, withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                     } from '@angular/core';
+import { Property                                                   } from '@bespunky/typescript-utils';
+import { Destroyable                                                } from '@bespunky/angular-zen/core';
 
 import { ViewPort   } from '../shared/view-port';
 import { ViewBounds } from '../shared/view-bounds';
 
-function restrictLowerBound(center: number, lower: number | null, halfViewPort: number)
+function constrainLowerBound(center: number, lower: number | null, halfViewPort: number): { center: number; constrained: boolean; }
 {
-    if (lower !== null && center - halfViewPort < lower) return lower + halfViewPort;
+    if (lower !== null && center - halfViewPort < lower) return { center: lower + halfViewPort, constrained: true };
 
-    return center;
+    return { center, constrained: false };
 }
 
-function restrictUpperBound(center: number, upper: number | null, halfViewPort: number)
+function constrainUpperBound(center: number, upper: number | null, halfViewPort: number): { center: number; constrained: boolean; }
 {
-    if (upper !== null && center + halfViewPort > upper) return upper - halfViewPort;
+    if (upper !== null && center + halfViewPort > upper) return { center: upper - halfViewPort, constrained: true };
 
-    return center;
+    return { center, constrained: false };
 }
 
 /**
@@ -40,7 +40,7 @@ function keepPositionInRange(
     lowerBound       : Observable<number | null>,
     upperBound       : Observable<number | null>,
     viewPortLengthKey: Property<ViewPort, number>,
-): (centerSource: Observable<number>) => Observable<number>
+): (centerSource: Observable<number>) => Observable<{ center: number, constrained: boolean }>
 {
     return (centerSource: Observable<number>) => centerSource.pipe(
         pairwise(),
@@ -55,11 +55,11 @@ function keepPositionInRange(
             const halfViewPort = viewPort[viewPortLengthKey] / 2;
 
             // If bounds exist, use them to determine if the value is in range. If it is not, return a new value sitting on the bounds exactly.
-            if      (direction === -1) return restrictLowerBound(center, lower, halfViewPort);
-            else if (direction ===  1) return restrictUpperBound(center, upper, halfViewPort);
+            if      (direction === -1) return constrainLowerBound(center, lower, halfViewPort);
+            else if (direction ===  1) return constrainUpperBound(center, upper, halfViewPort);
 
             // No bounds or value is in range. Use the new center as-is.
-            return center;
+            return { center, constrained: false };
         })
     );
 }
@@ -77,6 +77,9 @@ export abstract class Camera<TItem> extends Destroyable
     public readonly rightBound : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
     public readonly topBound   : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
     public readonly bottomBound: BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
+    
+    protected horizontalBoundReached: Subject<number> = new Subject();
+    protected verticalBoundReached  : Subject<number> = new Subject();
     
     /**
      * A zoom dependant value to use as a unit for sizing elements on the screen.
@@ -142,7 +145,9 @@ export abstract class Camera<TItem> extends Destroyable
     {
         return this.viewCenterXInput.pipe(
             startWith(0),
-            keepPositionInRange(this.viewPort, this.leftBound, this.rightBound, 'width')
+            keepPositionInRange(this.viewPort, this.leftBound, this.rightBound, 'width'),
+            tap(({ center, constrained }) => constrained ? this.horizontalBoundReached.next(center) : null),
+            map(({ center }) => center)
         );
     }
 
@@ -150,7 +155,9 @@ export abstract class Camera<TItem> extends Destroyable
     {
         return this.viewCenterYInput.pipe(
             startWith(0),
-            keepPositionInRange(this.viewPort, this.topBound, this.bottomBound, 'height')
+            keepPositionInRange(this.viewPort, this.topBound, this.bottomBound, 'height'),
+            tap(({ center, constrained }) => constrained ? this.verticalBoundReached.next(center) : null),
+            map(({ center }) => center)
         );
     }
 
