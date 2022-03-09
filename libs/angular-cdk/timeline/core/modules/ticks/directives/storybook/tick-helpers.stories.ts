@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { CommonModule                                           } from '@angular/common';
 import { componentWrapperDecorator, Meta, moduleMetadata, Story } from '@storybook/angular';
 
@@ -12,7 +13,7 @@ export function createTickStoryMeta(exampleGroupName: string, wrapStoryInTimelin
         component : TimelineTickDirective,
         decorators: [
             moduleMetadata({ imports: [CommonModule, TimelineCdkModule] }),
-            componentWrapperDecorator(wrapStoryInTimelineContainer, { zoom: 100, now: new Date() })
+            componentWrapperDecorator(wrapStoryInTimelineContainer, { zoom: 100, now: new Date(), yesterday: addDays(new Date(), -1) })
         ],
         argTypes: {
             minZoom: { description: 'The lowest zoom level this tick should render on' , defaultValue: -200, control: { type: 'range', min: -300, max: 300 } },

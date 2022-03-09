@@ -6,7 +6,7 @@ export function wrapStoryInDivTimeline(story: string)
     const currentPositionLineStyle = `width: 1px; height: 100%; position: absolute; left: 50%; right: 50%; top: 0; border-left: 1px solid purple;`
 
     return /*html*/`
-    <div bsTimeline [zoom]="zoom" [date]="now" [positionY]="50" style="${timelineStyle}">
+    <div bsTimeline [zoom]="zoom" [date]="now" [minDate]="yesterday" [positionY]="50" style="${timelineStyle}">
         <div style="${currentPositionLineStyle}"></div>
         ${story}
     </div>

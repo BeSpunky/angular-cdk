@@ -1,11 +1,11 @@
 import { animationFrameScheduler, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, observeOn               } from 'rxjs/operators';
 import { Injectable                                         } from '@angular/core';
-import { debug, useActivationSwitch, valueInRange                  } from '@bespunky/rxjs/operators';
+import { useActivationSwitch, valueInRange                  } from '@bespunky/rxjs/operators';
 
 import { ViewBounds                                                                  } from '@bespunky/angular-cdk/navigables/camera';
-import { TimelineLocationService                                                     } from '@bespunky/angular-cdk/timeline/shared';
 import { TimelineTick, DatesBetweenGenerator, TickData, TickLabeler, WidthCalculator } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
+import { dateToPosition, positionToDate, positionToScreenPosition                    } from '@bespunky/angular-cdk/timeline/shared';
 
 /**
  * Provides methods for virtualizing tick rendering. This service is designed to determine what ticks should
@@ -17,8 +17,6 @@ import { TimelineTick, DatesBetweenGenerator, TickData, TickLabeler, WidthCalcul
 @Injectable({ providedIn: 'root' })
 export class TimelineTickVirtualizationService
 {
-    constructor(private location: TimelineLocationService) { }
-
     /**
      * Creates a stream that notifies subscribers when the specified tick scale should render or unrender.
      * Render state is determined by the current zoom level and the min/max zoom defined for the tick scale.
@@ -93,15 +91,15 @@ export class TimelineTickVirtualizationService
     public ticksOnScreen(viewBounds: ViewBounds, dayWidth: number, width: WidthCalculator, startPosition: number, endPosition: number, datesBetween: DatesBetweenGenerator, label: TickLabeler): TickData[]
     {
         // Find the dates corresponding to the bounds of the screen
-        const start = this.location.positionToDate(dayWidth, startPosition);
-        const end   = this.location.positionToDate(dayWidth, endPosition);
+        const start = positionToDate(dayWidth, startPosition);
+        const end   = positionToDate(dayWidth, endPosition);
 
         // Generate all scale-level dates inside the screen bounds and create a tick item for each
         return datesBetween(start, end).map(date =>
         {
-            const position        = this.location.dateToPosition(dayWidth, date);
-            const screenPositionX = this.location.toScreenPosition(position, viewBounds.left);
-            const screenPositionY = this.location.toScreenPosition(0       , viewBounds.top);
+            const position        = dateToPosition(dayWidth, date);
+            const screenPositionX = positionToScreenPosition(position, viewBounds.left);
+            const screenPositionY = positionToScreenPosition(0       , viewBounds.top);
 
             return new TickData(position, 0, screenPositionX, screenPositionY, date, width(date), label(date));
         });

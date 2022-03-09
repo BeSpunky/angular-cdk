@@ -6,7 +6,7 @@ import { TimelineCamera } from '../services/timeline-camera';
 
 export abstract class Timeline extends Destroyable
 {
-    abstract readonly currentDate: Observable<Date>;
-    abstract readonly config     : TimelineConfig;
-    abstract readonly camera     : TimelineCamera;
+    public abstract readonly currentDate: Observable<Date>;
+    public abstract readonly config     : TimelineConfig;
+    public abstract readonly camera     : TimelineCamera;
 }

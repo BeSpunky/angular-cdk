@@ -2,10 +2,10 @@ import { combineLatest, Observable, Subject                               } from
 import { map, startWith                                                   } from 'rxjs/operators';
 import { Directive, EmbeddedViewRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { TimelineCamera, TimelineConfig              } from '@bespunky/angular-cdk/timeline/abstraction';
-import { ItemContext, ItemData, TimelineItem         } from '@bespunky/angular-cdk/timeline/abstraction/items';
-import { MillisecondsInADay, TimelineLocationService } from '@bespunky/angular-cdk/timeline/shared';
-import { ViewBounds                                  } from '@bespunky/angular-cdk/navigables/camera';
+import { TimelineCamera, TimelineConfig      } from '@bespunky/angular-cdk/timeline/abstraction';
+import { ItemContext, ItemData, TimelineItem } from '@bespunky/angular-cdk/timeline/abstraction/items';
+import { MillisecondsInADay                  } from '@bespunky/angular-cdk/timeline/shared';
+import { ViewBounds                          } from '@bespunky/angular-cdk/navigables/camera';
 
 @Directive({
     selector: '[bsTimelineItem]',
@@ -28,8 +28,7 @@ export class TimelineItemDirective extends TimelineItem
         private viewContainer: ViewContainerRef,
         private template     : TemplateRef<ItemContext | null>,
         private camera       : TimelineCamera,
-        private config       : TimelineConfig,
-        private location     : TimelineLocationService
+        private config       : TimelineConfig
     )
     {
         super();
@@ -42,23 +41,23 @@ export class TimelineItemDirective extends TimelineItem
     private contextFeed(): Observable<ItemContext>
     {
         // Allow combineLatest to emit with an optional date and/or duration
-        const date                               = this.date    .pipe(startWith(new Date()));
-        const duration                           = this.duration.pipe(startWith(0));
-        const { dayWidth, viewBounds, sizeUnit } = this.camera;
+        const date                     = this.date    .pipe(startWith(new Date()));
+        const duration                 = this.duration.pipe(startWith(0));
+        const { viewBounds, sizeUnit } = this.camera;
         
-        return combineLatest([date, duration, dayWidth, viewBounds, sizeUnit]).pipe(
-            map(([date, duration, dayWidth, viewBounds, sizeUnit]) => this.createViewContext(date, duration, dayWidth, viewBounds, sizeUnit))
+        return combineLatest([date, duration, viewBounds, sizeUnit]).pipe(
+            map(([date, duration, viewBounds, sizeUnit]) => this.createViewContext(date, duration, viewBounds, sizeUnit))
         );
     }
 
-    private createViewContext(date: Date, duration: number, dayWidth: number, viewBounds: ViewBounds, sizeUnit: number): ItemContext
+    private createViewContext(date: Date, duration: number, viewBounds: ViewBounds, sizeUnit: number): ItemContext
     {
         const isVertical     = this.config.vertical.value;
-        const position       = this.location.dateToPosition(dayWidth, date);
-        const screenPosition = this.location.toScreenPosition(position, isVertical ? viewBounds.top : viewBounds.left);
+        const position       = this.camera.dateToPosition(date);
+        const screenPosition = this.camera.toScreenPosition(position, isVertical ? viewBounds.top : viewBounds.left);
         const size           = (duration / MillisecondsInADay) * sizeUnit;
         
-        const data = new ItemData(position, screenPosition, size, viewBounds);
+        const data = new ItemData(position, screenPosition, size, viewBounds, sizeUnit);
 
         return {
             $implicit     : data,

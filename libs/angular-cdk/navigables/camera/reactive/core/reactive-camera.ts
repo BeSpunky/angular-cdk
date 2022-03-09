@@ -35,7 +35,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
     public readonly swipeFlickFactor       : BehaviorSubject<number>                  = new BehaviorSubject(0.4);
     public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
-    public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(30);
+    public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(20);
     
     constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, private touch: ReactiveTouchService, element: ElementRef)
     {
@@ -208,6 +208,11 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
         return direction === 'horizontal' ? this.flickX : this.flickY;
     }
 
+    private chooseBoundsReachedNotifier(direction: PanDirection): Observable<number>
+    {
+        return direction === 'horizontal' ? this.horizontalBoundReached : this.verticalBoundReached;
+    }
+    
     private hookStandardPosition<TEvent>(eventFeed: Observable<TEvent>, getAmount: AmountExtractor<TEvent>, direction: PanDirection): void
     {
         const movement = eventFeed.pipe(map(e => [getAmount(e), e] as [number, TEvent]));
@@ -258,11 +263,15 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookFlick<TTrigger, TAbort>({ trigger, abortOn, direction, getLastMoveAmount }: FlickConfig<TTrigger, TAbort>): void
     {
-        const flickSwitch = this.choosePanFlickActivationSwitch(direction);
-        const panCamera   = this.choosePanMethod(direction);
+        const flickSwitch    = this.choosePanFlickActivationSwitch(direction);
+        const panCamera      = this.choosePanMethod(direction);
+        const boundsNotifier = this.chooseBoundsReachedNotifier(direction);
 
-        const lastMovement     = trigger.pipe(useActivationSwitch(flickSwitch));
-        const easeOutAnimation = this.easeOutMouseMovement(lastMovement, abortOn, getLastMoveAmount);
+        const lastMovement = trigger.pipe(useActivationSwitch(flickSwitch));
+
+        // Abort flick in case the bounds are reached, and in case the user triggered an abort event (like grabbing the timeline again with the mouse)
+        const abort = merge(abortOn, boundsNotifier);
+        const easeOutAnimation = this.easeOutMouseMovement(lastMovement, abort, getLastMoveAmount);
 
         this.subscribe(easeOutAnimation, panCamera);
     }
@@ -289,7 +298,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
             // Calculate the next decreased movement amount
             map(breaksStrength => movement - breaksStrength),
             // Take the direction into account and stop the animation when exceeding zero
-            takeWhile(nextPan => movement > 0 ? nextPan > 0 : nextPan < 0)
+            takeWhile(nextPan => Math.abs(nextPan) > 0)
         );
 
         return lastMovement.pipe(
