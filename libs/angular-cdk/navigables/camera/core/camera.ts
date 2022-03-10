@@ -64,6 +64,8 @@ function keepPositionInRange(
     );
 }
 
+export type PanAxis = 'x' | 'y' | 'both';
+
 @Injectable()
 export abstract class Camera<TItem> extends Destroyable
 {
@@ -71,7 +73,8 @@ export abstract class Camera<TItem> extends Destroyable
     private readonly viewCenterXInput: Subject<number> = new Subject();
     private readonly viewCenterYInput: Subject<number> = new Subject();
     
-    public readonly zoomFactor: BehaviorSubject<number> = new BehaviorSubject(1.06);
+    public readonly zoomFactor   : BehaviorSubject<number>  = new BehaviorSubject(1.06);
+    public readonly panAxisOnZoom: BehaviorSubject<PanAxis> = new BehaviorSubject('x' as PanAxis);
     
     public readonly leftBound  : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
     public readonly rightBound : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
@@ -81,8 +84,6 @@ export abstract class Camera<TItem> extends Destroyable
     protected horizontalBoundReached: Subject<number> = new Subject();
     protected verticalBoundReached  : Subject<number> = new Subject();
     
-    public panAxisOnZoom: 'x' | 'y' | 'both' = 'both';
-
     /**
      * A zoom dependant value to use as a unit for sizing elements on the screen.
      *
@@ -248,18 +249,14 @@ export abstract class Camera<TItem> extends Destroyable
     {
         this.zoom(amount);
 
-        const zoomedBy = this.calculateZoomChangeInPixels(amount);
+        const zoomedBy          = this.calculateZoomChangeInPixels(amount);
+        const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterX, positionX, zoomedBy);
+        const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterY, positionY, zoomedBy);
+        const axis              = this.panAxisOnZoom.value;
         
-        if (this.panAxisOnZoom === 'x' || this.panAxisOnZoom === 'both')
-        {
-            const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterX, positionX, zoomedBy);
-            this.panX(zoomedViewCenterX);
-        }
-        else if (this.panAxisOnZoom === 'y' || this.panAxisOnZoom === 'both')
-        {
-            const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterY, positionY, zoomedBy);
-            this.panY(zoomedViewCenterY);
-        }
+        if      (axis === 'both') this.panToPosition(zoomedViewCenterX, zoomedViewCenterY);
+        else if (axis === 'x')    this.panToX(zoomedViewCenterX);
+        else                      this.panToY(zoomedViewCenterY);
     }
     
     private calculateZoomChangeInPixels(amount: number): number

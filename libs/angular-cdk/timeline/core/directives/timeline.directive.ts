@@ -47,7 +47,6 @@ export class TimelineDirective extends Timeline
         this.currentDate = this.camera.viewCenterX.pipe(
             map(position => this.camera.positionToDate(position))
         );
-
     
         // TODO: Modify to accomodate RTL timelines and vertical timelines. Currently this will only work for
         //       horizontal LTR timelines.
@@ -136,6 +135,6 @@ export class TimelineDirective extends Timeline
 
     @Input() public set panAxisOnZoom(value: 'x' | 'y' | 'both')
     {
-        this.camera.panAxisOnZoom = value;
+        this.camera.panAxisOnZoom.next(value);
     }
 }
