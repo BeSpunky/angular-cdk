@@ -18,7 +18,7 @@ export function createDivTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayF
     return /*html*/`
     <div *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;"
          [style.width.px]="tick.width"
-         [style.height.px]="tick.width / 4"
+         [style.height.px]="tick.sizeUnit"
          [style.transform]="'translate(' + tick.screenPositionX + 'px, ' + tick.screenPositionY + 'px)'"
          style="position: absolute; border-left: ${width}px solid ${color};"
     >

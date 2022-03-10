@@ -18,7 +18,7 @@ export function createSVGTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayF
     return /*html*/`
     <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;">
         <line [attr.x1]="tick.screenPositionX" [attr.y1]="tick.screenPositionY + ${offset}"
-              [attr.x2]="tick.screenPositionX" [attr.y2]="tick.screenPositionY + tick.width / 4"
+              [attr.x2]="tick.screenPositionX" [attr.y2]="tick.screenPositionY + tick.sizeUnit"
               stroke-width="${width}" stroke="${color}"
         ></line>
 
