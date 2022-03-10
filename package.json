@@ -48,13 +48,16 @@
     "zone.js": "0.11.5"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "^0.1302.6",
     "@angular-devkit/build-angular": "12.2.16",
+    "@angular-devkit/core": "^7.0.0",
     "@angular-eslint/eslint-plugin": "12.3.1",
     "@angular-eslint/eslint-plugin-template": "12.3.1",
     "@angular-eslint/template-parser": "12.3.1",
     "@angular/cli": "12.2.16",
     "@angular/compiler-cli": "12.2.16",
     "@angular/language-service": "12.2.16",
+    "@babel/core": ">=7.13.0 <8.0.0",
     "@nrwl/cli": "12.10.0",
     "@nrwl/cypress": "12.10.0",
     "@nrwl/eslint-plugin-nx": "12.10.0",
@@ -67,14 +70,18 @@
     "@nrwl/workspace": "12.10.0",
     "@storybook/addon-essentials": "6.3.2",
     "@storybook/angular": "6.3.2",
-    "@storybook/builder-webpack5": "latest",
-    "@storybook/manager-webpack5": "latest",
+    "@storybook/builder-webpack5": "6.3.2",
+    "@storybook/components": "^6.3.0",
+    "@storybook/core-events": "^6.3.0",
+    "@storybook/manager-webpack5": "6.3.2",
+    "@storybook/theming": "^6.3.0",
     "@types/hammerjs": "^2.0.39",
     "@types/jest": "27.0.2",
     "@types/node": "14.14.33",
     "@types/webpack": "4.41.21",
     "@typescript-eslint/eslint-plugin": "4.31.2",
     "@typescript-eslint/parser": "4.31.2",
+    "babel-loader": "^8.0.0",
     "cypress": "^6.0.1",
     "dotenv": "10.0.0",
     "eslint": "7.22.0",
@@ -85,9 +92,11 @@
     "ng-packagr": "12.2.7",
     "ng-samurai": "^2.0.6",
     "prettier": "2.3.1",
+    "react": ">=16.13.1 <17.0.0",
+    "react-dom": ">=16.8.0 <17.0.0",
     "ts-jest": "27.0.5",
     "ts-node": "~9.1.1",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "webpack": "^4.18.1"
   }
 }
-
