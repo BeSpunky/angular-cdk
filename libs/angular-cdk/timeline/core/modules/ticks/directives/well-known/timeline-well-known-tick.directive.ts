@@ -1,6 +1,6 @@
 import { Directive, OnInit } from '@angular/core';
 
-import { DatesBetween, DayFactors, DefaultLabels, WellKnownTickId } from '@bespunky/angular-cdk/timeline/shared';
+import { DatesBetween, DayFactors, DefaultLabels, WellKnownTickId } from '@bespunky/angular-cdk/timeline/well-known';
 import { TimelineTickDirective                                    } from '../timeline-tick.directive';
 
 @Directive()
