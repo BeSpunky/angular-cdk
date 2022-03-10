@@ -133,4 +133,9 @@ export class TimelineDirective extends Timeline
     {
         this.camera.zoomOnWheel.next(value);
     }
+
+    @Input() public set panAxisOnZoom(value: 'x' | 'y' | 'both')
+    {
+        this.camera.panAxisOnZoom = value;
+    }
 }

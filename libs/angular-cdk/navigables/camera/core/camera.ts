@@ -81,6 +81,8 @@ export abstract class Camera<TItem> extends Destroyable
     protected horizontalBoundReached: Subject<number> = new Subject();
     protected verticalBoundReached  : Subject<number> = new Subject();
     
+    public panAxisOnZoom: 'x' | 'y' | 'both' = 'both';
+
     /**
      * A zoom dependant value to use as a unit for sizing elements on the screen.
      *
@@ -246,11 +248,18 @@ export abstract class Camera<TItem> extends Destroyable
     {
         this.zoom(amount);
 
-        const zoomedBy          = this.calculateZoomChangeInPixels(amount);
-        const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterX, positionX, zoomedBy);
-        const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterY, positionY, zoomedBy);
-
-        this.panToPosition(zoomedViewCenterX, zoomedViewCenterY);
+        const zoomedBy = this.calculateZoomChangeInPixels(amount);
+        
+        if (this.panAxisOnZoom === 'x' || this.panAxisOnZoom === 'both')
+        {
+            const zoomedViewCenterX = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterX, positionX, zoomedBy);
+            this.panX(zoomedViewCenterX);
+        }
+        else if (this.panAxisOnZoom === 'y' || this.panAxisOnZoom === 'both')
+        {
+            const zoomedViewCenterY = this.calculateViewCenterZoomedToPosition(this.currentViewBounds.viewCenterY, positionY, zoomedBy);
+            this.panY(zoomedViewCenterY);
+        }
     }
     
     private calculateZoomChangeInPixels(amount: number): number
