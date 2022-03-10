@@ -1,8 +1,3 @@
-module.exports = {
-  projects: [
-    '<rootDir>/apps/official-site',
-    '<rootDir>/libs/rxjs',
-    '<rootDir>/apps/demo',
-    '<rootDir>/libs/angular-cdk',
-  ],
-};
+const { getJestProjects } = require("@nrwl/jest");
+
+module.exports = { projects: [...getJestProjects(), "<rootDir>/apps/demo"] };
