@@ -7,6 +7,7 @@ export class TickData
         public readonly screenPositionY: number,
         public readonly value          : Date,
         public readonly width          : number,
-        public readonly label          : string | number
+        public readonly label          : string | number,
+        public readonly sizeUnit       : number
     ) { }
 }

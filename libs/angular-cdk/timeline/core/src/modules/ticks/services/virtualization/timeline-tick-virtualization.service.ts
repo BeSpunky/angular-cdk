@@ -58,20 +58,20 @@ export class TimelineTickVirtualizationService
      */
     public itemsToRenderFeed(tick: TimelineTick): Observable<TickData[]>
     {
-        return combineLatest([tick.label, tick.datesBetween, tick.width, tick.camera.dayWidth, tick.camera.viewBounds, tick.config.virtualizationBuffer]).pipe(
+        return combineLatest([tick.label, tick.datesBetween, tick.width, tick.camera.dayWidth, tick.camera.viewBounds, tick.camera.sizeUnit, tick.config.virtualizationBuffer]).pipe(
             // As item generation depends on multiple subjects, generation might be triggered multiple times for the same change.
             // When zooming, for example, viewBounds + width are changed causing at least 2 notifications.
             // The animationFrameScheduler calculates changes just before next browser content repaint, which prevents flickering and hangs,
             // creating a smoother animation.
             observeOn(animationFrameScheduler),
             useActivationSwitch(tick.shouldRender),
-            map(([label, datesBetween, width, dayWidth, viewBounds, virtualizationBuffer]) =>
+            map(([label, datesBetween, width, dayWidth, viewBounds, sizeUnit, virtualizationBuffer]) =>
             {
                 const bufferWidth   = viewBounds.width * virtualizationBuffer;
                 const startPosition = viewBounds.left  - bufferWidth;
                 const endPosition   = viewBounds.right + bufferWidth;
                 
-                return this.ticksOnScreen(viewBounds, dayWidth, width, startPosition, endPosition, datesBetween, label);
+                return this.ticksOnScreen(viewBounds, sizeUnit, dayWidth, width, startPosition, endPosition, datesBetween, label);
             })
         );
     }
@@ -80,15 +80,16 @@ export class TimelineTickVirtualizationService
      * Generates an array of tick items representing the ticks that should be displayed on the screen given
      * the specified state.
      *
+     * @param {ViewBounds} viewBounds The current bounds of the view on the timeline's camera.
      * @param {number} dayWidth The width (in pixels) representing one single day on the timeline.
-     * @param {DayFactor} dayFactor The multiplier specifying what part of a single day (or how many days) this tick scale represents.
+     * @param {WidthCalculator} width A function that calculates the width of a single tick.
      * @param {number} startPosition The start position (in pixels) from which ticks should start. This should include any buffer width.
      * @param {number} endPosition The end position (in pixels) from which ticks should end. This should include any buffer width.
      * @param {DatesBetweenGenerator} datesBetween The function that generates all tick scale-level dates between two given dates.
      * @param {TickLabeler} label The function to use for labeling the items.
      * @returns {TickData[]} An array of tick items representing the ticks that should be displayed on the screen.
      */
-    public ticksOnScreen(viewBounds: ViewBounds, dayWidth: number, width: WidthCalculator, startPosition: number, endPosition: number, datesBetween: DatesBetweenGenerator, label: TickLabeler): TickData[]
+    public ticksOnScreen(viewBounds: ViewBounds, sizeUnit: number, dayWidth: number, width: WidthCalculator, startPosition: number, endPosition: number, datesBetween: DatesBetweenGenerator, label: TickLabeler): TickData[]
     {
         // Find the dates corresponding to the bounds of the screen
         const start = positionToDate(dayWidth, startPosition);
@@ -101,7 +102,7 @@ export class TimelineTickVirtualizationService
             const screenPositionX = positionToScreenPosition(position, viewBounds.left);
             const screenPositionY = positionToScreenPosition(0       , viewBounds.top);
 
-            return new TickData(position, 0, screenPositionX, screenPositionY, date, width(date), label(date));
+            return new TickData(position, 0, screenPositionX, screenPositionY, date, width(date), label(date), sizeUnit);
         });
     };
 }
