@@ -5,7 +5,7 @@ import { DocumentRef             } from '@bespunky/angular-zen';
 
 import { FeedConfig              } from '../feeds/feed-config';
 
-export function createReactiveInputObservable<TEvent extends unknown>(element: ElementRef | DocumentRef, eventName: string, config?: FeedConfig): Observable<TEvent>
+export function createReactiveInputObservable<TEvent>(element: ElementRef | DocumentRef, eventName: string, config?: FeedConfig): Observable<TEvent>
 {
     const { activationSwitch } = config || {};
     
