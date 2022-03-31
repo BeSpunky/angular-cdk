@@ -30,6 +30,9 @@
       ],
       "@bespunky/angular-cdk/reactive-input/keyboard": [
         "libs/angular-cdk/reactive-input/keyboard/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input/mouse": [
+        "libs/angular-cdk/reactive-input/mouse/src/index.ts"
       ]
     }
   },
