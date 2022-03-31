@@ -10,7 +10,7 @@ export type AcceleratedEvent        <TEvent extends EventWithModifiers> = [numbe
 export function accelerateWithKeyboard<T extends EventWithModifiers>(getAmount: (event: T) => number, modifierFactors: Observable<KeyboardModifierFactors>)
 {
     return pipe(
-        withLatestFrom<T, EventWithModifierFactors<T>>(modifierFactors),
+        withLatestFrom(modifierFactors),
         map<EventWithModifierFactors<T>, AcceleratedEvent<T>>(([event, factors]) =>
         {
             let amount = getAmount(event);

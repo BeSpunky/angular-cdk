@@ -17,7 +17,7 @@ export function createReactiveTouchInputObservable<TEvent extends HammerInput>(e
     const nativeElement = element instanceof DocumentRef ? element.nativeDocument : element.nativeElement;
     
     const hammer            = new Hammer(nativeElement);
-    const eventTarget       = hammer as unknown as JQueryStyleEventEmitter;
+    const eventTarget       = hammer as unknown as JQueryStyleEventEmitter<unknown, TEvent>;
     const recognizer        = hammer.get(recognizerName);
 
     recognizer.set(extractNativeRecognizerOptions(config))
