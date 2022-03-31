@@ -27,6 +27,9 @@
       ],
       "@bespunky/angular-cdk/reactive-input": [
         "libs/angular-cdk/reactive-input/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input/keyboard": [
+        "libs/angular-cdk/reactive-input/keyboard/src/index.ts"
       ]
     }
   },
