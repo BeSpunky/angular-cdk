@@ -57,6 +57,9 @@
       ],
       "@bespunky/angular-cdk/timeline/shared": [
         "libs/angular-cdk/timeline/shared/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/well-known": [
+        "libs/angular-cdk/timeline/well-known/src/index.ts"
       ]
     }
   },
