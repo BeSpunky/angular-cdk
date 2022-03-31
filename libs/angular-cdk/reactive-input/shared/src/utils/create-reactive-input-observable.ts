@@ -1,7 +1,7 @@
 import { fromEvent, Observable   } from 'rxjs';
 import { ElementRef              } from '@angular/core';
+import { useActivationSwitch     } from '@bespunky/rxjs';
 import { DocumentRef             } from '@bespunky/angular-zen';
-import { useActivationSwitch     } from '@bespunky/rxjs/operators';
 
 import { FeedConfig              } from '../feeds/feed-config';
 

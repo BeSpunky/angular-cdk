@@ -2,7 +2,7 @@ import { fromEvent, Observable         } from 'rxjs';
 import { filter                        } from 'rxjs/operators';
 import { JQueryStyleEventEmitter       } from 'rxjs/internal/observable/fromEvent';
 import { ElementRef                    } from '@angular/core';
-import { useActivationSwitch           } from '@bespunky/rxjs/operators';
+import { useActivationSwitch           } from '@bespunky/rxjs';
 import { DocumentRef                   } from '@bespunky/angular-zen';
 
 import { TouchEventName                } from '../types/touch-event';

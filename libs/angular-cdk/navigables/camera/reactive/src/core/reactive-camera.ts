@@ -2,8 +2,7 @@ import { Key                                                                    
 import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                   } from 'rxjs';
 import { first, map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
 import { ElementRef, Injectable                                                                                 } from '@angular/core';
-import { mergeToggled, toggled                                                                                  } from '@bespunky/rxjs';
-import { useActivationSwitch                                                                                    } from '@bespunky/rxjs/operators';
+import { mergeToggled, toggled, useActivationSwitch                                                             } from '@bespunky/rxjs';
 import { DocumentRef                                                                                            } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
