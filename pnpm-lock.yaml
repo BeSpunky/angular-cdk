@@ -20,6 +20,7 @@ specifiers:
   '@angular/router': ~13.2.0
   '@babel/core': '>=7.9.6 <8.0.0'
   '@babel/preset-env': '>=7.0.0 <8.0.0'
+  '@bespunky/angular-zen': ^4.0.0-alpha.0
   '@bespunky/rxjs': ^0.0.1-alpha.5
   '@bespunky/typescript-utils': ^0.0.1-alpha.0
   '@nrwl/angular': 13.9.5
@@ -48,6 +49,7 @@ specifiers:
   hammerjs: ^2.0.8
   jest: 27.2.3
   jest-preset-angular: 11.1.1
+  lodash-es: 4.17.21
   ng-packagr: ^13.0.0
   nx: 13.9.5
   postcss: ^8.4.5
@@ -74,10 +76,12 @@ dependencies:
   '@angular/platform-browser': 13.2.7_b78ed31d39db3a0743cc65f22f72226f
   '@angular/platform-browser-dynamic': 13.2.7_aa82ce30927f2b99723e23d9f57bdb1c
   '@angular/router': 13.2.7_e21fb5cc7a9b10b6644560061e5edcb6
+  '@bespunky/angular-zen': 4.0.0-alpha.0_4823daa19ebcca2a28a3d08e674af7df
   '@bespunky/rxjs': 0.0.1-alpha.5_rxjs@7.4.0
   '@nrwl/angular': 13.9.5_abb89e0be7d5e96c7e3f94793915e8cb
   date-fns: 2.28.0
   hammerjs: 2.0.8
+  lodash-es: 4.17.21
   rxjs: 7.4.0
   ts-key-enum: 2.0.11
   tslib: 2.3.1
@@ -2851,6 +2855,23 @@ packages:
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  /@bespunky/angular-zen/4.0.0-alpha.0_4823daa19ebcca2a28a3d08e674af7df:
+    resolution: {integrity: sha512-tcS+HHuGMG0vQYuprDIgodAoTxwfsYkN7clLdkFie/DEMyC78z4Irk3rgl8IqVebffQ6Ow2nHoAOyiSr0+Ucow==}
+    peerDependencies:
+      '@angular/common': '>= 7.2.0'
+      '@angular/core': '>= 7.2.0'
+      '@angular/router': 12.0.0
+      lodash-es: ^4.17.15
+      rxjs: ~6.6.3
+    dependencies:
+      '@angular/common': 13.2.7_@angular+core@13.2.7+rxjs@7.4.0
+      '@angular/core': 13.2.7_rxjs@7.4.0+zone.js@0.11.5
+      '@angular/router': 13.2.7_e21fb5cc7a9b10b6644560061e5edcb6
+      lodash-es: 4.17.21
+      rxjs: 7.4.0
+      tslib: 2.3.1
+    dev: false
 
   /@bespunky/rxjs/0.0.1-alpha.5_rxjs@7.4.0:
     resolution: {integrity: sha512-2CNcoYDKJ11wqXW2zzjOfsu8X0suGsohwyuWx0OXu5u4u8FjboILhdsWiPu8thG6QpoLU2SfUVKPFEuP4ypPZQ==}
@@ -12492,6 +12513,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
