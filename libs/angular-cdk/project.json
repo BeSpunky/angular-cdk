@@ -59,7 +59,9 @@
           "libs/angular-cdk/timeline/abstraction/ticks/**/*.ts",
           "libs/angular-cdk/timeline/abstraction/ticks/**/*.html",
           "libs/angular-cdk/timeline/abstraction/items/**/*.ts",
-          "libs/angular-cdk/timeline/abstraction/items/**/*.html"
+          "libs/angular-cdk/timeline/abstraction/items/**/*.html",
+          "libs/angular-cdk/timeline/shared/**/*.ts",
+          "libs/angular-cdk/timeline/shared/**/*.html"
         ]
       }
     },
