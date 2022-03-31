@@ -14,17 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "@bespunky/angular-cdk": ["libs/angular-cdk"],
-      "@bespunky/angular-cdk/*": ["libs/angular-cdk/*"],
-      "@bespunky/rxjs": ["libs/rxjs"],
-      "@bespunky/rxjs/*": ["libs/rxjs/*"],
-      "@bespunky/typescript-utils": [
-        "libs/typescript-utils",
-        "libs/typescript-utils/src/index.ts"
-      ],
-      "@bespunky/typescript-utils/*": ["libs/typescript-utils/src/*"]
-    }
+    "paths": {}
   },
   "exclude": ["node_modules", "tmp"]
 }
