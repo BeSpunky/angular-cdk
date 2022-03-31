@@ -20,6 +20,8 @@ specifiers:
   '@angular/router': ~13.2.0
   '@babel/core': '>=7.9.6 <8.0.0'
   '@babel/preset-env': '>=7.0.0 <8.0.0'
+  '@bespunky/rxjs': ^0.0.1-alpha.5
+  '@bespunky/typescript-utils': ^0.0.1-alpha.0
   '@nrwl/angular': 13.9.5
   '@nrwl/cli': 13.9.5
   '@nrwl/cypress': 13.9.5
@@ -32,15 +34,18 @@ specifiers:
   '@storybook/angular': ~6.4.12
   '@storybook/builder-webpack5': ~6.4.12
   '@storybook/manager-webpack5': ~6.4.12
+  '@types/hammerjs': ^2.0.41
   '@types/jest': 27.0.2
   '@types/node': 16.11.7
   '@typescript-eslint/eslint-plugin': ~5.10.0
   '@typescript-eslint/parser': ~5.10.0
   babel-loader: '>=8.0.2 <9.0.0'
   cypress: ^9.1.0
+  date-fns: ^2.28.0
   eslint: ~8.7.0
   eslint-config-prettier: 8.1.0
   eslint-plugin-cypress: ^2.10.3
+  hammerjs: ^2.0.8
   jest: 27.2.3
   jest-preset-angular: 11.1.1
   ng-packagr: ^13.0.0
@@ -54,6 +59,7 @@ specifiers:
   react-dom: '>=16.8.0 <17.0.0 || >=17.0.1 <18.0.0'
   rxjs: ~7.4.0
   ts-jest: 27.0.5
+  ts-key-enum: ^2.0.11
   tslib: ^2.0.0
   typescript: ~4.5.2
   webpack: ^5.64.0
@@ -68,8 +74,12 @@ dependencies:
   '@angular/platform-browser': 13.2.7_b78ed31d39db3a0743cc65f22f72226f
   '@angular/platform-browser-dynamic': 13.2.7_aa82ce30927f2b99723e23d9f57bdb1c
   '@angular/router': 13.2.7_e21fb5cc7a9b10b6644560061e5edcb6
+  '@bespunky/rxjs': 0.0.1-alpha.5_rxjs@7.4.0
   '@nrwl/angular': 13.9.5_abb89e0be7d5e96c7e3f94793915e8cb
+  date-fns: 2.28.0
+  hammerjs: 2.0.8
   rxjs: 7.4.0
+  ts-key-enum: 2.0.11
   tslib: 2.3.1
   zone.js: 0.11.5
 
@@ -85,6 +95,7 @@ devDependencies:
   '@angular/language-service': 13.2.7
   '@babel/core': 7.17.8
   '@babel/preset-env': 7.16.11_@babel+core@7.17.8
+  '@bespunky/typescript-utils': 0.0.1-alpha.0
   '@nrwl/cli': 13.9.5
   '@nrwl/cypress': 13.9.5_c90a78f94197a792ac6c2eca815bb6de
   '@nrwl/eslint-plugin-nx': 13.9.5_80c1b4581f82c07899aa6aa62ed85faa
@@ -96,6 +107,7 @@ devDependencies:
   '@storybook/angular': 6.4.19_4affb7cc42b41bbac8891b0c7d9813c6
   '@storybook/builder-webpack5': 6.4.19_384ca7a83f5c3de93b04cec7e267f51b
   '@storybook/manager-webpack5': 6.4.19_384ca7a83f5c3de93b04cec7e267f51b
+  '@types/hammerjs': 2.0.41
   '@types/jest': 27.0.2
   '@types/node': 16.11.7
   '@typescript-eslint/eslint-plugin': 5.10.2_61711575dd6de0ced61e0bccc6181943
@@ -2839,6 +2851,21 @@ packages:
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  /@bespunky/rxjs/0.0.1-alpha.5_rxjs@7.4.0:
+    resolution: {integrity: sha512-2CNcoYDKJ11wqXW2zzjOfsu8X0suGsohwyuWx0OXu5u4u8FjboILhdsWiPu8thG6QpoLU2SfUVKPFEuP4ypPZQ==}
+    peerDependencies:
+      rxjs: ~6.6.3
+    dependencies:
+      rxjs: 7.4.0
+      tslib: 2.3.1
+    dev: false
+
+  /@bespunky/typescript-utils/0.0.1-alpha.0:
+    resolution: {integrity: sha512-RNiJrTlir+nNuyaIR7J1vkK/J/fY2R/dwOkKkfFpmthYwClGcwZN14rnx07QasLopFm9nckKIOgGqwRjrkvI2A==}
+    dependencies:
+      tslib: 2.3.1
+    dev: true
 
   /@cnakazawa/watch/1.0.4:
     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
@@ -5658,6 +5685,10 @@ packages:
     dependencies:
       '@types/node': 16.11.7
 
+  /@types/hammerjs/2.0.41:
+    resolution: {integrity: sha512-ewXv/ceBaJprikMcxCmWU1FKyMAQ2X7a9Gtmzw8fcg2kIePI1crERDM818W+XYrxqdBBOdlf2rm137bU+BltCA==}
+    dev: true
+
   /@types/hast/2.3.4:
     resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
     dependencies:
@@ -8397,6 +8428,11 @@ packages:
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
 
+  /date-fns/2.28.0:
+    resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
+    engines: {node: '>=0.11'}
+    dev: false
+
   /dayjs/1.11.0:
     resolution: {integrity: sha512-JLC809s6Y948/FuCZPm5IX8rRhQwOiyMb2TfVVQEixG7P8Lm/gt5S7yoQZmC8x1UehI9Pb7sksEt4xx14m+7Ug==}
     dev: true
@@ -10332,6 +10368,11 @@ packages:
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
+
+  /hammerjs/2.0.8:
+    resolution: {integrity: sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=}
+    engines: {node: '>=0.8.0'}
+    dev: false
 
   /handle-thing/2.0.1:
     resolution: {integrity: sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==}
@@ -16758,6 +16799,10 @@ packages:
       typescript: 4.5.5
       yargs-parser: 20.0.0
     dev: true
+
+  /ts-key-enum/2.0.11:
+    resolution: {integrity: sha512-ZYcdy6/RdwryMm2hcRT3KJanGSQREd5SDkMirdFjhWINe12wht2A26tzBqi3pxPau9Pf3Bq1C7iwzFCOfdm5yQ==}
+    dev: false
 
   /ts-loader/8.3.0_typescript@4.5.5+webpack@4.46.0:
     resolution: {integrity: sha512-MgGly4I6cStsJy27ViE32UoqxPTN9Xly4anxxVyaIWR+9BGxboV4EyJBGfR3RePV7Ksjj3rHmPZJeIt+7o4Vag==}

@@ -15,7 +15,52 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bespunky/angular-cdk": ["libs/angular-cdk/src/index.ts"]
+      "@bespunky/angular-cdk": ["libs/angular-cdk/src/index.ts"],
+      "@bespunky/angular-cdk/navigables": [
+        "libs/angular-cdk/navigables/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/navigables/camera": [
+        "libs/angular-cdk/navigables/camera/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/navigables/camera/reactive": [
+        "libs/angular-cdk/navigables/camera/reactive/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input": [
+        "libs/angular-cdk/reactive-input/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input/keyboard": [
+        "libs/angular-cdk/reactive-input/keyboard/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input/mouse": [
+        "libs/angular-cdk/reactive-input/mouse/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input/shared": [
+        "libs/angular-cdk/reactive-input/shared/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input/touch": [
+        "libs/angular-cdk/reactive-input/touch/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline": [
+        "libs/angular-cdk/timeline/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/abstraction": [
+        "libs/angular-cdk/timeline/abstraction/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/abstraction/items": [
+        "libs/angular-cdk/timeline/abstraction/items/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/abstraction/ticks": [
+        "libs/angular-cdk/timeline/abstraction/ticks/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/core": [
+        "libs/angular-cdk/timeline/core/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/shared": [
+        "libs/angular-cdk/timeline/shared/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/well-known": [
+        "libs/angular-cdk/timeline/well-known/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
