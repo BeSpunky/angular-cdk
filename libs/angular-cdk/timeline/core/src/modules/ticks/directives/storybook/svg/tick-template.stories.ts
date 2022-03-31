@@ -13,10 +13,10 @@ export function wrapStoryInSVGTimeline(story: string)
     `;
 }
 
-export function createSVGTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayFactorKey, datesBetweenKey, color, width, offset }: TickStoryDefinition): string
+export function createSVGTickTemplate({ tickId, minZoom, maxZoom, color, width, offset }: TickStoryDefinition): string
 {    
     return /*html*/`
-    <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;">
+    <g *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${tickId}']; dayFactor: dayFactors['${tickId}']; datesBetween: datesBetween['${tickId}']; let tick;">
         <line [attr.x1]="tick.screenPositionX" [attr.y1]="tick.screenPositionY + ${offset}"
               [attr.x2]="tick.screenPositionX" [attr.y2]="tick.screenPositionY + tick.sizeUnit"
               stroke-width="${width}" stroke="${color}"

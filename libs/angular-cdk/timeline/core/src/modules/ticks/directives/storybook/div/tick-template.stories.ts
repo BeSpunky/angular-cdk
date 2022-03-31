@@ -13,10 +13,10 @@ export function wrapStoryInDivTimeline(story: string)
     `;
 }
 
-export function createDivTickTemplate({ tickId, minZoom, maxZoom, labelKey, dayFactorKey, datesBetweenKey, color, width, offset }: TickStoryDefinition): string
+export function createDivTickTemplate({ tickId, minZoom, maxZoom, color, width, offset }: TickStoryDefinition): string
 {
     return /*html*/`
-    <div *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${labelKey}']; dayFactor: dayFactors['${dayFactorKey}']; datesBetween: datesBetween['${datesBetweenKey}']; let tick;"
+    <div *bsTimelineTick="${tickId}; minZoom: ${minZoom}; maxZoom: ${maxZoom}; label: label['${tickId}']; dayFactor: dayFactors['${tickId}']; datesBetween: datesBetween['${tickId}']; let tick;"
          [style.width.px]="tick.width"
          [style.height.px]="tick.sizeUnit"
          [style.transform]="'translate(' + tick.screenPositionX + 'px, ' + tick.screenPositionY + 'px)'"

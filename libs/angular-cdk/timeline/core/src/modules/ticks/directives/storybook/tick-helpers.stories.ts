@@ -3,7 +3,7 @@ import { CommonModule                                           } from '@angular
 import { componentWrapperDecorator, Meta, moduleMetadata, Story } from '@storybook/angular';
 
 import { TimelineTickDirective, TimelineCdkModule } from '@bespunky/angular-cdk/timeline';
-import { dayFactors, datesBetween, label          } from './tick-context.stories';
+import { DayFactors, DatesBetween, DefaultLabels  } from '@bespunky/angular-cdk/timeline/well-known';
 import { TickStoryDefinition                      } from './tick-definitions.stories';
 
 export function createTickStoryMeta(exampleGroupName: string, wrapStoryInTimelineContainer: (story: string) => string): Meta
@@ -40,7 +40,7 @@ export function createTickStory(createTickTemplate: (tick: TickStoryDefinition) 
     const template = ticks.map(offsetTick).map(createTickTemplate).join(' ');
     
     const story: Story<TickStoryDefinition> = (args) => ({
-        props: { ...args, dayFactors, datesBetween, label },
+        props: { ...args, dayFactors: DayFactors, datesBetween: DatesBetween, label: DefaultLabels },
         template
     });
 
@@ -56,7 +56,7 @@ export function createTickStory(createTickTemplate: (tick: TickStoryDefinition) 
 export function createDynamicTickStory(createTickTemplate: (tick: TickStoryDefinition) => string, tick: TickStoryDefinition): Story<TickStoryDefinition>
 {
     return (args) => ({
-        props   : { ...tick, ...args, dayFactors, datesBetween, label },
+        props   : { ...tick, ...args, dayFactors: DayFactors, datesBetween: DatesBetween, label: DefaultLabels },
         template: createTickTemplate(tick)
     });
 }

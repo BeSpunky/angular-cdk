@@ -1,4 +1,4 @@
-import { TickLabelerPreset, DayFactorPreset, DatesBetweenPreset } from './tick-context.stories';
+import { DayFactors } from '@bespunky/angular-cdk/timeline/well-known';
 
 export class TickStoryDefinition
 {
@@ -9,22 +9,17 @@ export class TickStoryDefinition
     public color                  = 'black';
     public width: number | string = 5;
 
-    constructor(
-        public readonly tickId         : string,
-        public readonly labelKey       : keyof TickLabelerPreset,
-        public readonly dayFactorKey   : keyof DayFactorPreset | number,
-        public readonly datesBetweenKey: keyof DatesBetweenPreset,
-    ) { }
+    constructor(public readonly tickId: keyof typeof DayFactors) { }
 };
 
-export const yearsTick   = new TickStoryDefinition('years', 'years', 'daysInYear', 'years');
-export const monthsTick  = new TickStoryDefinition('months', 'months', 'daysInMonth', 'months');
-export const daysTick    = new TickStoryDefinition('days', 'days', 1, 'days');
-export const hoursTick   = new TickStoryDefinition('hours', 'hours', 'hoursInDay', 'hours');
-export const minutesTick = new TickStoryDefinition('minutes', 'minutes', 'minutesInDay', 'minutes');
-export const secondsTick = new TickStoryDefinition('seconds', 'seconds', 'secondsInDay', 'seconds');
+export const yearsTick   = new TickStoryDefinition('years');
+export const monthsTick  = new TickStoryDefinition('months');
+export const daysTick    = new TickStoryDefinition('days');
+export const hoursTick   = new TickStoryDefinition('hours');
+export const minutesTick = new TickStoryDefinition('minutes');
+export const secondsTick = new TickStoryDefinition('seconds');
 
-export const dayPartsTick = new TickStoryDefinition('dayParts', 'dayParts', 'dayParts', 'dayParts');
+export const dayPartsTick = new TickStoryDefinition('dayParts');
 
 dayPartsTick.minZoom = 80;
 dayPartsTick.maxZoom = 150;
