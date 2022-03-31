@@ -1,10 +1,10 @@
 import { Observable                                      } from 'rxjs';
+import { filter                                          } from 'rxjs/operators';
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { TimelineCamera, TimelineConfig                                                                      } from '@bespunky/angular-cdk/timeline/abstraction';
+import { TimelineCamera, TimelineConfig                                                                                            } from '@bespunky/angular-cdk/timeline/abstraction';
 import { TimelineTick, TickData, DatesBetweenGenerator, DayFactor, TickLabeler, WidthCalculator, TickContext, TimelineTickRenderer } from '@bespunky/angular-cdk/timeline/abstraction/ticks';
-import { TimelineTickVirtualizationService                                                                   } from '../services/virtualization/timeline-tick-virtualization.service';
-import { filter } from 'rxjs/operators';
+import { TimelineTickVirtualizationService                                                                                         } from '../services/virtualization/timeline-tick-virtualization.service';
 
 /**
  * Converts an element to a tick template and provides tools for timelines to easily render ticks with

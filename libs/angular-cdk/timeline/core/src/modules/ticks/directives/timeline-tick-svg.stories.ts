@@ -1,4 +1,4 @@
-import { createSVGTickTemplate, wrapStoryInSVGTimeline                                                             } from './storybook/svg/tick-template.stories';
+import { createSVGTickTemplate, wrapStoryInSVGTimeline                                      } from './storybook/svg/tick-template.stories';
 import { createTickStory, createDynamicTickStory, createTickStoryMeta                       } from './storybook/tick-helpers.stories';
 import { yearsTick, monthsTick, daysTick, dayPartsTick, hoursTick, minutesTick, secondsTick } from './storybook/tick-definitions.stories';
 
