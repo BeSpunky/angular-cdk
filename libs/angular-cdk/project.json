@@ -45,7 +45,9 @@
           "libs/angular-cdk/reactive-input/keyboard/**/*.ts",
           "libs/angular-cdk/reactive-input/keyboard/**/*.html",
           "libs/angular-cdk/reactive-input/mouse/**/*.ts",
-          "libs/angular-cdk/reactive-input/mouse/**/*.html"
+          "libs/angular-cdk/reactive-input/mouse/**/*.html",
+          "libs/angular-cdk/reactive-input/touch/**/*.ts",
+          "libs/angular-cdk/reactive-input/touch/**/*.html"
         ]
       }
     },
