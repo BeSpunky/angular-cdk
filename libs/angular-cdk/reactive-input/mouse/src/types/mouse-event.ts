@@ -1,0 +1,1 @@
+export type MouseEventName = 'mousedown' | 'mousemove' | 'mouseup' | 'click' | 'dblclick';
