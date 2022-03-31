@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "angular-cdk": "libs/angular-cdk",
+    "angular-cdk-e2e": "apps/angular-cdk-e2e",
     "official-site": "apps/official-site",
     "official-site-e2e": "apps/official-site-e2e"
   }
