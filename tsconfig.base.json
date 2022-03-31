@@ -18,6 +18,9 @@
       "@bespunky/angular-cdk": ["libs/angular-cdk/src/index.ts"],
       "@bespunky/angular-cdk/navigables": [
         "libs/angular-cdk/navigables/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/navigables/camera": [
+        "libs/angular-cdk/navigables/camera/src/index.ts"
       ]
     }
   },
