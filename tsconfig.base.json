@@ -39,6 +39,9 @@
       ],
       "@bespunky/angular-cdk/reactive-input/touch": [
         "libs/angular-cdk/reactive-input/touch/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline": [
+        "libs/angular-cdk/timeline/src/index.ts"
       ]
     }
   },
