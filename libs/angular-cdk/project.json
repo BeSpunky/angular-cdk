@@ -1,0 +1,42 @@
+{
+  "projectType": "library",
+  "root": "libs/angular-cdk",
+  "sourceRoot": "libs/angular-cdk/src",
+  "prefix": "bs",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": ["dist/libs/angular-cdk"],
+      "options": {
+        "project": "libs/angular-cdk/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/angular-cdk/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/angular-cdk/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/angular-cdk"],
+      "options": {
+        "jestConfig": "libs/angular-cdk/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/angular-cdk/src/**/*.ts",
+          "libs/angular-cdk/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
