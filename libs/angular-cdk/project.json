@@ -51,7 +51,9 @@
           "libs/angular-cdk/reactive-input/shared/**/*.ts",
           "libs/angular-cdk/reactive-input/shared/**/*.html",
           "libs/angular-cdk/timeline/**/*.ts",
-          "libs/angular-cdk/timeline/**/*.html"
+          "libs/angular-cdk/timeline/**/*.html",
+          "libs/angular-cdk/timeline/core/**/*.ts",
+          "libs/angular-cdk/timeline/core/**/*.html"
         ]
       }
     },

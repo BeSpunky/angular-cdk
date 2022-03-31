@@ -42,6 +42,9 @@
       ],
       "@bespunky/angular-cdk/timeline": [
         "libs/angular-cdk/timeline/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/timeline/core": [
+        "libs/angular-cdk/timeline/core/src/index.ts"
       ]
     }
   },
