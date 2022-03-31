@@ -33,7 +33,9 @@
       "options": {
         "lintFilePatterns": [
           "libs/angular-cdk/src/**/*.ts",
-          "libs/angular-cdk/src/**/*.html"
+          "libs/angular-cdk/src/**/*.html",
+          "libs/angular-cdk/navigables/**/*.ts",
+          "libs/angular-cdk/navigables/**/*.html"
         ]
       }
     },

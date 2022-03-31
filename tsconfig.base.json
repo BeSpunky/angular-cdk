@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bespunky/angular-cdk": ["libs/angular-cdk/src/index.ts"]
+      "@bespunky/angular-cdk": ["libs/angular-cdk/src/index.ts"],
+      "@bespunky/angular-cdk/navigables": [
+        "libs/angular-cdk/navigables/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
