@@ -24,6 +24,9 @@
       ],
       "@bespunky/angular-cdk/navigables/camera/reactive": [
         "libs/angular-cdk/navigables/camera/reactive/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/reactive-input": [
+        "libs/angular-cdk/reactive-input/src/index.ts"
       ]
     }
   },

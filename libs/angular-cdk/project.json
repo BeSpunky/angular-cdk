@@ -39,7 +39,9 @@
           "libs/angular-cdk/navigables/camera/**/*.ts",
           "libs/angular-cdk/navigables/camera/**/*.html",
           "libs/angular-cdk/navigables/camera/reactive/**/*.ts",
-          "libs/angular-cdk/navigables/camera/reactive/**/*.html"
+          "libs/angular-cdk/navigables/camera/reactive/**/*.html",
+          "libs/angular-cdk/reactive-input/**/*.ts",
+          "libs/angular-cdk/reactive-input/**/*.html"
         ]
       }
     },
