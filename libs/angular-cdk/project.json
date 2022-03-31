@@ -37,7 +37,9 @@
           "libs/angular-cdk/navigables/**/*.ts",
           "libs/angular-cdk/navigables/**/*.html",
           "libs/angular-cdk/navigables/camera/**/*.ts",
-          "libs/angular-cdk/navigables/camera/**/*.html"
+          "libs/angular-cdk/navigables/camera/**/*.html",
+          "libs/angular-cdk/navigables/camera/reactive/**/*.ts",
+          "libs/angular-cdk/navigables/camera/reactive/**/*.html"
         ]
       }
     },

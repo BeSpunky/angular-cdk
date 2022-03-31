@@ -21,6 +21,9 @@
       ],
       "@bespunky/angular-cdk/navigables/camera": [
         "libs/angular-cdk/navigables/camera/src/index.ts"
+      ],
+      "@bespunky/angular-cdk/navigables/camera/reactive": [
+        "libs/angular-cdk/navigables/camera/reactive/src/index.ts"
       ]
     }
   },
