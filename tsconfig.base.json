@@ -46,6 +46,9 @@
       "@bespunky/angular-cdk/timeline/abstraction": [
         "libs/angular-cdk/timeline/abstraction/src/index.ts"
       ],
+      "@bespunky/angular-cdk/timeline/abstraction/ticks": [
+        "libs/angular-cdk/timeline/abstraction/ticks/src/index.ts"
+      ],
       "@bespunky/angular-cdk/timeline/core": [
         "libs/angular-cdk/timeline/core/src/index.ts"
       ]
