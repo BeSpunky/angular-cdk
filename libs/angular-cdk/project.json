@@ -1,0 +1,105 @@
+{
+  "projectType": "library",
+  "root": "libs/angular-cdk",
+  "sourceRoot": "libs/angular-cdk/src",
+  "prefix": "bs",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": ["dist/libs/angular-cdk"],
+      "options": {
+        "project": "libs/angular-cdk/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/angular-cdk/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/angular-cdk/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/angular-cdk"],
+      "options": {
+        "jestConfig": "libs/angular-cdk/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/angular-cdk/src/**/*.ts",
+          "libs/angular-cdk/src/**/*.html",
+          "libs/angular-cdk/navigables/**/*.ts",
+          "libs/angular-cdk/navigables/**/*.html",
+          "libs/angular-cdk/navigables/camera/**/*.ts",
+          "libs/angular-cdk/navigables/camera/**/*.html",
+          "libs/angular-cdk/navigables/camera/reactive/**/*.ts",
+          "libs/angular-cdk/navigables/camera/reactive/**/*.html",
+          "libs/angular-cdk/reactive-input/**/*.ts",
+          "libs/angular-cdk/reactive-input/**/*.html",
+          "libs/angular-cdk/reactive-input/keyboard/**/*.ts",
+          "libs/angular-cdk/reactive-input/keyboard/**/*.html",
+          "libs/angular-cdk/reactive-input/mouse/**/*.ts",
+          "libs/angular-cdk/reactive-input/mouse/**/*.html",
+          "libs/angular-cdk/reactive-input/touch/**/*.ts",
+          "libs/angular-cdk/reactive-input/touch/**/*.html",
+          "libs/angular-cdk/reactive-input/shared/**/*.ts",
+          "libs/angular-cdk/reactive-input/shared/**/*.html",
+          "libs/angular-cdk/timeline/**/*.ts",
+          "libs/angular-cdk/timeline/**/*.html",
+          "libs/angular-cdk/timeline/core/**/*.ts",
+          "libs/angular-cdk/timeline/core/**/*.html",
+          "libs/angular-cdk/timeline/abstraction/**/*.ts",
+          "libs/angular-cdk/timeline/abstraction/**/*.html",
+          "libs/angular-cdk/timeline/abstraction/ticks/**/*.ts",
+          "libs/angular-cdk/timeline/abstraction/ticks/**/*.html",
+          "libs/angular-cdk/timeline/abstraction/items/**/*.ts",
+          "libs/angular-cdk/timeline/abstraction/items/**/*.html",
+          "libs/angular-cdk/timeline/shared/**/*.ts",
+          "libs/angular-cdk/timeline/shared/**/*.html",
+          "libs/angular-cdk/timeline/well-known/**/*.ts",
+          "libs/angular-cdk/timeline/well-known/**/*.html"
+        ]
+      }
+    },
+    "storybook": {
+      "executor": "@nrwl/storybook:storybook",
+      "options": {
+        "uiFramework": "@storybook/angular",
+        "port": 4400,
+        "config": {
+          "configFolder": "libs/angular-cdk/.storybook"
+        },
+        "projectBuildConfig": "angular-cdk:build-storybook"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@nrwl/storybook:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "uiFramework": "@storybook/angular",
+        "outputPath": "dist/storybook/angular-cdk",
+        "config": {
+          "configFolder": "libs/angular-cdk/.storybook"
+        },
+        "projectBuildConfig": "angular-cdk:build-storybook"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

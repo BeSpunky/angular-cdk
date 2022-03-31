@@ -1,7 +1,7 @@
 module.exports = {
   displayName: 'angular-cdk',
   preset: '../../jest.preset.js',
-  setupFilesAfterEnv: ['<rootDir>/test-setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -10,8 +10,9 @@ module.exports = {
   },
   coverageDirectory: '../../coverage/libs/angular-cdk',
   transform: {
-    '^.+\\.(ts|js|html)$': 'jest-preset-angular',
+    '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
   },
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

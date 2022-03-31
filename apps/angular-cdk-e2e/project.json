@@ -1,0 +1,28 @@
+{
+  "root": "apps/angular-cdk-e2e",
+  "sourceRoot": "apps/angular-cdk-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/angular-cdk-e2e/cypress.json",
+        "devServerTarget": "angular-cdk:storybook"
+      },
+      "configurations": {
+        "ci": {
+          "devServerTarget": "angular-cdk:storybook:ci"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/angular-cdk-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["angular-cdk"]
+}
