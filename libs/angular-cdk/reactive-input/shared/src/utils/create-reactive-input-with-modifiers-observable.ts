@@ -12,7 +12,7 @@ export function createReactiveInputWithModifiersObservable<TEvent extends EventW
 {
     const { modifiers } = config || {};
     
-    let event = createReactiveInputObservable(element, eventName, config) as Observable<TEvent>;
+    let event = createReactiveInputObservable<TEvent>(element, eventName, config);
 
     if (modifiers)
     {
