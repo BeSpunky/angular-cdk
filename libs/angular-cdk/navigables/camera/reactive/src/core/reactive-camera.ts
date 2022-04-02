@@ -1,9 +1,9 @@
-import { Key                                                                                                    } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                   } from 'rxjs';
-import { first, map, mergeMap, observeOn, pairwise, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
-import { ElementRef, Injectable                                                                                 } from '@angular/core';
-import { mergeToggled, toggled, useActivationSwitch                                                             } from '@bespunky/rxjs';
-import { DocumentRef                                                                                            } from '@bespunky/angular-zen/core';
+import { Key                                                                                                           } from 'ts-key-enum';
+import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                          } from 'rxjs';
+import { first, map, mergeMap, observeOn, pairwise, pluck, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                                                                        } from '@angular/core';
+import { mergeToggled, toggled, useActivationSwitch                                                                    } from '@bespunky/rxjs';
+import { DocumentRef                                                                                                   } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -228,7 +228,7 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
     private hookPosition<TEvent>(eventFeed: Observable<[amount: number, event: TEvent]>, direction: PanDirection): void
     {
-        const movement  = eventFeed.pipe(map(([amount]) => amount));
+        const movement  = eventFeed.pipe(pluck(0)); // Extract the amount
         const panCamera = this.choosePanMethod(direction);
 
         this.subscribe(movement, panCamera);
