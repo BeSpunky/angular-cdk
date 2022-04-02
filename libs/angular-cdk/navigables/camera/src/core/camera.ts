@@ -81,8 +81,8 @@ export abstract class Camera<TItem> extends Destroyable
     public readonly topBound   : BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
     public readonly bottomBound: BehaviorSubject<number | null> = new BehaviorSubject(null as number | null);
     
-    protected horizontalBoundReached: Subject<number> = new Subject();
-    protected verticalBoundReached  : Subject<number> = new Subject();
+    protected readonly horizontalBoundReached: Subject<number> = new Subject();
+    protected readonly verticalBoundReached  : Subject<number> = new Subject();
     
     /**
      * A zoom dependant value to use as a unit for sizing elements on the screen.
