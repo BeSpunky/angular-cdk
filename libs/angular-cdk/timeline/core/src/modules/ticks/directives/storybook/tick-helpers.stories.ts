@@ -15,9 +15,14 @@ export function createTickStoryMeta(exampleGroupName: string, wrapStoryInTimelin
             moduleMetadata({ imports: [CommonModule, TimelineCdkModule] }),
             componentWrapperDecorator(wrapStoryInTimelineContainer, { zoom: 100, now: new Date(), yesterday: addDays(new Date(), -1) })
         ],
+        args: {
+            // Define default values
+            minZoom: -200,
+            maxZoom: 200
+        },
         argTypes: {
-            minZoom: { description: 'The lowest zoom level this tick should render on' , defaultValue: -200, control: { type: 'range', min: -300, max: 300 } },
-            maxZoom: { description: 'The highest zoom level this tick should render on', defaultValue:  200, control: { type: 'range', min: -300, max: 300 } }
+            minZoom: { description: 'The lowest zoom level this tick should render on' , control: { type: 'range', min: -300, max: 300 } },
+            maxZoom: { description: 'The highest zoom level this tick should render on', control: { type: 'range', min: -300, max: 300 } }
         }
     } as Meta;
 }
