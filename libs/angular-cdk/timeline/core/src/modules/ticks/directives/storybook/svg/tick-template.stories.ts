@@ -3,13 +3,25 @@ import { TickStoryDefinition } from '../tick-definitions.stories';
 export function wrapStoryInSVGTimeline(story: string)
 {
     return /*html*/`
-    <svg bsTimeline [zoom]="zoom" [date]="now" [positionY]="50" height="85vh" width="100vw">
-        <line x1="50%" y1="0"
-              x2="50%" y2="100%"
-              stroke="purple" stroke-width="1"
-        ></line>
-        ${story}
-    </svg>
+    <!--
+        SVG has a wrapping div because setting 'bsTimeline' on the svg element itself causes the ResizeObserver
+        of the timeline to fire constantly on mousemove, which in turn causes the timeline to flicker.
+        Not sure why, but this is probably related with how SVGs are treated by the browser. Maybe even because
+        of how Angular treats them, as this started happening after I upgraded the workspace to Angular v13.
+        Another reason might be how storybook renders its component iframe, which might have changed along with
+        the new storybook version after upgrading the nx workspace to v13.
+
+        TODO: Test to see if this still occurs on a different project outside of storybook.
+    -->
+    <div bsTimeline [zoom]="zoom" [date]="now" [positionY]="50" style="padding: 0; margin: 0; width: 95vw; height: 85vh">
+        <svg height="100%" width="100%">
+            <line x1="50%" y1="0"
+                x2="50%" y2="100%"
+                stroke="purple" stroke-width="1"
+            ></line>
+            ${story}
+        </svg>
+    </div>
     `;
 }
 
