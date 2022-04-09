@@ -1,9 +1,9 @@
-import { Key                                                                                                           } from 'ts-key-enum';
-import { animationFrameScheduler, BehaviorSubject, combineLatest, interval, merge, Observable                          } from 'rxjs';
-import { first, map, mergeMap, observeOn, pairwise, pluck, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
-import { ElementRef, Injectable                                                                                        } from '@angular/core';
-import { mergeToggled, toggled, useActivationSwitch                                                                    } from '@bespunky/rxjs';
-import { DocumentRef                                                                                                   } from '@bespunky/angular-zen/core';
+import { Key                                                                                                } from 'ts-key-enum';
+import { animationFrames, BehaviorSubject, merge, Observable                                                } from 'rxjs';
+import { first, map, mergeMap, pairwise, pluck, startWith, switchMap, takeUntil, takeWhile , withLatestFrom } from 'rxjs/operators';
+import { ElementRef, Injectable                                                                             } from '@angular/core';
+import { mergeToggled, toggled, useActivationSwitch                                                         } from '@bespunky/rxjs';
+import { DocumentRef                                                                                        } from '@bespunky/angular-zen/core';
 
 import { EventWithModifiers, KeyboardModifiers                                                       } from '@bespunky/angular-cdk/reactive-input/shared';
 import { ReactiveMouseService                                                                        } from '@bespunky/angular-cdk/reactive-input/mouse';
@@ -29,12 +29,12 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
     public readonly flickY        : BehaviorSubject<boolean> = new BehaviorSubject(true as boolean);
 
     // Factors
-    public readonly wheelPanSpeedFactor    : BehaviorSubject<number>                  = new BehaviorSubject(1);
-    public readonly keyboardPanSpeed       : BehaviorSubject<number>                  = new BehaviorSubject(30);
-    public readonly keyboardModifierFactors: BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
-    public readonly swipeFlickFactor       : BehaviorSubject<number>                  = new BehaviorSubject(0.4);
-    public readonly flickBreaksStrength    : BehaviorSubject<number>                  = new BehaviorSubject(1);
-    public readonly flickSpeed             : BehaviorSubject<number>                  = new BehaviorSubject(20);
+    public readonly wheelPanSpeedFactor       : BehaviorSubject<number>                  = new BehaviorSubject(1);
+    public readonly keyboardPanSpeed          : BehaviorSubject<number>                  = new BehaviorSubject(30);
+    public readonly keyboardModifierFactors   : BehaviorSubject<KeyboardModifierFactors> = new BehaviorSubject(DefaultKeyboardModifierFactors);
+    public readonly swipeFlickFactor          : BehaviorSubject<number>                  = new BehaviorSubject(0.4);
+    public readonly flickDecelerationPerSecond: BehaviorSubject<number>                  = new BehaviorSubject(30);
+    public readonly flickSpeedFactor          : BehaviorSubject<number>                  = new BehaviorSubject(0.8);
     
     constructor(private document: DocumentRef, private mouse: ReactiveMouseService, private keyboard: ReactiveKeyboardService, private touch: ReactiveTouchService, element: ElementRef)
     {
@@ -270,35 +270,42 @@ export abstract class ReactiveCamera<TItem> extends Camera<TItem>
 
         // Abort flick in case the bounds are reached, and in case the user triggered an abort event (like grabbing the timeline again with the mouse)
         const abort = merge(abortOn, boundsNotifier);
-        const easeOutAnimation = this.easeOutMouseMovement(lastMovement, abort, getLastMoveAmount);
+        const easeOutAnimation = this.easeOutPanMovement(lastMovement, abort, getLastMoveAmount);
 
         this.subscribe(easeOutAnimation, panCamera);
     }
 
-    private easeOutMouseMovement<TEvent, TAbort>(lastMovement: Observable<TEvent>, abort: Observable<TAbort>, getMovement: AmountExtractor<TEvent>): Observable<number>
+    private easeOutPanMovement<TEvent, TAbort>(lastMovement: Observable<TEvent>, abort: Observable<TAbort>, getMovement: AmountExtractor<TEvent>): Observable<number>
     {
         /**
          * The idea is to get the last mouse movement amount, then repeat the movement decreasing the amount each time
          * until the amount exceeds zero.
+         * 
+         * Calculation is based on the physics formula for velocity with acceleration (deceleration in this case):
+         * v(t) = v0 - a * t
+         * where v(t) is the velocity at time t, v0 is the initial velocity, and a is the acceleration.
+         * 
+         * On each animation frame the amount is calculated relatively to the elapsed time from the moment easing out
+         * started. The amount is then applied to the pan camera.
          */
-        const animationInterval = interval(this.flickSpeed.value);
 
-        // Combine the timer and the breaks strength to have both values when calculating the next movement amount
-        const easeOut = (movement: number) => combineLatest([animationInterval, this.flickBreaksStrength]).pipe(
-            // Allow aborting the animation with another observable
-            takeUntil(abort),
-            // Only process on browser animation rerender
-            observeOn(animationFrameScheduler),
-            // Calculate how much to decrease the original amount on the next animation step.
-            // To calculate the next decreased movement: acceleration * animationStep
-            // To pull the next value closer to zero:    Math.sign(movement) * animation * animationStep
-            // To prevent a first value of 0:            Math.sign(movement) * animation * (animationStep + 1)
-            map(([animationStep, acceleration]) => Math.sign(movement) * acceleration * (animationStep + 1)),
-            // Calculate the next decreased movement amount
-            map(breaksStrength => movement - breaksStrength),
-            // Take the direction into account and stop the animation when exceeding zero
-            takeWhile(nextPan => Math.abs(nextPan) > 0)
-        );
+        const easeOut = (movement: number) =>
+        {
+            // The movement direction is taken into account to calculate the acceleration
+            const accelerationPerSecond = this.flickDecelerationPerSecond.value * Math.sign(movement);
+            // The movement amount is manipulated using the speed factor to increase or decrease initial speed
+            const initialSpeed          = this.flickSpeedFactor          .value * movement;
+
+            return animationFrames().pipe(
+                takeUntil(abort),
+                // Transform milliseconds to seconds
+                map(({ elapsed }) => elapsed / 1000),
+                // Calculate the velocit at the current elapsed time using the physics formula for velocity with acceleration
+                map(elapsedSeconds => initialSpeed - accelerationPerSecond * elapsedSeconds),
+                // Stop the animation when the velocity reaches zero
+                takeWhile(speed => movement > 0 ? speed > 0 : speed < 0)
+            );
+        };
 
         return lastMovement.pipe(
             // Extract the movement amount from the mouse event
