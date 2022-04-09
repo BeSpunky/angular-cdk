@@ -10,7 +10,7 @@
     "args": {
       "NODE_VARIANT"     : "16",
       "PNPM_VERSION"     : "6.32.4",
-      "NX_CLI_VERSION"   : "13.9.5",
+      "NX_CLI_VERSION"   : "13.10.1",
     }
   },
 
